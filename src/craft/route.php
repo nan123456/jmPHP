@@ -1,7 +1,7 @@
 <?php
 	require("../../conn.php");
 	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$ret_data='';
+	$ret_data = array();
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	$id = isset($_POST["id"])?$_POST["id"]:'';
 	
@@ -58,8 +58,8 @@
  		// 2状态表示该节点可以成功添加下一节点
  		
 		// 判断是在最后一个节点添加,且最后一个节点是否处于未完成状态,假如完成则不允许继续添加节点
-		if($ret_data["count"]==$listid&&$isfinish=='1'){
-			$ret_data["state"] = '0';
+		if($ret_data["count"]==$listid && $isfinish=='1'){
+			$ret_data["state"] = 0;
 		}
 		// 判断不属于最后一个节点的节点的下一节点是否是处于未完成的状态，如是未完成状态允许添加节点 
 		else if($listid<$ret_data["count"]) {

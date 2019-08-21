@@ -69,7 +69,7 @@
   }
 
   // 查询数据库所有产品的名称和编号 
-  $sql2 = "SELECT product_name,numbering,id,installation_site FROM plan_table ";
+  $sql2 = "SELECT product_name,numbering,id,installation_site FROM plan_table";
   $result2 = $conn->query($sql2);
   $selectArr = []; 
   $delete = [];
