@@ -1,5 +1,5 @@
 <?php
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	//header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	require("../conn.php");
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	if($flag == "Login"){

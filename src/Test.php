@@ -1,6 +1,6 @@
 <?php
 	//测试云平台交互的JSON数据格式
-	header("Access-Control-Allow-Origin: *");
+//	header("Access-Control-Allow-Origin: *");
 	class Test{
 		public $conn;
 		public $projectData = array();

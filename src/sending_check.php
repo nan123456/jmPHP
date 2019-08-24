@@ -1,6 +1,6 @@
 <?php
 	require ("../conn.php");
-	header("Access-Control-Allow-Origin: *");
+//	header("Access-Control-Allow-Origin: *");
 	$ret_data = '';
 	$flag = isset($_POST["flag"]) ? $_POST["flag"] : '';
 	$number = isset($_POST["number"]) ? $_POST["number"] : '';

@@ -2,7 +2,7 @@
 	header("Access-Control-Allow-Origin: *");
 	// 允许任意域名发起的跨域请求
 	require ("../../conn.php");
-	$arr = '';
+	$arr = array();
 	$flag = isset($_POST["flag"]) ? $_POST["flag"] : '';
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
