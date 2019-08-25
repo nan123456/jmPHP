@@ -24,10 +24,10 @@
 			break;
 		//获取最新时间
 		case 'time' :
-			$sql='select `time` from `hoting` order by `id` desc limit 1';
+			$sql='select `ctime` from `hoting` order by `id` desc limit 1';
 			$result = $conn->query($sql);
 			$row =$result->fetch_assoc();
-			$sjc=$row['time'];
+			$sjc=$row['ctime'];
 			$time=date( "H:i:s",$sjc);	
 			echo $time;		
 			break;
