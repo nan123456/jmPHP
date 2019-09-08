@@ -13,13 +13,14 @@ switch ($flag) {
 
 //		$modid = '1000634968';
 //		$pid = '17';
-		$sql = "SELECT isfinish,id FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
+		$sql = "SELECT isfinish,id,isexterior FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
 			$i = 0;
 			while ($row = $res -> fetch_assoc()) {
 				$arr[$i]['isfinish'] = $row['isfinish'];
 				$arr[$i]['routeid'] = $row['id'];
+				$arr[$i]['isexterior'] = $row['isexterior'];
 				$i++;
 			}
 		}
@@ -305,6 +306,29 @@ switch ($flag) {
 		$json = json_encode($arr);
 		echo $json;
 		break;
+		case 'save':
+		$partid = $_POST["partid"];
+        $pid = $_POST["pid"];
+        $modid = $_POST["modid"];
+        $routeid = $_POST["routeid"];
+        $sql = "select name,figure_number,product_name,count,route from productionplan where id='" . $partid . "' and routeid='".$routeid."'";
+		$res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+        	while ($row = $res->fetch_assoc()) {
+        	$count=$row['count'];
+        	$route=$row['route'];
+        	}
+        }
+        $cuser=$_POST['cuser'];
+        $time = date("Y-m-d h:i:s");
+//      $sql_oldupdate= "UPDATE route SET isfinish='0' where modid='$modid' and id='$routeid'";
+//		$conn->query($sql_oldupdate);
+        $sql =  "INSERT INTO workshop_k (modid, routeid, isfinish,ctime,cuser) VALUES ('$modid', '$routeid','0','$time','$cuser')";
+        $res = $conn->query($sql);
+        $data="succcess";
+        $json = json_encode($data);
+		echo $json;
+        break;
 }
 $conn -> close();
 ?>

@@ -26,10 +26,12 @@
 					//数量
 					$arr[$i]['child_material'] = $row['child_material'];
 					//规格
-					$number = explode("#", $row['number']);
-					$arr[$i]['number'] = $number[0] . "#";
+					// $number = explode("#", $row['number']);
+					// $arr[$i]['number'] = $number[0] . "#";
 					//工单
-					$arr[$i]['product_name'] = $number[1] . $row['product_name'];
+					// $arr[$i]['product_name'] = $number[0] . $row['product_name'];
+					$arr[$i]['number']=$row['number']. "#"; //工单
+					$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
 					//产品名称
 					$arr[$i]['remark'] = $row['remark'];
 					$arr[$i]['routeid'] = $row['routeid'];
@@ -70,9 +72,8 @@
 					$arr4[$i]['count'] = $row4['count'];
 					$arr4[$i]['route'] = $row4['route'];
 					$arr4[$i]['child_material'] = $row4['child_material'];
-					$number4 = explode("#", $row4['number']);
-					$arr4[$i]['number'] = $number4[0] . "#";
-					$arr4[$i]['product_name'] = $number4[1] . $row4['product_name'];
+					$arr4[$i]['number']=$row4['number']. "#"; //工单
+					$arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
 					$arr4[$i]['remark'] = $row4['remark'];
 					$arr4[$i]['station'] = $row4['station'];
 					$arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -105,9 +106,8 @@
 					$arr7[$i]['standard'] = $row7['standard'];
 					$arr7[$i]['count'] = $row7['count'];
 					$arr7[$i]['child_material'] = $row7['child_material'];
-					$number7 = explode("#", $row7['number']);
-					$arr7[$i]['number'] = $number7[0] . "#";
-					$arr7[$i]['product_name'] = $number7[1] . $row7['product_name'];
+					$arr7[$i]['number']=$row7['number']. "#"; //工单
+					$arr7[$i]['product_name'] = $row7['number'] . $row7['product_name']; //产品名称
 					$arr7[$i]['remark'] = $row7['remark'];
 					$arr7[$i]['station'] = $row7['station'];
 					$arr7[$i]['schedule_date'] = $row7['schedule_date'];
@@ -148,11 +148,8 @@
 					//数量
 					$arr[$i]['child_material'] = $row['child_material'];
 					//规格
-					$number = explode("#", $row['number']);
-					$arr[$i]['number'] = $number[0] . "#";
-					//工单
-					$arr[$i]['product_name'] = $number[1] . $row['product_name'];
-					//产品名称
+					$arr[$i]['number']=$row['number']. "#"; //工单
+					$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
 					$arr[$i]['remark'] = $row['remark'];
 					$arr[$i]['routeid'] = $row['routeid'];
 					if ($row['backMark'] == "1") {
@@ -192,9 +189,8 @@
 					$arr4[$i]['count'] = $row4['count'];
 					$arr4[$i]['route'] = $row4['route'];
 					$arr4[$i]['child_material'] = $row4['child_material'];
-					$number4 = explode("#", $row4['number']);
-					$arr4[$i]['number'] = $number4[0] . "#";
-					$arr4[$i]['product_name'] = $number4[1] . $row4['product_name'];
+					$arr4[$i]['number']=$row4['number']. "#"; //工单
+					$arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
 					$arr4[$i]['remark'] = $row4['remark'];
 					$arr4[$i]['station'] = $row4['station'];
 					$arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -227,9 +223,8 @@
 					$arr7[$i]['standard'] = $row7['standard'];
 					$arr7[$i]['count'] = $row7['count'];
 					$arr7[$i]['child_material'] = $row7['child_material'];
-					$number7 = explode("#", $row7['number']);
-					$arr7[$i]['number'] = $number7[0] . "#";
-					$arr7[$i]['product_name'] = $number7[1] . $row7['product_name'];
+					$arr7[$i]['number']=$row7['number']. "#"; //工单
+					$arr7[$i]['product_name'] = $row7['number'] . $row7['product_name']; //产品名称
 					$arr7[$i]['remark'] = $row7['remark'];
 					$arr7[$i]['station'] = $row7['station'];
 					$arr7[$i]['schedule_date'] = $row7['schedule_date'];
