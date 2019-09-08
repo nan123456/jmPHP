@@ -1,6 +1,6 @@
 <?php
 	require("../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	$ret_data='';
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	$id = isset($_POST["id"])?$_POST["id"]:'';
@@ -33,7 +33,7 @@
 			while($myrow=$myres->fetch_assoc()){
 //				$ret_data["e"] = $row["isfinish"];
 				switch($myrow["isfinish"]){
-					case 0:
+					case 3:
 					$ret_data["unfinished"][$x]["route"] = $myrow["route"];
 					$ret_data["unfinished"][$x]["id"] = $myrow["id"];
 					$x++;
@@ -122,7 +122,7 @@
 			//				$ret_data["e"] = $row["isfinish"];
 							$ret_data["item"][$i]["name"]=$crow["name"];
 							switch($drow["isfinish"]){
-								case 0:
+								case 3:
 								$ret_data["item"][$i]["unfinished"][$x]["route"] = $drow["route"];
 								$ret_data["item"][$i]["unfinished"][$x]["id"] = $drow["id"];
 								$x++;
@@ -224,6 +224,7 @@
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
 		$remark = isset($_POST["remark"])?$_POST["remark"]:'';
 		$routel = isset($_POST["routel"])?$_POST["routel"]:'';
+		$pNumber = isset($_POST["pNumber"])?$_POST["pNumber"]:'';
 		$sql = "SELECT fid,figure_number,name from part WHERE id = '$id'";
 		$res = $conn->query($sql);
 		if($res->num_rows>0){
@@ -243,7 +244,7 @@
 			$route_arr = explode('→',$routel);
 				$length = count($route_arr);
 				for($route_i=1;$route_i<$length;$route_i++){
-					$bsql = "INSERT INTO route VALUES(null,'$fid','$modid','$route_arr[$route_i]','$route_i','$routel','0',null,null,null,null)";
+					$bsql = "INSERT INTO route(pid,modid,pNumber,route,listid,route_line,isfinish) VALUES('$fid','$modid','$pNumber','$route_arr[$route_i]','$route_i','$routel','3')";
 					$bres = $conn->query($bsql);
 				}
 		}

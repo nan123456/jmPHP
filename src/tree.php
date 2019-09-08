@@ -1,7 +1,7 @@
 <?php
 	require("../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$ret_data='';
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	$ret_data=array();
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	
 	//未审核部分
@@ -104,17 +104,18 @@
 		$id = isset($_POST["id"])?$_POST["id"]:'';
 		$name = isset($_POST["name"])?$_POST["name"]:'';
 		$number = isset($_POST["number"])?$_POST["number"]:'';
-		$str = explode("#",$number);
-		$projectname = $name.$str[1];
+//		$str = explode("#",$number);
+//		$projectname = $name.$str[1];
 		$key = isset($_POST["key"])?$_POST["key"]:'';
 //		$ret_data["type"] = $type;
 		if($key==1||$key==2){
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and radio = '$key'";
-		}else if($key==3){
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='2'";
-		}else if($key==4){
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='1'";
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') and radio = '$key'";
 		}
+//		else if($key==3){
+//			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='2'";
+//		}else if($key==4){
+//			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='1'";
+//		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -134,7 +135,7 @@
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
 		$pid = isset($_POST["pid"])?$_POST["pid"]:'';
 		$name = isset($_POST["name"])?$_POST["name"]:'';
-		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
+//		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
 		$level = isset($_POST["level"])?$_POST["level"]:'';
 		$key = isset($_POST["key"])?$_POST["key"]:'';
 		$ret_data["level"] = $figure_number.'&'.$name;
@@ -148,31 +149,32 @@
 					$ret_data["data"][$i]["pid"] = $pid;  //项目id
 					$ret_data["data"][$i]["lx"] = 'bj';
 					$ret_data["data"][$i]["name"] = $row["name"];
-					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+//					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 					$ret_data["data"][$i]["modid"] = $row["modid"];
 					$ret_data["data"][$i]["leaf"] = true;
 					$i++;
 				}
 				$ret_data["success"] = 'success';
-			}else {
-				$bpart = $figure_number.'&'.$name;
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$bpart' and radio = '$key'";
-				$res=$conn->query($sql);
-				if($res->num_rows>0){
-					$i = 0;
-					while($row=$res->fetch_assoc()){
-						$ret_data["data"][$i]["id"] = $row["id"];
-						$ret_data["data"][$i]["pid"] = $pid;  //项目id
-						$ret_data["data"][$i]["lx"] = 'bj';
-						$ret_data["data"][$i]["name"] = $row["name"];
-						$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
-						$ret_data["data"][$i]["modid"] = $row["modid"];
-						$ret_data["data"][$i]["leaf"] = true;
-						$i++;
-					}
-					$ret_data["success"] = 'success';
-				}
 			}
+//			else {
+//				$bpart = $figure_number.'&'.$name;
+//				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$bpart' and radio = '$key'";
+//				$res=$conn->query($sql);
+//				if($res->num_rows>0){
+//					$i = 0;
+//					while($row=$res->fetch_assoc()){
+//						$ret_data["data"][$i]["id"] = $row["id"];
+//						$ret_data["data"][$i]["pid"] = $pid;  //项目id
+//						$ret_data["data"][$i]["lx"] = 'bj';
+//						$ret_data["data"][$i]["name"] = $row["name"];
+//						$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+//						$ret_data["data"][$i]["modid"] = $row["modid"];
+//						$ret_data["data"][$i]["leaf"] = true;
+//						$i++;
+//					}
+//					$ret_data["success"] = 'success';
+//				}
+//			}
 		
 		}else {
 			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name'";
@@ -184,31 +186,32 @@
 					$ret_data["data"][$i]["pid"] = $pid;  //项目id
 					$ret_data["data"][$i]["lx"] = 'bj';
 					$ret_data["data"][$i]["name"] = $row["name"];
-					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+//					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 					$ret_data["data"][$i]["modid"] = $row["modid"];
 					$ret_data["data"][$i]["leaf"] = false;
 					$i++;
 				}
 				$ret_data["success"] = 'success';
-			}else {
-				$bpart = $figure_number.'&'.$name;
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$bpart'";
-				$res=$conn->query($sql);
-				if($res->num_rows>0){
-					$i = 0;
-					while($row=$res->fetch_assoc()){
-						$ret_data["data"][$i]["id"] = $row["id"];
-						$ret_data["data"][$i]["pid"] = $pid;  //项目id
-						$ret_data["data"][$i]["lx"] = 'bj';
-						$ret_data["data"][$i]["name"] = $row["name"];
-						$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
-						$ret_data["data"][$i]["modid"] = $row["modid"];
-						$ret_data["data"][$i]["leaf"] = false;
-						$i++;
-					}
-					$ret_data["success"] = 'success';
-				}
 			}
+//			else {
+//				$bpart = $figure_number.'&'.$name;
+//				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$bpart'";
+//				$res=$conn->query($sql);
+//				if($res->num_rows>0){
+//					$i = 0;
+//					while($row=$res->fetch_assoc()){
+//						$ret_data["data"][$i]["id"] = $row["id"];
+//						$ret_data["data"][$i]["pid"] = $pid;  //项目id
+//						$ret_data["data"][$i]["lx"] = 'bj';
+//						$ret_data["data"][$i]["name"] = $row["name"];
+//						$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+//						$ret_data["data"][$i]["modid"] = $row["modid"];
+//						$ret_data["data"][$i]["leaf"] = false;
+//						$i++;
+//					}
+//					$ret_data["success"] = 'success';
+//				}
+//			}
 		}
 	} else if($flag == 'treefilter'){
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';

@@ -1,6 +1,6 @@
 <?php
 	require("../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	$sql = "SELECT type,id FROM project";
 	$res=$conn->query($sql);
 	if($res->num_rows>0){
