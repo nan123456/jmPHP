@@ -7,7 +7,7 @@
 	// $flag="Undelivered";
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='3' and Pisfinish='0' ORDER BY backMark DESC,routeid";
+		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='0' and Pisfinish='0' ORDER BY backMark DESC,routeid";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -75,8 +75,8 @@
 		$fChild_material = json_encode($arr3);
 		$json = '{"success":true,"rows":' . $list_data . ',"fStandard":' . $fStandard . ',"fChild_material":' . $fChild_material . '}';
 	}else if($flag =="Delivered") {
-		// 已排产数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='0' ORDER BY backMark DESC,routeid";
+		// 已就工数据列表
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='2' ORDER BY backMark DESC,routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -130,60 +130,116 @@
 	    $FStandard = json_encode($arr6);
 	    $json = '{"success":true,"rows2":'.$list_data2.',"FStandard":'.$FStandard.',"FChild_material":'.$FChild_material.'}';
 	  }
-	}elseif($flag=='Production'){
-			//已完工
-	  $sql7 = "Select * from projectIng";
-	  $res7 = $conn->query($sql7);
-	  if($res7->num_rows > 0 ){
+	}else if($flag=='Production'){
+		// 已完工数据列表
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='1' ORDER BY backMark DESC,routeid";
+	  $res4 = $conn->query($sql4);
+	  if($res4->num_rows > 0 ){
 	    $i = 0;
-	    while($row7 = $res7->fetch_assoc()){
-	      $arr7[$i]['partid'] = $row7['id'];
-	      $arr7[$i]['fid'] = $row7['fid'];  
-	      $arr7[$i]['modid'] = $row7['modid']; 
-	      $arr7[$i]['figure_number'] = $row7['figure_number']; 
-	      $arr7[$i]['name'] = $row7['name'];
-	      $arr7[$i]['standard'] = $row7['standard'];
-	      $arr7[$i]['count'] = $row7['count'];
-	      $arr7[$i]['child_material'] = $row7['child_material'];
-	      // $number7 = explode("#",$row7['number']);
-	      // $arr7[$i]['number'] = $number7[0] . "#";
-	      // $arr7[$i]['product_name'] = $number7[0] . $row7['product_name'];
-		  $arr7[$i]['number']=$row7['number']. "#"; //工单
-		  $arr7[$i]['product_name'] = $row7['number'] . $row7['product_name']; //产品名称
-	      $arr7[$i]['remark'] = $row7['remark'];
-	      $arr7[$i]['station'] = $row7['station'];
-	      $arr7[$i]['schedule_date'] = $row7['schedule_date'];
+	    while($row4 = $res4->fetch_assoc()){
+	      $arr4[$i]['partid'] = $row4['id'];
+	      $arr4[$i]['fid'] = $row4['fid'];  
+		  $arr4[$i]['modid'] = $row4['modid']; 
+		  $arr4[$i]['routeid'] = $row4['routeid']; 
+	      $arr4[$i]['figure_number'] = $row4['figure_number']; 
+	      $arr4[$i]['name'] = $row4['name'];
+	      $arr4[$i]['standard'] = $row4['standard'];
+	      $arr4[$i]['count'] = $row4['count'];
+		  $arr4[$i]['route'] = $row4['route'];
+	      $arr4[$i]['child_material'] = $row4['child_material'];
+	      // $number4 = explode("#",$row4['number']);
+	      // $arr4[$i]['number'] = $number4[0] . "#";
+		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
+		  $arr4[$i]['number']=$row4['number']. "#"; //工单
+		  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+	      $arr4[$i]['remark'] = $row4['remark'];
+	      $arr4[$i]['station'] = $row4['station'];
+	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
-		   // 规格下拉筛选数据
-	    $sql8 = "SELECT DISTINCT child_material FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
-	    $res8 = $conn->query($sql8);
-	    if($res8->num_rows > 0) {
+	
+	    // 规格下拉筛选数据
+	    $sql5 = "SELECT DISTINCT child_material FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $res5 = $conn->query($sql5);
+	    if($res5->num_rows > 0) {
 	      $i = 0;
-	      while($row8 = $res8->fetch_assoc()) {
-	        $arr8[$i]['F5'] = $row8['child_material'];
+	      while($row5 = $res5->fetch_assoc()) {
+	        $arr5[$i]['F5'] = $row5['child_material'];
 	        $i++;
 	      }
 	    }
 	
 	    // 开料尺寸下拉筛选数据
-	    $sql9 = "SELECT DISTINCT standard FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
-	    $res9 = $conn->query($sql9);
-	    if($res9->num_rows > 0) {
+	    $sql6 = "SELECT DISTINCT standard FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $res6 = $conn->query($sql6);
+	    if($res6->num_rows > 0) {
 	      $i = 0;
-	      while($row9 = $res9->fetch_assoc()) {
-	        $arr9[$i]['F6'] = $row9['standard'];
+	      while($row6 = $res6->fetch_assoc()) {
+	        $arr6[$i]['F6'] = $row6['standard'];
 	        $i++;
 	      }
 	    }
 	
-	    // 生产中
-	    $list_data3 = json_encode($arr7);
-	    $FChild_material3 = json_encode($arr8);
-	    $FStandard3 = json_encode($arr9);
-	    $json = '{"success":true,"rows3":'.$list_data3.'}';
+	    // 已完工
+	    $list_data2 = json_encode($arr4);
+	    $FChild_material = json_encode($arr5);
+	    $FStandard = json_encode($arr6);
+	    $json = '{"success":true,"rows3":'.$list_data2.',"FStandard":'.$FStandard.',"FChild_material":'.$FChild_material.'}';
 	  }
-	}elseif ($flag =="Scrap"){
+	
+			//已完工
+//	  $sql7 = "Select * from projectIng";
+//	  $res7 = $conn->query($sql7);
+//	  if($res7->num_rows > 0 ){
+//	    $i = 0;
+//	    while($row7 = $res7->fetch_assoc()){
+//	      $arr7[$i]['partid'] = $row7['id'];
+//	      $arr7[$i]['fid'] = $row7['fid'];  
+//	      $arr7[$i]['modid'] = $row7['modid']; 
+//	      $arr7[$i]['figure_number'] = $row7['figure_number']; 
+//	      $arr7[$i]['name'] = $row7['name'];
+//	      $arr7[$i]['standard'] = $row7['standard'];
+//	      $arr7[$i]['count'] = $row7['count'];
+//	      $arr7[$i]['child_material'] = $row7['child_material'];
+//	      // $number7 = explode("#",$row7['number']);
+//	      // $arr7[$i]['number'] = $number7[0] . "#";
+//	      // $arr7[$i]['product_name'] = $number7[0] . $row7['product_name'];
+//		  $arr7[$i]['number']=$row7['number']. "#"; //工单
+//		  $arr7[$i]['product_name'] = $row7['number'] . $row7['product_name']; //产品名称
+//	      $arr7[$i]['remark'] = $row7['remark'];
+//	      $arr7[$i]['station'] = $row7['station'];
+//	      $arr7[$i]['schedule_date'] = $row7['schedule_date'];
+//	      $i++;
+//	    }
+//		   // 规格下拉筛选数据
+//	    $sql8 = "SELECT DISTINCT child_material FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+//	    $res8 = $conn->query($sql8);
+//	    if($res8->num_rows > 0) {
+//	      $i = 0;
+//	      while($row8 = $res8->fetch_assoc()) {
+//	        $arr8[$i]['F5'] = $row8['child_material'];
+//	        $i++;
+//	      }
+//	    }
+//	
+//	    // 开料尺寸下拉筛选数据
+//	    $sql9 = "SELECT DISTINCT standard FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+//	    $res9 = $conn->query($sql9);
+//	    if($res9->num_rows > 0) {
+//	      $i = 0;
+//	      while($row9 = $res9->fetch_assoc()) {
+//	        $arr9[$i]['F6'] = $row9['standard'];
+//	        $i++;
+//	      }
+//	    }
+//	
+//	    // 生产中
+//	    $list_data3 = json_encode($arr7);
+//	    $FChild_material3 = json_encode($arr8);
+//	    $FStandard3 = json_encode($arr9);
+//	    $json = '{"success":true,"rows3":'.$list_data3.'}';
+//	  }
+	}else if ($flag =="Scrap"){
 		$sql = "select id,fid,Wid,modid,Pname,pNumber,routeid,unqualified,figure_number,name,child_material,route from fail WHERE unqualified !='0' ORDER BY routeid ASC";
 		$res = $conn->query($sql);
 		$i = 0;

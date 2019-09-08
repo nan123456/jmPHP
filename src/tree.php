@@ -109,13 +109,19 @@
 		$key = isset($_POST["key"])?$_POST["key"]:'';
 //		$ret_data["type"] = $type;
 		if($key==1||$key==2){
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') and radio = '$key'";
+			//1关键部件
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and radio = '$key'";
 		}
-//		else if($key==3){
-//			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='2'";
-//		}else if($key==4){
-//			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname') and isfinish='1'";
-//		}
+		else if($key==3){
+			//进行中
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and isfinish='2'";
+		}else if($key==4){
+			//已完成
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and isfinish='1'";
+		}else if($key==5){
+			//外协
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (isexterior=1)";
+		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -140,7 +146,7 @@
 		$key = isset($_POST["key"])?$_POST["key"]:'';
 		$ret_data["level"] = $figure_number.'&'.$name;
 		if($level == 5) {
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '$key'";
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '$key' AND (isexterior=0)";
 			$res=$conn->query($sql);
 			if($res->num_rows>0){
 				$i = 0;
@@ -151,7 +157,7 @@
 					$ret_data["data"][$i]["name"] = $row["name"];
 //					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 					$ret_data["data"][$i]["modid"] = $row["modid"];
-					$ret_data["data"][$i]["leaf"] = true;
+					$ret_data["data"][$i]["leaf"] = false;
 					$i++;
 				}
 				$ret_data["success"] = 'success';
@@ -177,7 +183,7 @@
 //			}
 		
 		}else {
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name'";
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '$key' AND (isexterior=0)";
 			$res=$conn->query($sql);
 			if($res->num_rows>0){
 				$i = 0;
