@@ -260,7 +260,76 @@
 		}
 		$list_data = json_encode($arr);
 		$json = '{"success":true,"rows4":' . $list_data . '}';
-	}else{
+	}else if($flag=='exterior'){
+		// 获取列表数据
+		$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY id";
+		
+		$res = $conn -> query($sql);
+		if ($res -> num_rows > 0) {
+			$i = 0;
+			while ($row = $res -> fetch_assoc()) {
+				$arr[$i]['modid'] = $row['modid'];
+				$arr[$i]['external']=$row['isexterior'];//外协标志
+				$arr[$i]['fid'] = $row['fid'];
+				$arr[$i]['partid'] = $row['id'];
+				$arr[$i]['figure_number'] = $row['figure_number'];
+				//零件图号
+				$arr[$i]['name'] = $row['name'];
+				//名称
+				$arr[$i]['standard'] = $row['standard'];
+				//开料尺寸
+//				$arr[$i]['route'] = $row['route'];
+				//加工工艺路线
+				$arr[$i]['count'] = $row['count'];
+				//数量
+				$arr[$i]['child_material'] = $row['child_material'];
+				//规格
+				// $number = explode("#", $row['number']);
+				// $arr[$i]['number'] = $number[0] . "#"; //工单
+				$arr[$i]['number']=$row['pnumber']. "#"; //工单
+				$arr[$i]['product_name'] = $row['pnumber'] . $row['product_name']; //产品名称
+//				$arr[$i]['remark'] = $row['remark'];
+//				$arr[$i]['routeid'] = $row['routeid'];
+//				if ($row['backMark'] == "1") {
+//					$arr[$i]['backMark'] = "是";
+//				} else {
+//					$arr[$i]['backMark'] = "否";
+//				}
+	
+//				$arr[$i]['reason'] = $row['reason'];
+				$i++;
+			}
+		}
+		// 过滤重复作为下拉checkbox数据
+		$sql2 = "SELECT DISTINCT standard from productionplan";
+		//DISTINCT通过关键字standard来过滤掉多余的重复记录只保留一条
+		$res2 = $conn -> query($sql2);
+		if ($res2 -> num_rows > 0) {
+			$i = 0;
+			while ($row2 = $res2 -> fetch_assoc()) {
+				// 开料尺寸
+				$arr2[$i]['f6'] = $row2['standard'];
+				$i++;
+			}
+		}
+	
+		$sql3 = "SELECT DISTINCT child_material from productionplan";
+		$res3 = $conn -> query($sql3);
+		if ($res3 -> num_rows > 0) {
+			$i = 0;
+			while ($row3 = $res3 -> fetch_assoc()) {
+				// 规格
+				$arr3[$i]['f5'] = $row3['child_material'];
+				$i++;
+			}
+		}
+	
+		// 未排产
+		$list_data = json_encode($arr);
+		$fStandard = json_encode($arr2);
+		$fChild_material = json_encode($arr3);
+		$json = '{"success":true,"rows4":' . $list_data . ',"fStandard":' . $fStandard . ',"fChild_material":' . $fChild_material . '}';
+	
 		
 	}
 	echo $json;
