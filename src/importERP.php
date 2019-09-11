@@ -168,7 +168,7 @@
 						$dres = $conn->query($dsql);					
 					}
 				}
-	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior) VALUES('$id','$k','$pnumber','$i','$z','$l','1','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior')"; //null 为主键id，自增可用null表示自动添加
+	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','1','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
 	        		$res= $conn->query($sql);
 	        	}
 	        	
