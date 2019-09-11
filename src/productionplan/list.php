@@ -42,6 +42,14 @@
 //				}
 	
 				$arr[$i]['reason'] = $row['reason'];
+				$sql10="select id from heattreatment where productDrawingNumber = '".$row['figure_number']."'";
+				$res10 = $conn -> query($sql10);
+				if ($res10 -> num_rows > 0){
+					$forbidden=0;
+				}else{
+					$forbidden=1;
+				}
+				$arr[$i]['forbidden'] = $forbidden;
 				$i++;
 			}
 		}
