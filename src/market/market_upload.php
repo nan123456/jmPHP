@@ -2,9 +2,9 @@
 	require("../../conn.php");
 	require_once '../../oss/sdk.class.php';
 	require_once '../../oss/util/oss_util.class.php';
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	set_time_limit(0); //使无响应时间限制
-	$ret_data = '';
+	$ret_data = array();
 	
 	$access_id = "LTAIIkOiJmMiAZ3V";
 	$access_key = "NsVQ9HgzGuDXcHz0buas4lWzotCw9G";

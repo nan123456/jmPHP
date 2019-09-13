@@ -1,7 +1,7 @@
 <?php
 	require("../../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$ret_data = '';
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	$ret_data = array();
 	$id = $_POST["id"];
 	$listname=$_POST["listname"];
 	$sql = "DELETE  FROM list WHERE id='".$id."'";

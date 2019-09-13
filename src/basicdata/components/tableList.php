@@ -1,7 +1,7 @@
 <?php
     require("../../../conn.php");
-    $ret_data = '';
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+    $ret_data = array();
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
     $sql = "select id,name,job,gNum,phone_number,department,terminal,workShop from user";
     $res = $conn->query($sql);
     if($res->num_rows>0){

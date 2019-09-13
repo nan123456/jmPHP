@@ -1,8 +1,8 @@
 <?php
 	require("../../conn.php");
 	$flag = isset($_REQUEST["flag"]) ? $_REQUEST["flag"] : "";
-	$ret_data = '';
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	$ret_data = array();
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	switch($flag){
 		case 'updata':
 			$ordernumber = isset($_POST["ordernumber"])?$_POST["ordernumber"]:'';

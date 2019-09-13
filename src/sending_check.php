@@ -1,7 +1,7 @@
 <?php
 	require ("../conn.php");
 //	header("Access-Control-Allow-Origin: *");
-	$ret_data = '';
+	$ret_data = array();
 	$flag = isset($_POST["flag"]) ? $_POST["flag"] : '';
 	$number = isset($_POST["number"]) ? $_POST["number"] : '';
 //	$number = "1000634971";

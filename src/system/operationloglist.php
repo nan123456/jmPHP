@@ -1,8 +1,8 @@
 <?php
 	require ("../../conn.php");
-	header("Access-Control-Allow-Origin: *");
+//	header("Access-Control-Allow-Origin: *");
 	// 允许任意域名发起的跨域请求
-	$ret_data = '';
+	$ret_data = array();
 	$sql = "select username,time,type,thing from daily_record order by time desc";
 	$res = $conn -> query($sql);
 	if ($res -> num_rows > 0) {

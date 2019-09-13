@@ -1,7 +1,7 @@
 <?php
 	require("../../../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$ret_data = '';
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	$ret_data = array();
 	$ret_data["success"] = 'success';
 	$gNum = isset($_POST["gNum"])?$_POST["gNum"] : '';
 	$name = isset($_POST["name"])?$_POST["name"] : '';
