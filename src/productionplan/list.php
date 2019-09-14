@@ -68,8 +68,8 @@
 				//规格
 				// $number = explode("#", $row['number']);
 				// $arr[$i]['number'] = $number[0] . "#"; //工单
-				$arr[$i]['number']=$row['number']. "#"; //工单
-				$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
+				$arr[$i]['number']=$row['number']; //工单
+				$arr[$i]['product_name'] =$row['product_name']; //产品名称
 				$arr[$i]['remark'] = $row['remark'];
 				$arr[$i]['routeid'] = $row['routeid'];
 //				if ($row['backMark'] == "1") {
@@ -160,8 +160,8 @@
 	      // $number4 = explode("#",$row4['number']);
 	      // $arr4[$i]['number'] = $number4[0] . "#";
 		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-		  $arr4[$i]['number']=$row4['number']. "#"; //工单
-		  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+		  $arr4[$i]['number']=$row4['number']; //工单
+		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
 	      $arr4[$i]['station'] = $row4['station'];
 	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -216,8 +216,8 @@
 	      // $number4 = explode("#",$row4['number']);
 	      // $arr4[$i]['number'] = $number4[0] . "#";
 		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-		  $arr4[$i]['number']=$row4['number']. "#"; //工单
-		  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+		  $arr4[$i]['number']=$row4['number']; //工单
+		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
 	      $arr4[$i]['station'] = $row4['station'];
 	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -352,8 +352,8 @@
 				//规格
 				// $number = explode("#", $row['number']);
 				// $arr[$i]['number'] = $number[0] . "#"; //工单
-				$arr[$i]['number']=$row['pnumber']. "#"; //工单
-				$arr[$i]['product_name'] = $row['pnumber'] . $row['product_name']; //产品名称
+				$arr[$i]['number']=$row['pnumber']; //工单
+				$arr[$i]['product_name'] = $row['product_name']; //产品名称
 //				$arr[$i]['remark'] = $row['remark'];
 //				$arr[$i]['routeid'] = $row['routeid'];
 //				if ($row['backMark'] == "1") {

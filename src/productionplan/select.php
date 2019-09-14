@@ -3,12 +3,49 @@
 	// 允许任意域名发起的跨域请求
 	require ("../../conn.php");
 	$arr = array();
+	$heating = array();//热处理查询数组
+	$maching = array();//机械加工查询数组
+	$welding = array();//焊接查询数组
+	$craft = array();//机械制造查询数组	
 	$flag = isset($_POST["flag"]) ? $_POST["flag"] : '';
+	
+	$sql10="select partsName,productDrawingNumber from heattreatment";
+	$res10 = $conn -> query($sql10);
+	$j=0;
+	while ($row10 = $res10 -> fetch_assoc()){
+		$heating[$j]=$row10['partsName'].'_'.$row10['productDrawingNumber'];
+		$j++;
+	}
+	
+	$sql11="SELECT b.pNumber,a.partdrawnumber FROM machiningtable a,project b WHERE a.productdrawnumber=b.number";
+	$res11 = $conn -> query($sql11);
+	$k=0;
+	while ($row11 = $res11 -> fetch_assoc()){
+		$maching[$k]=$row11['pNumber'].'_'.$row11['partdrawnumber'];
+		$k++;
+	}
+	
+	$sql12="select workordernumber,partdrawingnumber from weldingtable";
+	$res12 = $conn -> query($sql12);
+	$l=0;
+	while ($row12 = $res12 -> fetch_assoc()){
+		$welding[$l]=$row12['workordernumber'].'_'.$row12['partdrawingnumber'];
+		$l++;
+	}
+	
+	$sql13="SELECT b.pNumber,a.partdrawnumber FROM craftsmanshiptable a,project b WHERE a.productdrawnumber=b.number";
+	$res13 = $conn -> query($sql13);
+	$m=0;
+	while ($row13 = $res13 -> fetch_assoc()){
+		$craft[$m]=$row13['pNumber'].'_'.$row13['partdrawnumber'];
+		$m++;
+	}
+
 	if ($flag == "Select") {
 		$isfinish = isset($_POST["isfinish"]) ? $_POST["isfinish"] : '';
 		$list = isset($_POST["list"]) ? $_POST["list"] : '';
 		if ($isfinish == '0') {
-			$sql = "select modid,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='0' and Pisfinish='0' and route in $list  ORDER BY backMark DESC,routeid";
+			$sql = "select modid,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and Pisfinish='0' and route in $list  ORDER BY backMark DESC,routeid";
 			$res = $conn -> query($sql);
 			if ($res -> num_rows == TRUE) {
 				$i = 0;
@@ -30,8 +67,8 @@
 					// $arr[$i]['number'] = $number[0] . "#";
 					//工单
 					// $arr[$i]['product_name'] = $number[0] . $row['product_name'];
-					$arr[$i]['number']=$row['number']. "#"; //工单
-					$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
+					$arr[$i]['number']=$row['number']; //工单
+					$arr[$i]['product_name'] = $row['product_name']; //产品名称
 					//产品名称
 					$arr[$i]['remark'] = $row['remark'];
 					$arr[$i]['routeid'] = $row['routeid'];
@@ -42,7 +79,36 @@
 					}
 	
 					$arr[$i]['reason'] = $row['reason'];
-					$i++;
+					$arr[$i]['pNumber'] = $row['pNumber'];
+					$p_figure_number=$row['pNumber'].'_'.$row['figure_number'];
+				//后台返回值1不可勾选，0为无工单号可勾选，2为有工单号有工艺卡可勾选，3为该工艺路线不需要工艺卡可勾选
+				if($row['figure_number']==''){
+					//无工单号
+					$forbidden=0;
+				}else if($row['route']=='IA'||$row['route']=='IA1'||$row['route']=='IG'||$row['route']=='L焊'){
+					//需要焊接或机械制造工艺卡
+					if(in_array($p_figure_number,$welding)||in_array($p_figure_number,$craft)){
+						//存在焊接或机械制造工艺卡
+						$forbidden=2;
+					}else{
+						//不存在焊接或机械制造工艺卡
+						$forbidden=1;
+					}
+				}else if($row['route']=='T粗'||$row['route']=='T淬'||$row['route']=='T调'||$row['route']=='T发黑'||$row['route']=='T焊'||$row['route']=='T划线'||$row['route']=='T坡'||$row['route']=='T退'||$row['route']=='T线'||$row['route']=='T正火'||$row['route']=='T装'){
+					//需要热处理或机械加工工艺卡
+					if(in_array($p_figure_number,$heating)||in_array($p_figure_number,$maching)){
+						//存在热处理或机械加工工艺卡
+						$forbidden=2;
+					}else{
+						//不存在热处理或机械加工工艺卡
+						$forbidden=1;
+					}					
+				}else{
+					//该工艺路线不需要工艺卡
+					$forbidden=3;
+				}
+				$arr[$i]['forbidden'] = $forbidden;
+				$i++;
 				}
 			}
 			// 未排产
@@ -73,8 +139,8 @@
 	      // $number4 = explode("#",$row4['number']);
 	      // $arr4[$i]['number'] = $number4[0] . "#";
 		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-		  $arr4[$i]['number']=$row4['number']. "#"; //工单
-		  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+		  $arr4[$i]['number']=$row4['number']; //工单
+		  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
 	      $arr4[$i]['station'] = $row4['station'];
 	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -141,8 +207,8 @@
 		      // $number4 = explode("#",$row4['number']);
 		      // $arr4[$i]['number'] = $number4[0] . "#";
 			  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-			  $arr4[$i]['number']=$row4['number']. "#"; //工单
-			  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+			  $arr4[$i]['number']=$row4['number']; //工单
+			  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 		      $arr4[$i]['remark'] = $row4['remark'];
 		      $arr4[$i]['station'] = $row4['station'];
 		      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -185,12 +251,12 @@
 		  
 		  
 		}
-	}else{
+	}else if($flag=='search'){
 		$isfinish = isset($_POST["isfinish"]) ? $_POST["isfinish"] : '';
 		$searchValue = isset($_POST["searchValue"]) ? $_POST["searchValue"] : '';
 		$searchCondition = isset($_POST["searchCondition"]) ? $_POST["searchCondition"] : '';
 		if ($isfinish == '0') {
-			$sql = "select modid,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='0' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
+			$sql = "select modid,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
 			$res = $conn -> query($sql);
 			if ($res -> num_rows == TRUE) {
 				$i = 0;
@@ -208,8 +274,8 @@
 					//数量
 					$arr[$i]['child_material'] = $row['child_material'];
 					//规格
-					$arr[$i]['number']=$row['number']. "#"; //工单
-					$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
+					$arr[$i]['number']=$row['number']; //工单
+					$arr[$i]['product_name'] =  $row['product_name']; //产品名称
 					$arr[$i]['remark'] = $row['remark'];
 					$arr[$i]['routeid'] = $row['routeid'];
 					if ($row['backMark'] == "1") {
@@ -219,7 +285,36 @@
 					}
 	
 					$arr[$i]['reason'] = $row['reason'];
-					$i++;
+					$arr[$i]['pNumber'] = $row['pNumber'];
+					$p_figure_number=$row['pNumber'].'_'.$row['figure_number'];
+				//后台返回值1不可勾选，0为无工单号可勾选，2为有工单号有工艺卡可勾选，3为该工艺路线不需要工艺卡可勾选
+				if($row['figure_number']==''){
+					//无工单号
+					$forbidden=0;
+				}else if($row['route']=='IA'||$row['route']=='IA1'||$row['route']=='IG'||$row['route']=='L焊'){
+					//需要焊接或机械制造工艺卡
+					if(in_array($p_figure_number,$welding)||in_array($p_figure_number,$craft)){
+						//存在焊接或机械制造工艺卡
+						$forbidden=2;
+					}else{
+						//不存在焊接或机械制造工艺卡
+						$forbidden=1;
+					}
+				}else if($row['route']=='T粗'||$row['route']=='T淬'||$row['route']=='T调'||$row['route']=='T发黑'||$row['route']=='T焊'||$row['route']=='T划线'||$row['route']=='T坡'||$row['route']=='T退'||$row['route']=='T线'||$row['route']=='T正火'||$row['route']=='T装'){
+					//需要热处理或机械加工工艺卡
+					if(in_array($p_figure_number,$heating)||in_array($p_figure_number,$maching)){
+						//存在热处理或机械加工工艺卡
+						$forbidden=2;
+					}else{
+						//不存在热处理或机械加工工艺卡
+						$forbidden=1;
+					}					
+				}else{
+					//该工艺路线不需要工艺卡
+					$forbidden=3;
+				}
+				$arr[$i]['forbidden'] = $forbidden;
+				$i++;
 				}
 			}
 			// 未排产
@@ -250,8 +345,8 @@
 	      // $number4 = explode("#",$row4['number']);
 	      // $arr4[$i]['number'] = $number4[0] . "#";
 		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-		  $arr4[$i]['number']=$row4['number']. "#"; //工单
-		  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+		  $arr4[$i]['number']=$row4['number']; //工单
+		  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
 	      $arr4[$i]['station'] = $row4['station'];
 	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
@@ -318,8 +413,8 @@
 		      // $number4 = explode("#",$row4['number']);
 		      // $arr4[$i]['number'] = $number4[0] . "#";
 			  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-			  $arr4[$i]['number']=$row4['number']. "#"; //工单
-			  $arr4[$i]['product_name'] = $row4['number'] . $row4['product_name']; //产品名称
+			  $arr4[$i]['number']=$row4['number']; //工单
+			  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 		      $arr4[$i]['remark'] = $row4['remark'];
 		      $arr4[$i]['station'] = $row4['station'];
 		      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
