@@ -44,7 +44,7 @@
 	
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and Pisfinish='0' ORDER BY backMark DESC,routeid";
+		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and isexterior='0' and Pisfinish='0' ORDER BY backMark DESC,routeid";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
