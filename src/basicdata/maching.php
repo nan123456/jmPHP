@@ -39,12 +39,11 @@
 				}
 					
 			}
-
 			//保存信息
 			if(count($machiningTableHeader) > 0){
-				$sql = "INSERT INTO machiningtable ( craftsmanshiptree_id, hendnumber, productname, ownpartname, partname, workpiecenumber, productdrawnumber, ownpartdrawnumber, partdrawnumber, quantity, bottonimage, authorizedname, auditor, ctime ) VALUES(";
+				$sql = "INSERT INTO machiningtable ( craftsmanshiptree_id, hendnumber, productname, ownpartname, partname, workpiecenumber, productdrawnumber, ownpartdrawnumber, partdrawnumber, quantity, bottonimage, authorizedname, auditor, ctime,pnumber ) VALUES(";
 				$sql .="'".$treeId."','".$machiningTableHeader["hendNumber"]."','".$machiningTableHeader["productName"]."','".$machiningTableHeader["ownPartName"]."','".$machiningTableHeader["partsName"]."','".$machiningTableHeader["workpieceNumber"]."'";
-				$sql .=",'".$machiningTableHeader["productDrawingNumber"]."','".$machiningTableHeader["ownPartDrawingNumber"]."','".$machiningTableHeader["partsDrawingNumber"]."','".$machiningTableHeader["quantity"]."','".$fileSaveSql."','".$machiningTableFooter["name1"]."','".$machiningTableFooter["name2"]."','".time()."')";
+				$sql .=",'".$machiningTableHeader["productDrawingNumber"]."','".$machiningTableHeader["ownPartDrawingNumber"]."','".$machiningTableHeader["partsDrawingNumber"]."','".$machiningTableHeader["quantity"]."','".$fileSaveSql."','".$machiningTableFooter["name1"]."','".$machiningTableFooter["name2"]."','".time()."','".$machiningTableHeader["pnumber"]."')";
 				$autoIncrementId = $conn->query($sql) ? $conn->insert_id : "";//获取成功插入后的id
 				
 				if(!empty($autoIncrementId)){

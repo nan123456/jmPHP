@@ -319,7 +319,7 @@
 		
 		case "getTableListData" ://--------------查询焊接与制作工艺表格列表信息------------------
 			//接收数据
-			$tableFlag = isset($_GET["tableFlag"]) ? $_GET["tableFlag"] :"";//1为焊接，2为制造
+			$tableFlag = isset($_GET["tableFlag"]) ? $_GET["tableFlag"] :"";//1为焊接，2为制造，3为热处理，4为机加工
 			$relateId = isset($_GET["relateId"]) ? $_GET["relateId"] :"";
 			
 			//返回信息
@@ -630,13 +630,13 @@
 			//保存单一信息
 			if(count($craftsmanshipTableHeader) > 0){
 				$sql = "INSERT INTO `craftsmanshiptable`(`craftsmanshiptree_id`,`model`,`productname`,`ownpartname`,`partname`,`workpiecenumber`,`productdrawnumber`,`ownpartdrawnumber`,`partdrawnumber`";
-				$sql .= ",`quantity`,`finalconclusion`,`inspector`,`inspectionaudit`,`mark`,`numberofplaces`,`changethefilenumber`,`signature`,`date`,`establishment`,`review`,`conclusion`,`inconsistentconfirmation`,`firstfive`,`ctime`) VALUES(";
+				$sql .= ",`quantity`,`finalconclusion`,`inspector`,`inspectionaudit`,`mark`,`numberofplaces`,`changethefilenumber`,`signature`,`date`,`establishment`,`review`,`conclusion`,`inconsistentconfirmation`,`firstfive`,`ctime`,`pnumber`) VALUES(";
 				$sql .= "'".$treeId."','1'";
 				$sql .= ",'".$craftsmanshipTableHeader["productName"]."','".$craftsmanshipTableHeader["ownPartName"]."','".$craftsmanshipTableHeader["partsName"]."','".$craftsmanshipTableHeader["workpieceNumber"]."'";
 				$sql .= ",'".$craftsmanshipTableHeader["productDrawingNumber"]."','".$craftsmanshipTableHeader["ownPartDrawingNumber"]."','".$craftsmanshipTableHeader["partsDrawingNumber"]."','".$craftsmanshipTableHeader["quantity"]."'";
 				$sql .= ",'".$craftsmanshipTableFooter["finalConclusion"]."','".$craftsmanshipTableFooter["inspector"]."','".$craftsmanshipTableFooter["inspectionAudit"]."','".$craftsmanshipTableFooter["mark"]."','".$craftsmanshipTableFooter["numberOfPlaces"]."'";
 				$sql .= ",'".$craftsmanshipTableFooter["changeTheFileNumber"]."','".$craftsmanshipTableFooter["signature"]."','".$craftsmanshipTableFooter["date"]."','".$craftsmanshipTableFooter["establishment"]."','".$craftsmanshipTableFooter["review"]."'";
-				$sql .= ",'".$craftsmanshipTableBodyResult["conclusion"]."','".$craftsmanshipTableBodyResult["inconsistentConfirmation"]."','".$fileSaveSql."','".time()."')";
+				$sql .= ",'".$craftsmanshipTableBodyResult["conclusion"]."','".$craftsmanshipTableBodyResult["inconsistentConfirmation"]."','".$fileSaveSql."','".time()."','".$craftsmanshipTableHeader["pnumber"]."')";
 				echo $sql;
 				$autoIncrementId = $conn->query($sql) ? $conn->insert_id : "";//获取成功插入后的id
 				

@@ -465,11 +465,11 @@
 		}else if($isfinish=='w'){
 			//外协
 			if($searchCondition=='product_name'){
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.name LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.name LIKE '%$searchValue%') ORDER BY id";
 			}else if($searchCondition=='number'){
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.$searchCondition LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.$searchCondition LIKE '%$searchValue%') ORDER BY id";
 			}else{
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (a.$searchCondition LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (a.$searchCondition LIKE '%$searchValue%') ORDER BY id";
 			}
 		
 		
@@ -497,6 +497,11 @@
 				// $arr[$i]['number'] = $number[0] . "#"; //工单
 				$arr[$i]['number']=$row['pnumber']; //工单
 				$arr[$i]['product_name'] = $row['product_name']; //产品名称
+				if($row['isfinish']=='1'){
+					$arr[$i]['finish'] = '已完成';
+				}else{
+					$arr[$i]['finish'] = '未完成';
+				}
 //				$arr[$i]['remark'] = $row['remark'];
 //				$arr[$i]['routeid'] = $row['routeid'];
 //				if ($row['backMark'] == "1") {

@@ -1,7 +1,8 @@
 <?php
 	require('../../../conn.php');
 	$flag = isset($_REQUEST["flag"]) ? $_REQUEST["flag"] : "";
-//	$flag='time';
+	$flag='time';
+	date_default_timezone_set("PRC");//设置时区为中国时区
 	switch($flag){
 		//获取最新温度
 		case 'temperature' :
@@ -28,8 +29,15 @@
 			$result = $conn->query($sql);
 			$row =$result->fetch_assoc();
 			$sjc=$row['ctime'];
-			$time=date( "H:i:s",$sjc);	
-			echo $time;		
+			$nowtime=time();//当前秒级时间戳
+			$interval=$nowtime-$sjc;//时间间隔
+			if($interval>120){
+				//间隔时间大于2分钟
+				echo	 '硬件获取时间已超两分钟，请检查硬件';
+			}else{
+				$time=date( "H:i:s",$sjc);	
+				echo $time;	
+			}	
 			break;
 	}
 ?>

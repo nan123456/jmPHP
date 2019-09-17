@@ -2,14 +2,19 @@
 	require("../conn.php");
 //	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	set_time_limit(0); //使无响应时间限制
-	$ret_data = array();
-		
+	$ret_data = array();	
 //	$ret_data["ftype"] = isset($_POST["ftype"])?$_POST["ftype"] : '';
 	$ret_data["fname"] = isset($_POST["fname"])?$_POST["fname"] : '';
 	$ret_data["name"] = isset($_POST["name"])?$_POST["name"] : '';
 	$ret_data["number"] = isset($_POST["number"])?$_POST["number"] : '';
-	$ret_data["pnumber"] = isset($_POST["pnumber"])?$_POST["pnumber"] : '';	
-	$ret_data["type"] = isset($_POST["type"])?$_POST["type"] : '';
+	$ret_data["pnumber"] = isset($_POST["pnumber"])?$_POST["pnumber"] : '';
+	$type=isset($_POST["type"])?$_POST["type"] : '';
+	if($type){
+		$typearr=explode('_',$type);
+		$ret_data["typevalue"]=$typearr[0];
+		$ret_data["type"]=$typearr[1];
+	}
+//	$ret_data["type"] = isset($_POST["type"])?$_POST["type"] : '';
 	$ret_data["date"] = isset($_POST["date"])?$_POST["date"] : '';
 	$ret_data["ftype"]=substr($ret_data["fname"],-3,3);
 	
@@ -26,6 +31,7 @@
 	$number = $ret_data["number"];
 	$type = $ret_data["type"];
 	$date = $ret_data["date"];
+	$typevalue = $ret_data["typevalue"];
 	//查询数据库，检查是否已存在该项目
 	$asql = "SELECT id FROM project WHERE number = '$number'";
 	$ares = $conn->query($asql);
@@ -58,7 +64,12 @@
 		$highestRow=intval($highestRow);
 		$ret_data["highestRow"]=$highestRow; 
    	 	$ctime = date('Y-m-d H:i:s');
-	 	$bsql = "INSERT INTO project (name,type,number,pNumber,end_date,isfinish,ctime)VALUES('$name','$type','$number','$pnumber','$date','0','$ctime')";
+   	 	$sjc = time();
+   	 	$fsql = "INSERT INTO `weldingtree`(`proname`,`procode`,`category`,`ctime`,`pnumber`) VALUES('$name','$number','$typevalue','$sjc','$pnumber')";
+   	 	$fres = $conn->query($fsql);
+   	 	$gsql = "INSERT INTO `craftsmanshiptree`(`proname`,`procode`,`category`,`ctime`,`pnumber`) VALUES('$name','$number','$typevalue','$sjc','$pnumber')";
+   	 	$gres = $conn->query($gsql);
+	 	$bsql = "INSERT INTO project (name,type,number,pNumber,end_date,isfinish,ctime,typevalue)VALUES('$name','$type','$number','$pnumber','$date','0','$ctime','$typevalue')";
 		$bres = $conn->query($bsql);
 	  	$csql = "SELECT id FROM project WHERE number = '$number'";
 	 	$cres = $conn->query($csql);

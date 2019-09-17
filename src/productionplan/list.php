@@ -17,11 +17,11 @@
 		$j++;
 	}
 	
-	$sql11="SELECT b.pNumber,a.partdrawnumber FROM machiningtable a,project b WHERE a.productdrawnumber=b.number";
+	$sql11="SELECT pnumber,partdrawnumber FROM machiningtable";
 	$res11 = $conn -> query($sql11);
 	$k=0;
 	while ($row11 = $res11 -> fetch_assoc()){
-		$maching[$k]=$row11['pNumber'].'_'.$row11['partdrawnumber'];
+		$maching[$k]=$row11['pnumber'].'_'.$row11['partdrawnumber'];
 		$k++;
 	}
 	
@@ -33,7 +33,7 @@
 		$l++;
 	}
 	
-	$sql13="SELECT b.pNumber,a.partdrawnumber FROM craftsmanshiptable a,project b WHERE a.productdrawnumber=b.number";
+	$sql13="SELECT pnumber,partdrawnumber FROM craftsmanshiptable";
 	$res13 = $conn -> query($sql13);
 	$m=0;
 	while ($row13 = $res13 -> fetch_assoc()){
@@ -328,7 +328,7 @@
 		$json = '{"success":true,"rows4":' . $list_data . '}';
 	}else if($flag=='exterior'){
 		// 获取列表数据
-		$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY id";
+		$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,a.isfinish,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY id";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -354,6 +354,11 @@
 				// $arr[$i]['number'] = $number[0] . "#"; //工单
 				$arr[$i]['number']=$row['pnumber']; //工单
 				$arr[$i]['product_name'] = $row['product_name']; //产品名称
+				if($row['isfinish']=='1'){
+					$arr[$i]['finish'] = '已完成';
+				}else{
+					$arr[$i]['finish'] = '未完成';
+				}
 //				$arr[$i]['remark'] = $row['remark'];
 //				$arr[$i]['routeid'] = $row['routeid'];
 //				if ($row['backMark'] == "1") {
