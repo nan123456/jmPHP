@@ -12,11 +12,11 @@
 	if($res->num_rows>0){
 		while($row=$res->fetch_assoc()){
 			if($row['isfinish']=='0'){
-				$row['isfinish'] = "未完成";
+				$row['isfinish'] = "未开工";
 			}elseif($row['isfinish']=='1'){
 				$row['isfinish'] = "已完成";
 			}else{
-				$row['isfinish'] = "生成中";
+				$row['isfinish'] = "已就工";
 			}
 			$alter = new Alteration();
 			$alter->name = $row['isfinish'];
