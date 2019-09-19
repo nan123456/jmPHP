@@ -65,9 +65,14 @@
 	}else{
 		$state = $_POST["state"];
 		if($state==1){
+			//未检验
 			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio from test where isfinish = '1'";
-		}else{
-			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio from test where isfinish = '3'";
+		}else if($state==4){
+			//不合格
+			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio from test where isfinish = '3' and unqualified>'0'";
+		}else if($state==3){
+			//合格
+			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio from test where isfinish = '3' and (count-unqualified-reviews-dumping)>'0'";
 		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){

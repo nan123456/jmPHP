@@ -21,15 +21,15 @@
 				}else{
 					$ret_data["data"][$i]["backMark"] = "是";
 				}
-//				$arr = array();
-//				$arr=explode(',',$row["part_url"]);
-				$part_url=$row["part_url"];
+				$arr = array();
+				$arr=explode(',',$row["part_url"]);
+//				$part_url=$row["part_url"];
 				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
-//				foreach($arr as $key => $url){
-//					$arr[$key] = $base .$url;
-//				}	
-				$ret_data["data"][$i]["photourl"] = $base.$part_url;
-				
+				foreach($arr as $key => $url){
+					$arr[$key] = $base .$url;
+				}	
+//				$ret_data["data"][$i]["photourl"] = $base.$part_url;
+				$ret_data["data"][$i]["photourl"] = $arr;
 				$ret_data["data"][$i]["reason"] = $row["reason"];
 				$ret_data["data"][$i]["otime"] = $row["otime"];
 				$ret_data["data"][$i]["stime"] = $row["stime"];
