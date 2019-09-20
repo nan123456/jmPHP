@@ -1,7 +1,7 @@
 <?php
 	require('../../../conn.php');
 	$flag = isset($_REQUEST["flag"]) ? $_REQUEST["flag"] : "";
-	$flag='time';
+//	$flag='time';
 	date_default_timezone_set("PRC");//设置时区为中国时区
 	switch($flag){
 		//获取最新温度

@@ -14,12 +14,22 @@
 			$treeId = isset($_POST["treeId"]) ? $_POST["treeId"] :"";//表【craftsmanshiptree】的id
 			$heattreatmentTableHeader = isset($_POST["heattreatmentTableHeader"]) ? json_decode($_POST["heattreatmentTableHeader"],TRUE) : array();
 			$model = isset($_REQUEST["model"]) ? $_REQUEST["model"] : "";
+			$temperature = isset($_POST["temperature"]) ? json_decode($_POST["temperature"],TRUE) : array();
+			$time = isset($_POST["time"]) ? json_decode($_POST["time"],TRUE) : array();
 			//返回数据
 			$returnData = array(
 				"state" => "success",
 				"message" => "",
 				"sql" => ""				
 			);
+			$temperature_string='';
+			for($i=0;$i<count($temperature);$i++){
+				$temperature_string=$temperature_string.$temperature[$i].'|';
+			}
+			$time_string='';
+			for($j=0;$j<count($time);$j++){
+				$time_string=$time_string.$time[$j].'|';
+			}
 			//保存单一信息
 			if(count($heattreatmentTableHeader) > 0){
 				$sql  = "INSERT INTO `heattreatment`(weldingtree_id,model,productName,ownPartName,partsName,productDrawingNumber,ownPartDrawingNumber";
@@ -27,6 +37,13 @@
 				$sql .= ",'".$heattreatmentTableHeader["partsName"]."','".$heattreatmentTableHeader["productDrawingNumber"]."','".$heattreatmentTableHeader["ownPartDrawingNumber"]."'";
 				$sql .= ",'".$heattreatmentTableHeader["partsDrawingNumber"]."','".time()."')";
 				$conn->query($sql);
+				
+				$sql2="select id from heattreatment where productDrawingNumber='".$heattreatmentTableHeader["productDrawingNumber"]."' and partsName='".$heattreatmentTableHeader["partsName"]."' order by id desc limit 1";
+				$res2=$conn->query($sql2);
+				$row2 =$res2->fetch_assoc();
+				
+				$sql3="INSERT INTO heattreatbody(heattreatment_id,model,temperature,time)VALUES('".$row2["id"]."','$model','$temperature_string','$time_string')";
+				$res3=$conn->query($sql3);
 			}else{
 				$returnData["state"] = "failure";
 				$returnData["message"] = "主要数据为空";
@@ -66,6 +83,11 @@
 
 				}
 			}
+			$sql2="SELECT temperature,time FROM `heattreatbody` WHERE `heattreatment_id`='".$contactId."'";
+			$result2 = $conn->query($sql2);
+			$row2 = $result2->fetch_assoc();
+			$returnData["temperature"]=$row2["temperature"];
+			$returnData["time"]=$row2["time"];
 			$json = json_encode($returnData);
 			echo $json;
 			break;
