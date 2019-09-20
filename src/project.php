@@ -1,7 +1,7 @@
 <?php
 //	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	require("../conn.php");
-	$ret_data='';
+	$ret_data=array();
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	$id = isset($_POST["id"])?$_POST["id"]:'';
 	

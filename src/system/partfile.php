@@ -1,12 +1,13 @@
 <?php
 	require("../../conn.php");
-	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$ret_data='';
+//	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
+	$ret_data=array();
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 
 	if($flag == "partfile"){
 		$id = isset($_POST["id"])?$_POST["id"]:'';
-		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,photourl from onfile where id = '$id' order by Rid ";
+//		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,photourl from onfile where id = '$id' order by Rid ";
+		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,part_url from onfile where id = '$id' order by Rid ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -21,13 +22,14 @@
 					$ret_data["data"][$i]["backMark"] = "是";
 				}
 				$arr = array();
-				$arr=explode(',',$row["photourl"]);
-				$base = "http://jmmes.oss-cn-shenzhen.aliyuncs.com/partUpload/";
+				$arr=explode(',',$row["part_url"]);
+//				$part_url=$row["part_url"];
+				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
 				foreach($arr as $key => $url){
 					$arr[$key] = $base .$url;
 				}	
+//				$ret_data["data"][$i]["photourl"] = $base.$part_url;
 				$ret_data["data"][$i]["photourl"] = $arr;
-				
 				$ret_data["data"][$i]["reason"] = $row["reason"];
 				$ret_data["data"][$i]["otime"] = $row["otime"];
 				$ret_data["data"][$i]["stime"] = $row["stime"];

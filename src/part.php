@@ -161,7 +161,7 @@
 				$ret_data["radio"] = $row["radio"];
 				$arr = array();
 				$arr=explode(',',$row["part_url"]);
-				$base = "http://jmmes.oss-cn-shenzhen.aliyuncs.com/partUpload/";
+				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
 				foreach($arr as $key => $url){
 					$arr[$key] = $base .$url;
 				}	

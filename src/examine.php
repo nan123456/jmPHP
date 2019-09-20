@@ -1,11 +1,12 @@
 <?php
 	require ("../conn.php");
-	header("Access-Control-Allow-Origin: *");
+//	header("Access-Control-Allow-Origin: *");
 	// 允许任意域名发起的跨域请求
 	$ret_data = array();
 	$flag = isset($_POST["flag"]) ? $_POST["flag"] : '';
 	if($flag == "Select"){
-		$sql = "select Wmodid,station,name,route,count,figure_number,radio,photourl,inspectcount from test where inspectcount !='0' ORDER BY ftime desc ";
+//		$sql = "select Wmodid,station,name,route,count,figure_number,radio,photourl,inspectcount from test where inspectcount !='0' ORDER BY ftime desc ";
+		$sql="select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,inspectcount from test where isfinish = '1'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -62,10 +63,17 @@
 			}
 		$ret_data["success"] = 'success';
 	}else{
-//		$state = 3;
 		$state = $_POST["state"];
-		$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio from test where isfinish = '".$state."'";
-		//  $sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,inspectcount from test where inspectcount !='0'";
+		if($state==1){
+			//未检验
+			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio from test where isfinish = '1'";
+		}else if($state==4){
+			//不合格
+			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio from test where isfinish = '3' and unqualified>'0'";
+		}else if($state==3){
+			//合格
+			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio from test where isfinish = '3' and (count-unqualified-reviews-dumping)>'0'";
+		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -107,6 +115,8 @@
 				$i++;
 			}
 			$ret_data["success"] = 'success';
+		}else{
+			$ret_data["success"] = 'error';
 		}
 	}
 	$conn->close();

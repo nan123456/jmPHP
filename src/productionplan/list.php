@@ -163,8 +163,8 @@
 		  $arr4[$i]['number']=$row4['number']; //工单
 		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
-	      $arr4[$i]['station'] = $row4['station'];
-	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
+//	      $arr4[$i]['station'] = $row4['station'];
+//	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
 	
@@ -219,8 +219,8 @@
 		  $arr4[$i]['number']=$row4['number']; //工单
 		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
-	      $arr4[$i]['station'] = $row4['station'];
-	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
+//	      $arr4[$i]['station'] = $row4['station'];
+//	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
 	
