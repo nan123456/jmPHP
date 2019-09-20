@@ -313,7 +313,7 @@ switch ($flag) {
         $finishcount = $_POST["finishcount"];
         $workstate = '完工';
         $message = $name . "的" . $route . "已完工！";
-        $writtenBy = '$_POST["writtenBy"]';
+        $writtenBy = $_POST["writtenBy"];
 		$sql6 = "UPDATE warehouse SET count='".$finishcount."' where pid='".$pid."' and figure_number='".$figure_number."' and pNumber='".$pNumber."' ";
 		$conn->query($sql6);
         if ($todocount === $finishcount) {

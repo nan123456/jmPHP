@@ -27,6 +27,7 @@
 			if($result -> num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
 					$arr['listname'] = $row['listname'];
+					$arr['isfinish'] = $row['isfinish'];
 				}
 			}
 			$arr['state']="nodata";
