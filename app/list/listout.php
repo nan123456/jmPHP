@@ -84,7 +84,7 @@
 			//装配清单完成
 		case '4':
 			$listid=$_POST['listid'];
-			$time=date("Y/m/d H：i：s");
+			$time=date("Y/m/d");
 			$finishman=$_POST['finishman'];
 //			$listname='1222';
 //			$description='4564';

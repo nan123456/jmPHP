@@ -179,18 +179,21 @@ switch ($flag) {
 			$conn -> query($sql11);
 			$sql12 = "UPDATE review SET reviews='".$reviews."'  WHERE modid='".$modid."' and routeid='".$routeid."'and id='" . $rid . "' ORDER by id LIMIT 1";
 			$conn -> query($sql12);
+			  // 检测当前零件不合格处理是否完成
+			$sql_finish = "SELECT todocount ,reviews ,inspectcount,unqualified from workshop_k where modid='".$modid."' and routeid='".$routeid."'  ";
+			$res_finish = $conn -> query($sql_finish);
 			if ($res_finish -> num_rows > 0) {   
 				while ($row = $res_finish -> fetch_assoc()) {
 					if ($row['todocount'] == '0'  && $row['reviews'] == '0' && $row['inspectcount'] == '0'&& $row['unqualified'] == '0') {
 						 // 更新route进度为完成状态
 						 if($isexterior=="1"){
-						 	$sql10 = "UPDATE route SET isfinish='1' where modid='" . $modid . "' and pid='" . $pid . "'  ";
-			           		$conn->query($sql10);
-			           		$sql10 = "UPDATE part SET isfinish='1' where modid='" . $modid . "' and fid='" . $pid . "' ORDER by id LIMIT 1 ";
-			           		$conn->query($sql10);
+						 	$sql13 = "UPDATE route SET isfinish='1' where modid='" . $modid . "' and pid='" . $pid . "'  ";
+			           		$conn->query($sql13);
+			           		$sql14 = "UPDATE part SET isfinish='1' where modid='" . $modid . "' and fid='" . $pid . "' ORDER by id LIMIT 1 ";
+			           		$conn->query($sql14);
 						 }else{
-						 	$sql10 = "UPDATE route SET isfinish='1' where modid='" . $modid . "' and id='" . $routeid . "' ORDER by id LIMIT 1 ";
-			           		$conn->query($sql10);
+						 	$sql13 = "UPDATE route SET isfinish='1' where modid='" . $modid . "' and id='" . $routeid . "' ORDER by id LIMIT 1 ";
+			           		$conn->query($sql13);
 						 }
 			            
 					}

@@ -19,6 +19,7 @@
 				}
 			}
 			if($isexterior=="1"){
+				$arr['state']="nodata";
 				$sql_state="SELECT * FROM workshop_k where modid='".$modid."'";
 				$res_state = $conn->query($sql_state);
 				if($res_state -> num_rows > 0) {
@@ -116,7 +117,7 @@
 				$arr['photo'] = explode(',',$arrphoto); 
 			}
 			else{
-				$arr['photo'] ='';
+				$arr['photo'] ='null';
 			}
 			$json = json_encode($arr);
 //			$json_url = json_encode($photo);
