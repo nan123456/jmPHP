@@ -1,15 +1,16 @@
 <?php
 	require("../../conn.php");
 	$flag = $_POST["flag"];
-	// $flag = '1';
+//	 $flag = '4';
 	switch ($flag) {
-		//0为查询数据
+		//0为查询未完成装配单数据
 		case '0' : 
-			$sql = "SELECT * FROM list";
+			$sql = "SELECT * FROM list where isfinish=0";
 			$res = $conn->query($sql);
 			if($res -> num_rows > 0) {
 				$i = 0;
 				while($row = $res->fetch_assoc()) {
+					$arr[$i]['listid'] = $row['id'];
 					$arr[$i]['listname'] = $row['listname'];
 					$arr[$i]['description'] = $row['description'];
 					$i++;
@@ -20,7 +21,7 @@
 			break;
 		case '1':
 		    $listid=$_POST['listid'];
-			// $listid='7';
+//			 $listid='13';
 			$sql_search="SELECT * FROM list where id='".$listid."'";
 			$result = $conn->query($sql_search);
 			if($result -> num_rows > 0) {
@@ -46,12 +47,12 @@
 			$json = json_encode($arr);
 			echo $json;
 			break;
-			//shanchu
+			//删除
 			case '2':
 			    $data['state']="error";
 			    $modid=$_POST['modid'];
-				$listname=$_POST['listname'];
-				$sql_del="DELETE FROM listout WHERE modid='".$modid."' and listname='".$listname."'";
+				$listid=$_POST['listid'];
+				$sql_del="DELETE FROM listout WHERE modid='".$modid."' and listid='".$listid."'";
 				$res = $conn->query($sql_del);
 				if($res){
 					$data['state']="success";
@@ -59,7 +60,25 @@
 				$json = json_encode($data);
 				echo $json;
 				break;
-				
+			//4为查询已完成装配单数据
+		case '4' : 
+			$sql = "SELECT * FROM list where isfinish=1";
+			$res = $conn->query($sql);
+			if($res -> num_rows > 0) {
+				$i = 0;
+				while($row = $res->fetch_assoc()) {
+					$arr[$i]['listid'] = $row['id'];
+					$arr[$i]['listname'] = $row['listname'];
+					$arr[$i]['description'] = $row['description'];
+					$i++;
+				}
+			}
+			else{
+				$arr="null";
+			}
+			$json = json_encode($arr);
+			echo $json;
+			break;	
 	}
 	$conn->close();
 ?>

@@ -18,8 +18,8 @@ switch ($flag) {
 			$upfile = $_FILES["upfile" . $index];
 			//上传文件名
 			$filepathsave = $upfile["name"];
-			$uploadfile = new UploadFile($upfile);
-			if ($uploadfile->uploadFile()) {
+			$uploadfile= new upload($upfile);
+			if ($uploadfile -> useclass()) {
 				$sql = "select part_url from part where fid = '" . $pid . "' AND modid = '" . $modid . "' ";
 				$result = $conn -> query($sql);
 				$row = $result -> fetch_assoc();
@@ -54,8 +54,8 @@ switch ($flag) {
 			$index = $i + 1;
 			$upfile = $_FILES["upfile" . $index];
 			$filepathsave = $upfile["name"];
-			$uploadfile = new UploadFile($upfile);
-			if ($uploadfile->uploadFile()) {
+			$uploadfileoss = new UploadFileOss($upfile);
+			if ($uploadfileoss -> useclass()) {
 				//检验照片
 				$sql = "select photourl from workshop_k where id = '" . $wid . "' ";
 				$result = $conn -> query($sql);
@@ -69,15 +69,9 @@ switch ($flag) {
 					$sql2 = "select part_url from part where fid = '" . $pid . "' AND modid = '" . $modid . "' ";
 					$result = $conn -> query($sql2);
 					$row = $result -> fetch_assoc();
-					if (strlen($row["part_url"]) > 0) {
-						$filepathsave2 = $row["part_url"] . "," . $filepathsave;
-						$sql3 = "UPDATE part SET part_url = '" . $filepathsave2 . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
-						$result = $conn -> query($sql3);
-					} else {
-					//上传照片url
-						$sql4 = "UPDATE part SET part_url = '" . $filepathsave . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
-						$result = $conn -> query($sql4);
-					}
+					$filepathsave2 = $row["part_url"] . "," . $filepathsave;
+					$sql3 = "UPDATE part SET part_url = '" . $filepathsave2 . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
+					$result = $conn -> query($sql3);
 				} else {
 					//上传照片url
 					$sql = "UPDATE workshop_k SET photourl = '" . $filepathsave . "' WHERE id = '" . $wid . "' ";
@@ -86,15 +80,9 @@ switch ($flag) {
 					$sql1 = "select part_url from part where fid = '" . $pid . "' AND modid = '" . $modid . "' ";
 					$result = $conn -> query($sql1);
 					$row = $result -> fetch_assoc();
-					if (strlen($row["part_url"]) > 0) {
-						$filepathsave2 = $row["part_url"] . "," . $filepathsave;
-						$sql3 = "UPDATE part SET part_url = '" . $filepathsave2 . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
-						$result = $conn -> query($sql3);
-					} else {
-					//上传照片url
-						$sql4 = "UPDATE part SET part_url = '" . $filepathsave . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
-						$result = $conn -> query($sql4);
-					}
+					$filepathsave2 = $row["part_url"] . "," . $filepathsave;
+					$sql2 = "UPDATE part SET part_url = '" . $filepathsave2 . "' WHERE fid = '" . $pid . "' AND modid = '" . $modid . "' ";
+					$result = $conn -> query($sql2);
 				}
 
 			} else {
@@ -102,7 +90,6 @@ switch ($flag) {
 			}
 		}
 		break;
-		//评审
 	case '2' :
 		$nub = isset($_POST["nub"]) ? $_POST["nub"] : "";
 		$modid = isset($_POST["modid"]) ? $_POST["modid"] : "";
@@ -117,8 +104,8 @@ switch ($flag) {
 			$index = $i + 1;
 			$upfile = $_FILES["upfile" . $index];
 			$filepathsave = $upfile["name"];
-			$uploadfile = new UploadFile($upfile);
-			if ($uploadfile->uploadFile()) {
+			$uploadfileoss = new UploadFileOss($upfile);
+			if ($uploadfileoss -> useclass()) {
 				//检验照片
 				$sql = "select photourl from review where id = '" . $wid . "' ";
 				$result = $conn -> query($sql);

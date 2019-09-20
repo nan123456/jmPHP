@@ -1,20 +1,14 @@
 <?php 
-/*
- * 上传文件保存
- * */
-
-
-class UploadFile{
-//	protected $fileName;//
-//	protected $maxSize;//文件大小限制
-//	protected $allowMime;//允许的文件类型
-//	protected $allowExt;//文件后缀限制
-	protected $uploadPath;//保存的路径
-//	protected $imgFlag;//是否为真实图片
-	protected $fileInfo;//文件主体 
+class upload{
+	protected $fileName;
+	protected $maxSize;
+	protected $allowMime;
+	protected $allowExt;
+	protected $uploadPath;
+	protected $imgFlag;
+	protected $fileInfo;
 	protected $error;
 	protected $ext;
-//	protected $fileSaveName;
 	/**
 	 * @param string $fileName
 	 * @param string $uploadPath
@@ -23,17 +17,14 @@ class UploadFile{
 	 * @param array $allowExt
 	 * @param array $allowMime
 	 */
-//	public function __construct($fileName='myFile',$uploadPath='./uploads',$imgFlag=true,$maxSize=5242880,$allowExt=array('jpeg','jpg','png','gif'),$allowMime=array('image/jpeg','image/png','image/gif')){
-	public function __construct($fileinfo,$uploadPath='../app/uploadfiles'){
-//		$this->fileName=$fileName;
-//		$this->maxSize=$maxSize;
-//		$this->allowMime=$allowMime;
-//		$this->allowExt=$allowExt;
+	public function __construct($fileName='myFile',$uploadPath='../AboutImg/ProOwn',$imgFlag=true,$maxSize=5242880,$allowExt=array('jpeg','jpg','png','gif'),$allowMime=array('image/jpeg','image/png','image/gif')){
+		$this->fileName=$fileName;
+		$this->maxSize=$maxSize;
+		$this->allowMime=$allowMime;
+		$this->allowExt=$allowExt;
 		$this->uploadPath=$uploadPath;
-//		$this->imgFlag=$imgFlag;
-		
-		$this->fileInfo=$fileinfo;
-//		$this->fileSaveName = $fileSaveName;
+		$this->imgFlag=$imgFlag;
+		$this->fileInfo=$_FILES[$this->fileName];
 	}
 	/**
 	 * 检测上传文件是否出错
@@ -143,9 +134,8 @@ class UploadFile{
 	 * 检测目录不存在则创建
 	 */
 	protected function checkUploadPath(){
-		$uploadpath_gbk = iconv("UTF-8", "GB2312", $this->uploadPath);
-		if(!file_exists($uploadpath_gbk)){
-			mkdir($uploadpath_gbk,0777,true);
+		if(!file_exists($this->uploadPath)){
+			mkdir($this->uploadPath,0777,true);
 		}
 	}
 	/**
@@ -160,21 +150,13 @@ class UploadFile{
 	 * @return string
 	 */
 	public function uploadFile(){
-//		if($this->checkError()&&$this->checkSize()&&$this->checkExt()&&$this->checkMime()&&$this->checkTrueImg()&&$this->checkHTTPPost()){
-		if($this->checkError()){
-			$this->checkUploadPath();//检测保存目录是否存在
-			$this->ext = strtolower(pathinfo($this->fileInfo['name'],PATHINFO_EXTENSION));//获取文件后缀
-			if(isset($this->fileSaveName)){
-				$this->destination = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;
-				$this->destination_gbk = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;				
-			}else{
-				$this->uniName = pathinfo($this->fileInfo['name'],PATHINFO_FILENAME);//重新命名问价
-				$this->destination = $this->uploadPath.'/'.$this->uniName.'.'.$this->ext;//组建完整问价路径
-				$this->destination_gbk = iconv("UTF-8", "GB2312", $this->destination);
-			}				
-			
-			if(@move_uploaded_file($this->fileInfo['tmp_name'], $this->destination_gbk)){
-				return  $this->destination;//返回文件完整目录
+		if($this->checkError()&&$this->checkSize()&&$this->checkExt()&&$this->checkMime()&&$this->checkTrueImg()&&$this->checkHTTPPost()){
+			$this->checkUploadPath();
+			$this->uniName=$this->getUniName();
+			$this->destination=$this->uploadPath.'/'.$this->uniName.'.'.$this->ext;
+			if(@move_uploaded_file($this->fileInfo['tmp_name'], $this->destination)){
+			    $PathTure = '../TongBeiPC/AboutImg/ProOwn/'.$this->uniName.'.'.$this->ext;
+				return  $PathTure;
 			}else{
 				$this->error='文件移动失败';
 				$this->showError();

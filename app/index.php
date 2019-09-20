@@ -2,7 +2,7 @@
 require ("../conn.php");
 	$flag = $_POST["flag"];
 	$time = date("Y-m-d h:i:s");
-//$flag = "5";
+//$flag = "9";
 
 switch ($flag) {
 
@@ -10,20 +10,35 @@ switch ($flag) {
 		// 获取isfinish状态
 		$modid = $_POST["modid"];
 		$pid = $_POST["pid"];
-
-//		$modid = '1000634968';
-//		$pid = '17';
-		$sql = "SELECT isfinish,id,isexterior FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
-		$res = $conn -> query($sql);
-		if ($res -> num_rows > 0) {
-			$i = 0;
-			while ($row = $res -> fetch_assoc()) {
-				$arr[$i]['isfinish'] = $row['isfinish'];
-				$arr[$i]['routeid'] = $row['id'];
-				$arr[$i]['isexterior'] = $row['isexterior'];
-				$i++;
+		$isexterior=$_POST["isexterior"];
+		if($isexterior=="1"){
+			$sql = "SELECT isfinish FROM part WHERE modid='" . $modid . "' AND fid='" . $pid . "' ";
+			$res = $conn -> query($sql);
+			if ($res -> num_rows > 0) {
+				$i = 0;
+				while ($row = $res -> fetch_assoc()) {
+					$arr[$i]['isfinish'] = $row['isfinish'];
+					$arr[$i]['routeid'] ='';
+					$arr[$i]['isexterior'] = '1';
+					$i++;
+				}
 			}
 		}
+		else{
+			$sql = "SELECT isfinish,id,isexterior FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
+			$res = $conn -> query($sql);
+			if ($res -> num_rows > 0) {
+				$i = 0;
+				while ($row = $res -> fetch_assoc()) {
+					$arr[$i]['isfinish'] = $row['isfinish'];
+					$arr[$i]['routeid'] = $row['id'];
+					$arr[$i]['isexterior'] = $row['isexterior'];
+					$i++;
+				}
+			}
+		}
+//		$modid = '1000634968';
+//		$pid = '17';
 		$json = json_encode($arr);
 		//			echo gettype($json);
 		echo $json;
@@ -32,10 +47,13 @@ switch ($flag) {
 		// 获取isfinish状态
 		$modid = $_POST["modid"];
 		$routeid = $_POST["routeid"];
-		
+		$isexternal = $_POST["isexternal"];
 //		$modid = '1000634968';
 //		$routeid = '18959';
-		$sql = "SELECT id,routeid,todocount,inspectcount,isfinish FROM workshop_k WHERE modid='" . $modid . "' AND routeid='" . $routeid . "' AND isfinish!='3' ORDER by id LIMIT 1";
+		if($isexternal=="1"){
+		  $routeid="";
+		}
+		$sql = "SELECT id,routeid,todocount,inspectcount,isfinish,unqualified FROM workshop_k WHERE modid='" . $modid . "' AND routeid='" . $routeid . "' AND isfinish!='3' ORDER by id LIMIT 1";
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
 			$i = 0;
@@ -43,7 +61,9 @@ switch ($flag) {
 				$arr[$i]['todocount'] = $row['todocount'];
 				$arr[$i]['isfinish'] = $row['isfinish'];
 				$arr[$i]['inspectcount'] = $row['inspectcount'];
+				$arr[$i]['unqualified'] = $row['unqualified'];
 				$arr[$i]['routeid'] = $row['routeid'];
+				$arr[$i]['wid'] = $row['id'];
 				$arr[$i]['wid'] = $row['id'];
 				$i++;
 			}
@@ -67,7 +87,8 @@ switch ($flag) {
 		$count = $_POST["count"];
 		$finishcount = $_POST["finishcount"];
 		$workstate = '完工';
-		$message = $name . "的" . $route . "的" . $station . "已完工！";
+		$message = $name . "的" . $route ."已完工！";
+//			$message = $name . "的" . $route . "的" . $station . "已完工！";
 		$writtenBy = $_POST["writtenBy"];
 
 		if ($count == $finishcount) {
@@ -100,7 +121,7 @@ switch ($flag) {
 		$messageid = $_POST["messageid"];
 		$name = $_POST["name"];
 		$workstate = '检验';
-		$message = $name . "的" . $route . "的" . $station . "已检验！";
+		$message = $name . "的" . $route . "已检验！";
 		$remark = $_POST["remark"];
 		$count = $_POST["count"];
 		$inspectcount = $_POST["inspectcount"];
@@ -306,11 +327,17 @@ switch ($flag) {
 		$json = json_encode($arr);
 		echo $json;
 		break;
-		case 'save':
+	case '9':
 		$partid = $_POST["partid"];
         $pid = $_POST["pid"];
         $modid = $_POST["modid"];
         $routeid = $_POST["routeid"];
+        $cuser=$_POST["cuser"];
+//      $partid = '10602';
+//      $modid = '100604284';
+//      $pid='51';
+//      $routeid='43157';
+//      $cuser='小郭';
         $sql = "select name,figure_number,product_name,count,route from productionplan where id='" . $partid . "' and routeid='".$routeid."'";
 		$res = $conn->query($sql);
         if ($res->num_rows > 0) {
@@ -319,13 +346,35 @@ switch ($flag) {
         	$route=$row['route'];
         	}
         }
-        $cuser=$_POST['cuser'];
         $time = date("Y-m-d h:i:s");
-//      $sql_oldupdate= "UPDATE route SET isfinish='0' where modid='$modid' and id='$routeid'";
-//		$conn->query($sql_oldupdate);
-        $sql =  "INSERT INTO workshop_k (modid, routeid, isfinish,ctime,cuser) VALUES ('$modid', '$routeid','0','$time','$cuser')";
-        $res = $conn->query($sql);
-        $data="succcess";
+        $sql_exist= "select routeid from workshop_k where routeid='$routeid'";
+		$res_exist=$conn->query($sql_exist);
+		if($res_exist->num_rows > 0){
+			$sql_update =  "update workshop_k set isfinish='0' where routeid='".$routeid."'"; 
+       		$conn->query($sql_update);
+       		$data="update";
+		}
+		else{
+			$sql2 =  "INSERT INTO workshop_k (modid, routeid, isfinish,ctime,cuser) VALUES ('$modid', '$routeid','0','$time','$cuser')";
+       		$res2 = $conn->query($sql2);
+       		$data="succcess";
+		}
+        $json = json_encode($data);
+		echo $json;
+        break;
+    case '10':
+        $modid = $_POST["modid"];
+        $sql = "select unqualified,inspectcount,isfinish from workshop_k where modid='" . $modid . "' ";
+		$res = $conn->query($sql);
+        if ($res->num_rows > 0) {
+        	$i = 0;
+        	while ($row = $res->fetch_assoc()) {
+        	$data[0]['unqualified']=$row['unqualified'];
+        	$data[0]['inspectcount']=$row['inspectcount'];
+        	$data[0]['isfinish']=$row['isfinish'];
+            $i++;
+        	}
+        }
         $json = json_encode($data);
 		echo $json;
         break;
