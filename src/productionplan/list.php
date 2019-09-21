@@ -37,7 +37,7 @@
 	$res13 = $conn -> query($sql13);
 	$m=0;
 	while ($row13 = $res13 -> fetch_assoc()){
-		$craft[$m]=$row13['pNumber'].'_'.$row13['partdrawnumber'];
+		$craft[$m]=$row13['pnumber'].'_'.$row13['partdrawnumber'];
 		$m++;
 	}
 	

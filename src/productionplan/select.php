@@ -124,7 +124,7 @@
 			}
 		} else if ($isfinish == '2') {
 		// 已就工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='2' and route in $list ORDER BY backMark DESC,routeid";
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='2' and route in ".$list." ORDER BY backMark DESC";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -145,8 +145,8 @@
 		  $arr4[$i]['number']=$row4['number']; //工单
 		  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
-	      $arr4[$i]['station'] = $row4['station'];
-	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
+//	      $arr4[$i]['station'] = $row4['station'];
+//	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
 	
@@ -213,8 +213,8 @@
 			  $arr4[$i]['number']=$row4['number']; //工单
 			  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 		      $arr4[$i]['remark'] = $row4['remark'];
-		      $arr4[$i]['station'] = $row4['station'];
-		      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
+//		      $arr4[$i]['station'] = $row4['station'];
+//		      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 		      $i++;
 		    }
 		

@@ -10,7 +10,7 @@
 	}
 	
 	$flag = isset($_REQUEST["flag"]) ? $_REQUEST["flag"] : "";
-
+//	$flag='machiningUpdateData';
 	switch ($flag) {
 		case 'machingInserData':
 			//接收数据
@@ -96,7 +96,8 @@
 				}
 				
 			}
-
+			$json = json_encode($returnData);
+			echo $json;
 			break;
 		case 'getMachiningInfoData':
 			//接收数据

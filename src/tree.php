@@ -141,7 +141,7 @@
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
 		$pid = isset($_POST["pid"])?$_POST["pid"]:'';
 		$name = isset($_POST["name"])?$_POST["name"]:'';
-//		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
+		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
 		$level = isset($_POST["level"])?$_POST["level"]:'';
 		$key = isset($_POST["key"])?$_POST["key"]:'';
 		$ret_data["level"] = $figure_number.'&'.$name;
