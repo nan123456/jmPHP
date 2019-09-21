@@ -67,8 +67,8 @@
 				$number = $row["number"];
 			}
 		}
-		$str = explode("#",$number);
-		$projectname = $name.$str[1];
+//		$str = explode("#",$number);
+		$projectname = $name.$number;
 		$ret_data["project"]=$projectname;
 		$asql = "SELECT modid,name FROM part  WHERE fid = '$id' AND (belong_part=''||belong_part='$projectname')";
 		$ares=$conn->query($asql);

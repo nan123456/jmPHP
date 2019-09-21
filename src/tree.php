@@ -114,10 +114,10 @@
 		}
 		else if($key==3){
 			//进行中
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and isfinish='2'";
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='2'";
 		}else if($key==4){
 			//已完成
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and isfinish='1'";
+			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='1'";
 		}else if($key==5){
 			//外协
 			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (isexterior=1||isexterior=2||isexterior=3)";

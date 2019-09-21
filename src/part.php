@@ -181,8 +181,8 @@
 				$fid = $row["id"];
 			}
 		}
-		$str = explode("#",$number);
-		$projectname = $name.$str[1];
+//		$str = explode("#",$number);
+		$projectname = $name.$number;
 		//判断是否项目下一级部件的部件
 		$asql = "SELECT belong_part FROM part WHERE id='$id' AND belong_part<>'$projectname' AND belong_part<>''";
 		$ares=$conn->query($asql);
