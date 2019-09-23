@@ -87,20 +87,22 @@
 				$i++;
 			}
 }
-		$sql3 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish = '1'";
-		$res3 = $conn -> query($sql3);
-		if ($res3 -> num_rows > 0) {
+		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish = '1'";
+		$res2 = $conn -> query($sql2);
+		if ($res2 -> num_rows > 0) {
 			$i = 0;
-			while ($row3 = $res3 -> fetch_assoc()) {
+			while ($row2 = $res2 -> fetch_assoc()) {
 				// 规格
-				$arr3[$i]['f5'] = $row3['child_material'];
-				$i++;
+				if($row2['child_material'] != ""&&$row2['child_material'] != Null){
+					$arr2[$i]['f5'] = $row2['child_material'];
+					$i++;					
+				}
 			}
 		}
 	
 		// 工时统计
 		$list_data = json_encode($arr);
-		$fChild_material = json_encode($arr3);
+		$fChild_material = json_encode($arr2);
 		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . '}';
 	}
 	echo $json;

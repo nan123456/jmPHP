@@ -16,6 +16,10 @@
 			$model = isset($_REQUEST["model"]) ? $_REQUEST["model"] : "";
 			$temperature = isset($_POST["temperature"]) ? json_decode($_POST["temperature"],TRUE) : array();
 			$time = isset($_POST["time"]) ? json_decode($_POST["time"],TRUE) : array();
+//			$otherData = isset($_POST["otherData"]) ? json_decode($_POST["otherData"],TRUE) : array();
+//			$selectvalue = isset($_POST["selectvalue"]) ? json_decode($_POST["selectvalue"],TRUE) : array();
+			$otherData = isset($_POST["otherData"]) ? $_POST["otherData"] :"";
+			$selectvalue = isset($_POST["selectvalue"]) ? $_POST["selectvalue"] :"";
 			//返回数据
 			$returnData = array(
 				"state" => "success",
@@ -30,6 +34,8 @@
 			for($j=0;$j<count($time);$j++){
 				$time_string=$time_string.$time[$j].'|';
 			}
+			$otherData_string = $otherData;;
+			$selectvalue_string = $selectvalue;						
 			//保存单一信息
 			if(count($heattreatmentTableHeader) > 0){
 				$sql  = "INSERT INTO `heattreatment`(weldingtree_id,model,productName,ownPartName,partsName,productDrawingNumber,ownPartDrawingNumber";
@@ -42,7 +48,7 @@
 				$res2=$conn->query($sql2);
 				$row2 =$res2->fetch_assoc();
 				
-				$sql3="INSERT INTO heattreatbody(heattreatment_id,model,temperature,time)VALUES('".$row2["id"]."','$model','$temperature_string','$time_string')";
+				$sql3="INSERT INTO heattreatbody(heattreatment_id,model,temperature,time,otherdata,selectvalue)VALUES('".$row2["id"]."','$model','$temperature_string','$time_string','".$otherData_string."','".$selectvalue_string."')";
 				$res3=$conn->query($sql3);
 			}else{
 				$returnData["state"] = "failure";
@@ -83,11 +89,13 @@
 
 				}
 			}
-			$sql2="SELECT temperature,time FROM `heattreatbody` WHERE `heattreatment_id`='".$contactId."'";
+			$sql2="SELECT temperature,time,otherdata,selectvalue FROM `heattreatbody` WHERE `heattreatment_id`='".$contactId."'";
 			$result2 = $conn->query($sql2);
 			$row2 = $result2->fetch_assoc();
 			$returnData["temperature"]=$row2["temperature"];
 			$returnData["time"]=$row2["time"];
+			$returnData["otherData"]=$row2["otherdata"];
+			$returnData["selectvalue"]=$row2["selectvalue"];
 			$json = json_encode($returnData);
 			echo $json;
 			break;
