@@ -2168,22 +2168,22 @@
 				if(!empty($autoIncrementId)){
 						//复制第一个表信息
 						$sql = "INSERT INTO `weldingtableone`(`weldingtable_id`,`weldingnumber`,`materialfirst`,`specificationsfirst`,`materialsecond`,`specificationssecond`,`weldingmethod`,`grooveform`,`consumables`,`specifications`,`weldinglayer`,`weldingtrack`,`gas`,`current`,`actualcurrentfirst`,`actualcurrentsecond`,`voltage`,`actualvoltagefirst`,`actualvoltagesecond`,`specificationnumber`,`ratingnumber`,`flawdetection`,`steelstamp`,`ctime`)";
-						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`materialfirst`,`specificationsfirst`,`materialsecond`,`specificationssecond`,`weldingmethod`,`grooveform`,`consumables`,`specifications`,`weldinglayer`,`weldingtrack`,`gas`,`current`,`actualcurrentfirst`,`actualcurrentsecond`,`voltage`,`actualvoltagefirst`,`actualvoltagesecond`,`specificationnumber`,`ratingnumber`,`flawdetection`,`steelstamp`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtableone` where `weldingtable_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`materialfirst`,`specificationsfirst`,`materialsecond`,`specificationssecond`,`weldingmethod`,`grooveform`,`consumables`,`specifications`,`weldinglayer`,`weldingtrack`,`gas`,`current`,`actualcurrentfirst`,`actualcurrentsecond`,`voltage`,`actualvoltagefirst`,`actualvoltagesecond`,`specificationnumber`,`ratingnumber`,`flawdetection`,`steelstamp`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtableone` where `weldingtable_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						
 						//复制第二个表信息
 						$sql = "INSERT INTO `weldingtabletwo`(`weldingtable_id`,`serialnumber`,`checkcontent`,`processrequirement`,`testresult`,`singnature`,`ctime`)";
-						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`checkcontent`,`processrequirement`,`testresult`,`singnature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtabletwo` where `weldingtable_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`checkcontent`,`processrequirement`,`testresult`,`singnature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtabletwo` where `weldingtable_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						
 						//复制第三个表信息
 						$sql = "INSERT INTO `weldingtablethree`(`weldingtable_id`,`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,`ctime`)";
-						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablethree` where `weldingtable_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablethree` where `weldingtable_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						
 						//复制第四个表信息
 						$sql = "INSERT INTO `weldingtablefour`(`weldingtable_id`,`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,`ctime`)";
-						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablefour` where `weldingtable_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`weldingtable_id`,'".$relateId."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablefour` where `weldingtable_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						$returnData["message"] = "保存成功";
 						$returnData["autoIncrementId"] = $autoIncrementId;
@@ -2220,12 +2220,12 @@
 					if(!empty($autoIncrementId)){
 						//复制模板一表信息
 						$sql = "INSERT INTO `craftsmanshiptableone`(`craftsmanship_id`,`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest_13`,`selftest_14`,`selftest_15`,`selftest_16`,`signature_1`,`qualityinspection_13`,`qualityinspection_14`,`qualityinspection_15`,`qualityinspection_16`,`signature_2`)";
-						$sql .= "select REPLACE(`craftsmanship_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest_13`,`selftest_14`,`selftest_15`,`selftest_16`,`signature_1`,`qualityinspection_13`,`qualityinspection_14`,`qualityinspection_15`,`qualityinspection_16`,`signature_2` from `craftsmanshiptableone` where `craftsmanship_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`craftsmanship_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest_13`,`selftest_14`,`selftest_15`,`selftest_16`,`signature_1`,`qualityinspection_13`,`qualityinspection_14`,`qualityinspection_15`,`qualityinspection_16`,`signature_2` from `craftsmanshiptableone` where `craftsmanship_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						
 						//复制模板二表信息
 						$sql = "INSERT INTO `craftsmanshiptabletwo`(`craftsmanship_id`,`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,`ctime`)";
-						$sql .= "select REPLACE(`craftsmanship_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `craftsmanshiptabletwo` where `craftsmanship_id` = '".$relateId."'";
+						$sql .= "select REPLACE(`craftsmanship_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `craftsmanshiptabletwo` where `craftsmanship_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						$returnData["message"] = "保存成功";
 					}else{
