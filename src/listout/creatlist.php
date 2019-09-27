@@ -71,6 +71,25 @@
 		$json=json_encode($ret_data);
 		echo $json;
 		break;
+		case "detail":
+		$id=$_POST['id'];
+		$sql="SELECT * FROM listshowall WHERE listid='".$id."'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i=0;
+			$ret_data["success"]= 'success';
+			while($row = $res->fetch_assoc()){
+				$ret_data["data"][$i]["num"] = $i+1;
+				$ret_data["data"][$i]["name"] = $row["listname"];
+				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+				$ret_data["data"][$i]["child_material"] = $row["child_material"];
+				$ret_data["data"][$i]["count"] = $row["count"];
+				$i++;
+			}
+		}
+		$json=json_encode($ret_data);
+		echo $json;
+		break;
 		default :
 		echo '{"state":"error","message":"没有对应的标志"}';
 	}
