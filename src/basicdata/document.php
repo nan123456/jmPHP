@@ -99,7 +99,7 @@
 						$row1 = $result1->fetch_assoc();
 						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
 						$returnData["data"][$j]["children"][$i]["label"] = $row["proname"];
-						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"];
+						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"].",".$row1["id"];
 						$returnData["data"][$j]["children"][$i]["children"][0]["label"] = "焊接工艺及检验记录";
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereFlag"] = 1;
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereId"] = $row["id"];
@@ -120,6 +120,117 @@
 			
 			$json = json_encode($returnData);
 			echo $json;
+			break;
+		
+		case "VaguelySelect": //--------------------树节点模糊查询------------------------
+			//接受前端数据
+			$vaguelydata = isset($_REQUEST["vaguelydata"]) ? $_REQUEST["vaguelydata"] : "";
+			//返回给前端的数据
+			$returnData = array(
+				"state" => "success",
+				"message" => "",
+				"data" => array(
+					0 => array(
+						"label" => "转马类",
+						"children" => array()
+					),
+					1 => array(
+						"label" => "滑行类",
+						"children" => array()
+					),
+					2 => array(
+						"label" => "陀螺类",
+						"children" => array()
+					),
+					3 => array(
+						"label" => "飞行塔类",
+						"children" => array()
+					),
+					4 => array(
+						"label" => "赛车类",
+						"children" => array()
+					),
+					5 => array(
+						"label" => "自控飞机类",
+						"children" => array()
+					),
+					6 => array(
+						"label" => "观览车类",
+						"children" => array()
+					),
+					7 => array(
+						"label" => "小火车类",
+						"children" => array()
+					),
+					8 => array(
+						"label" => "架空游览车类",
+						"children" => array()
+					),
+					9 => array(
+						"label" => "水上游乐设施",
+						"children" => array()
+					),
+					10 => array(
+						"label" => "碰碰车类",
+						"children" => array()
+					),
+					11 => array(
+						"label" => "电池车类",
+						"children" => array()
+					),
+					12 => array(
+						"label" => "摇摆类",
+						"children" => array()
+					),
+					13 => array(
+						"label" => "回旋类",
+						"children" => array()
+					),
+					14 => array(
+						"label" => "其他类",
+						"children" => array()
+					),
+					15 => array(
+						"label" => "科技娱乐类",
+						"children" => array()
+					)
+				)
+			);
+			
+			//查询大类树节点,0-15分别对应存货分类的16类
+			for($j=0;$j<16;$j++){
+				$sql = "SELECT `id`,`proname` FROM `weldingtree` where category='".$j."' AND proname LIKE '%$vaguelydata%'";
+				$result = $conn->query($sql);
+				if($result->num_rows > 0){
+					$i = 0;
+					while($row = $result->fetch_assoc()){
+						//通过时间戳获取同类表id
+						$sql1 = "SELECT b.`id` FROM `weldingtree` a,`craftsmanshiptree` b WHERE a.`id`='".$row["id"]."' and a.ctime=b.ctime";
+						$result1 = $conn->query($sql1);
+						$row1 = $result1->fetch_assoc();
+						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
+						$returnData["data"][$j]["children"][$i]["label"] = $row["proname"];
+						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"];
+						$returnData["data"][$j]["children"][$i]["children"][0]["label"] = "焊接工艺及检验记录";
+						$returnData["data"][$j]["children"][$i]["children"][0]["thereFlag"] = 1;
+						$returnData["data"][$j]["children"][$i]["children"][0]["thereId"] = $row["id"];
+						$returnData["data"][$j]["children"][$i]["children"][1]["label"] = "机械制造工艺及检验表";
+						$returnData["data"][$j]["children"][$i]["children"][1]["thereFlag"] = 2;
+						$returnData["data"][$j]["children"][$i]["children"][1]["thereId"] = $row1["id"];
+						$returnData["data"][$j]["children"][$i]["children"][2]["label"] = "热处理施工单";
+						$returnData["data"][$j]["children"][$i]["children"][2]["thereFlag"] = 3;
+						$returnData["data"][$j]["children"][$i]["children"][2]["thereId"] = $row["id"];
+						$returnData["data"][$j]["children"][$i]["children"][3]["label"] = "机械加工工艺过程卡";
+						$returnData["data"][$j]["children"][$i]["children"][3]["thereFlag"] = 4;
+						$returnData["data"][$j]["children"][$i]["children"][3]["thereId"] = $row["id"];
+						$i++;
+					}
+				}
+			}
+			
+			
+			$json = json_encode($returnData);
+			echo $json;			
 			break;
 		
 		case "saveTreeListData": //--------------------保存新建树节点------------------------
@@ -319,7 +430,7 @@
 		
 		case "getTableListData" ://--------------查询焊接与制作工艺表格列表信息------------------
 			//接收数据
-			$tableFlag = isset($_GET["tableFlag"]) ? $_GET["tableFlag"] :"";//1为焊接，2为制造，3为热处理，4为机加工
+			$tableFlag = isset($_GET["tableFlag"]) ? $_GET["tableFlag"] :"";//1为焊接，2为制造，3为热处理，4为机加工，0为全部类型
 			$relateId = isset($_GET["relateId"]) ? $_GET["relateId"] :"";
 			
 			//返回信息
@@ -390,7 +501,43 @@
 						$returnData["message"] = "没有数据";
 					}
 					break;
+				case "0":
+					$relateId = explode(',',$relateId);
+					//装载数据-焊接信息
+					$sql = "SELECT `id` AS `contactId`,`productcode`,`partdrawingnumber` AS productDrawingNumber,`producname` AS productName,`partname` AS ownPartName,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff,'焊接工艺' AS TypeCard FROM `weldingtable` WHERE `weldingtree_id`='".$relateId[0]."'";	
+					$result = $conn->query($sql);
+					$returnData["message"] = "获取成功";
+					$i = 0;
+					while($row = $result->fetch_assoc()){
+						$returnData["data"][$i] = $row;
+						$i++;
+					}
+					//装载数据-制造信息
+					$sql2 = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `productDrawingNumber`,productname AS `productName`,`partname` AS ownPartName,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff,'机械制造' AS TypeCard FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId[1]."'";
+					$result2 = $conn->query($sql2);
+					while($row2 = $result2->fetch_assoc()){
+						$returnData["data"][$i] = $row2;
+						$i++;
+					}
+					//装载数据-热处理
+					$sql3 = "SELECT `id` AS `contactId`,productDrawingNumber,productName,ownPartName,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff,'热处理' AS TypeCard FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId[0]."'";
+					$result3 = $conn->query($sql3);
+					while($row3 = $result3->fetch_assoc()){
+						$returnData["data"][$i] = $row3;
+						$i++;
+					}
+					//装载数据-机加工
+					$sql4 = "SELECT `id` AS `contactId`,productname AS `productName`,`partname` AS ownPartName,partdrawnumber AS productDrawingNumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff,'机械加工' AS TypeCard FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId[0]."'";
+					$result4 = $conn->query($sql4);
+					while($row4 = $result4->fetch_assoc()){
+						$returnData["data"][$i] = $row4;
+						$i++;
+					}																																					
+					break;	
 				default :
+					$returnData["state"] = "failure";
+					$returnData["message"] = "没有数据";
+					break;
 					
 			}
 			
@@ -2137,6 +2284,102 @@
 					echo $json;									
 					break;										
 			}				
+			break;
+		case("getCopyAlltypeTreeData"):
+			$returnData = array(
+				"state" => "success",
+				"message" => "",
+				"data" => array(
+					0 => array(
+						"label" => "转马类",
+						"children" => array()
+					),
+					1 => array(
+						"label" => "滑行类",
+						"children" => array()
+					),
+					2 => array(
+						"label" => "陀螺类",
+						"children" => array()
+					),
+					3 => array(
+						"label" => "飞行塔类",
+						"children" => array()
+					),
+					4 => array(
+						"label" => "赛车类",
+						"children" => array()
+					),
+					5 => array(
+						"label" => "自控飞机类",
+						"children" => array()
+					),
+					6 => array(
+						"label" => "观览车类",
+						"children" => array()
+					),
+					7 => array(
+						"label" => "小火车类",
+						"children" => array()
+					),
+					8 => array(
+						"label" => "架空游览车类",
+						"children" => array()
+					),
+					9 => array(
+						"label" => "水上游乐设施",
+						"children" => array()
+					),
+					10 => array(
+						"label" => "碰碰车类",
+						"children" => array()
+					),
+					11 => array(
+						"label" => "电池车类",
+						"children" => array()
+					),
+					12 => array(
+						"label" => "摇摆类",
+						"children" => array()
+					),
+					13 => array(
+						"label" => "回旋类",
+						"children" => array()
+					),
+					14 => array(
+						"label" => "其他类",
+						"children" => array()
+					),
+					15 => array(
+						"label" => "科技娱乐类",
+						"children" => array()
+					)
+				)
+			);
+			
+			//查询大类树节点,0-15分别对应存货分类的16类
+			for($j=0;$j<16;$j++){
+				$sql = "SELECT `id`,`proname` FROM `weldingtree` where category='".$j."'";
+				$result = $conn->query($sql);
+				if($result->num_rows > 0){
+					$i = 0;
+					while($row = $result->fetch_assoc()){
+						//通过时间戳获取同类表id
+						$sql1 = "SELECT b.`id` FROM `weldingtree` a,`craftsmanshiptree` b WHERE a.`id`='".$row["id"]."' and a.ctime=b.ctime";
+						$result1 = $conn->query($sql1);
+						$row1 = $result1->fetch_assoc();
+						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
+						$returnData["data"][$j]["children"][$i]["label"] = $row["proname"];
+						$returnData["data"][$j]["children"][$i]["relateId"] = [$row["id"],$row1["id"]];
+						$returnData["data"][$j]["children"][$i]["thereId"] = $row["id"].",".$row1["id"];						
+						$i++;
+					}
+				}
+			}
+			
+			
+			$json = json_encode($returnData);
+			echo $json;		
 			break;			
 		case("getCopy"):
 			//接收数据
@@ -2251,11 +2494,11 @@
 					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$type."'";
 					$result = $conn->query($sql);
 					$row = $result->fetch_assoc();
-					$sql2 = "SELECT ownPartName,model FROM heattreatment WHERE id='".$relateId."'";
+					$sql2 = "SELECT ownPartName,model,productDrawingNumber FROM heattreatment WHERE id='".$relateId."'";
 					$result2 = $conn->query($sql2);
 					$row2 = $result2->fetch_assoc();
 					//复制首表信息，返回自增id
-					$sql3 = "INSERT INTO `heattreatment`(`weldingtree_id`,`model`,`ctime`,`productName`,`ownPartName`,`partsName`) VALUES ('".$type."','".$row2["model"]."','".time()."','".$row["procode"].$row["proname"]."','".$row2["ownPartName"]."','".$row["procode"]."')";
+					$sql3 = "INSERT INTO `heattreatment`(`weldingtree_id`,`model`,`ctime`,`productName`,`ownPartName`,`partsName`,`productDrawingNumber`) VALUES ('".$type."','".$row2["model"]."','".time()."','".$row["procode"].$row["proname"]."','".$row2["ownPartName"]."','".$row["procode"]."','".$row2["productDrawingNumber"]."')";
 					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
 					if(!empty($autoIncrementId)){
 						$sql = "INSERT INTO heattreatbody ( heattreatment_id, model, temperature, time, otherdata, selectvalue )";
@@ -2306,9 +2549,153 @@
 					echo $json;															
 					break;										
 			}			
+			break;
+		case("getAllCopy"):
+			//接收前端数据
+			$thereId = isset($_GET["thereId"]) ? $_GET["thereId"] : "";
+			$OldrelateId = isset($_GET["OldrelateId"]) ? $_GET["OldrelateId"] : "";
+			$thereId = explode(',',$thereId);
+			$OldrelateId = explode(',',$OldrelateId);
+			//返回给前端的数据
+			$returnData = array(
+				"state" => "success",
+				"message" => ""
+			);
+			$sql1 = "SELECT id FROM weldingtable WHERE weldingtree_id='".$OldrelateId[0]."' ORDER BY id";
+			$result1 = $conn->query($sql1);
+			if($result1->num_rows > 0){
+				while($row1 = $result1->fetch_assoc()){
+					//获取旧时间，复制修改函数REPLACE需要定值修改
+					$sql = "select `weldingtree_id`,`ctime` from `weldingtable` where id='".$row1['id']."'";
+					$result = $conn->query($sql);
+					$row = $result->fetch_assoc();
+					$oldTime = $row["ctime"];
+					//查找要复制到的项目的首表信息
+					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$thereId[0]."'";
+					$result = $conn->query($sql);
+					$row = $result->fetch_assoc();
+					$sql2 = "SELECT partname,partdrawingnumber FROM weldingtable WHERE id='".$row1['id']."'";
+					$result2 = $conn->query($sql2);
+					$row2 = $result2->fetch_assoc();
+					//复制首表信息，返回自增id
+					$sql3 = "INSERT INTO `weldingtable`(`weldingtree_id`,`partname`,`partdrawingnumber`,`ctime`,`workordernumber`,`producname`,`productcode`) VALUES ('".$thereId[0]."','".$row2["partname"]."','".$row2["partdrawingnumber"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."')";
+					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
+					if(!empty($autoIncrementId)){
+							//复制第一个表信息
+							$sql = "INSERT INTO `weldingtableone`(`weldingtable_id`,`weldingnumber`,`materialfirst`,`specificationsfirst`,`materialsecond`,`specificationssecond`,`weldingmethod`,`grooveform`,`consumables`,`specifications`,`weldinglayer`,`weldingtrack`,`gas`,`current`,`actualcurrentfirst`,`actualcurrentsecond`,`voltage`,`actualvoltagefirst`,`actualvoltagesecond`,`specificationnumber`,`ratingnumber`,`flawdetection`,`steelstamp`,`ctime`)";
+							$sql .= "select REPLACE(`weldingtable_id`,'".$row1['id']."','".$autoIncrementId."'),`weldingnumber`,`materialfirst`,`specificationsfirst`,`materialsecond`,`specificationssecond`,`weldingmethod`,`grooveform`,`consumables`,`specifications`,`weldinglayer`,`weldingtrack`,`gas`,`current`,`actualcurrentfirst`,`actualcurrentsecond`,`voltage`,`actualvoltagefirst`,`actualvoltagesecond`,`specificationnumber`,`ratingnumber`,`flawdetection`,`steelstamp`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtableone` where `weldingtable_id` = '".$row1['id']."' ORDER BY `id`";
+							$conn->query($sql);
+							
+							//复制第二个表信息
+							$sql = "INSERT INTO `weldingtabletwo`(`weldingtable_id`,`serialnumber`,`checkcontent`,`processrequirement`,`testresult`,`singnature`,`ctime`)";
+							$sql .= "select REPLACE(`weldingtable_id`,'".$row1['id']."','".$autoIncrementId."'),`serialnumber`,`checkcontent`,`processrequirement`,`testresult`,`singnature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtabletwo` where `weldingtable_id` = '".$row1['id']."' ORDER BY `id`";
+							$conn->query($sql);
+							
+							//复制第三个表信息
+							$sql = "INSERT INTO `weldingtablethree`(`weldingtable_id`,`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,`ctime`)";
+							$sql .= "select REPLACE(`weldingtable_id`,'".$row1['id']."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablethree` where `weldingtable_id` = '".$row1['id']."' ORDER BY `id`";
+							$conn->query($sql);
+							
+							//复制第四个表信息
+							$sql = "INSERT INTO `weldingtablefour`(`weldingtable_id`,`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,`ctime`)";
+							$sql .= "select REPLACE(`weldingtable_id`,'".$row1['id']."','".$autoIncrementId."'),`weldingnumber`,`requirementone`,`testresultone`,`singnatureone`,`requirementtwo`,`testresultonetwo`,`singnatureonetwo`,`requirementthree`,`testresultonethree`,`singnatureonethree`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `weldingtablefour` where `weldingtable_id` = '".$row1['id']."' ORDER BY `id`";
+							$conn->query($sql);										
+					}								
+				}
+			}
+			$sql1 = "SELECT id FROM craftsmanshiptable WHERE craftsmanshiptree_id='".$OldrelateId[1]."' ORDER BY id";
+			$result1 = $conn->query($sql1);
+			if($result1->num_rows > 0){
+				while($row1 = $result1->fetch_assoc()){
+					//获取旧时间，复制修改函数REPLACE需要定值修改
+					$sql4 = "select `weldingtree_id`,`ctime` from `heattreatment` where id='".$row1['id']."'";
+					$result4 = $conn->query($sql4);
+					$row4 = $result4->fetch_assoc();
+					$oldTime = $row4["ctime"];					
+					$sql4 = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM craftsmanshiptree WHERE id='".$OldrelateId[1]."'";
+					$result4 = $conn->query($sql4);
+					$row4 = $result4->fetch_assoc();					
+					$sql2 = "SELECT ownpartname,partname,partdrawnumber,model FROM craftsmanshiptable WHERE id='".$row1['id']."'";
+					$result2 = $conn->query($sql2);
+					$row2 = $result2->fetch_assoc();
+					//获取旧时间，复制修改函数REPLACE需要定值修改
+					$sql = "select `craftsmanshiptree_id`,`ctime` from `craftsmanshiptable` where id='".$row1['id']."'";
+					$result = $conn->query($sql);
+					$row = $result->fetch_assoc();
+					$oldTime = $row["ctime"];
+					$sql3 = "INSERT INTO `craftsmanshiptable`(`craftsmanshiptree_id`,`partname`,`ctime`,`pnumber`,`productname`,`productdrawnumber`,`ownpartname`,`partdrawnumber`,`model`) VALUES ('".$thereId[1]."','".$row2["partname"]."','".time()."','".$row4["pnumber"]."','".$row4["proname"]."','".$row4["procode"]."','".$row2["ownpartname"]."','".$row2["partdrawnumber"]."','".$row2["model"]."')";
+					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
+					if(!empty($autoIncrementId)){
+						//复制模板一表信息
+						$sql = "INSERT INTO `craftsmanshiptableone`(`craftsmanship_id`,`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest_13`,`selftest_14`,`selftest_15`,`selftest_16`,`signature_1`,`qualityinspection_13`,`qualityinspection_14`,`qualityinspection_15`,`qualityinspection_16`,`signature_2`)";
+						$sql .= "select REPLACE(`craftsmanship_id`,'".$row1['id']."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest_13`,`selftest_14`,`selftest_15`,`selftest_16`,`signature_1`,`qualityinspection_13`,`qualityinspection_14`,`qualityinspection_15`,`qualityinspection_16`,`signature_2` from `craftsmanshiptableone` where `craftsmanship_id` = '".$row1['id']."' ORDER BY `id`";
+						$conn->query($sql);
+						
+						//复制模板二表信息
+						$sql = "INSERT INTO `craftsmanshiptabletwo`(`craftsmanship_id`,`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,`ctime`)";
+						$sql .= "select REPLACE(`craftsmanship_id`,'".$row1['id']."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `craftsmanshiptabletwo` where `craftsmanship_id` = '".$row1['id']."' ORDER BY `id`";
+						$conn->query($sql);				
+					}
+				}
+			}
+			$sql1 = "SELECT id FROM heattreatment WHERE weldingtree_id='".$OldrelateId[0]."' ORDER BY id";
+			$result1 = $conn->query($sql1);
+			if($result1->num_rows > 0){
+				while($row1 = $result1->fetch_assoc()){
+					//获取旧时间，复制修改函数REPLACE需要定值修改
+					$sql4 = "select `weldingtree_id`,`ctime` from `heattreatment` where id='".$row1['id']."'";
+					$result4 = $conn->query($sql4);
+					$row4 = $result4->fetch_assoc();
+					$oldTime = $row4["ctime"];
+					//查找要复制到的项目的首表信息
+					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$thereId[0]."'";
+					$result = $conn->query($sql);
+					$row = $result->fetch_assoc();
+					$sql2 = "SELECT ownPartName,model,productDrawingNumber FROM heattreatment WHERE id='".$row1['id']."'";
+					$result2 = $conn->query($sql2);
+					$row2 = $result2->fetch_assoc();
+					//复制首表信息，返回自增id
+					$sql3 = "INSERT INTO `heattreatment`(`weldingtree_id`,`model`,`ctime`,`productName`,`ownPartName`,`partsName`,`productDrawingNumber`) VALUES ('".$thereId[0]."','".$row2["model"]."','".time()."','".$row["procode"].$row["proname"]."','".$row2["ownPartName"]."','".$row["procode"]."','".$row2["productDrawingNumber"]."')";
+					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
+					if(!empty($autoIncrementId)){
+						$sql = "INSERT INTO heattreatbody ( heattreatment_id, model, temperature, time, otherdata, selectvalue )";
+						$sql .= "select REPLACE(`heattreatment_id`,'".$row1['id']."','".$autoIncrementId."'),`model`,`temperature`,`time`,`otherdata`,`selectvalue` from `heattreatbody` where `heattreatment_id` = '".$row1['id']."' order by id";
+						$conn->query($sql);
+					}									
+				}
+			}
+			$sql1 = "SELECT id FROM machiningtable WHERE craftsmanshiptree_id='".$OldrelateId[0]."' ORDER BY id";
+			$result1 = $conn->query($sql1);
+			if($result1->num_rows > 0){
+				while($row1 = $result1->fetch_assoc()){
+					//获取旧时间，复制修改函数REPLACE需要定值修改
+					$sql4 = "select `craftsmanshiptree_id`,`ctime` from `machiningtable` where id='".$row1['id']."'";
+					$result4 = $conn->query($sql4);
+					$row4 = $result4->fetch_assoc();
+					$oldTime = $row4["ctime"];
+					//查找要复制到的项目的首表信息
+					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$thereId[0]."'";
+					$result = $conn->query($sql);
+					$row = $result->fetch_assoc();
+					$sql2 = "SELECT ownpartname,partname,partdrawnumber FROM machiningtable WHERE id='".$row1['id']."'";
+					$result2 = $conn->query($sql2);
+					$row2 = $result2->fetch_assoc();
+					//复制首表信息，返回自增id
+					$sql3 = "INSERT INTO `machiningtable`(`craftsmanshiptree_id`,`partname`,`ctime`,`pnumber`,`productname`,`productdrawnumber`,`ownpartname`,`partdrawnumber`) VALUES ('".$thereId[0]."','".$row2["partname"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."','".$row2["ownpartname"]."','".$row2["partdrawnumber"]."')";
+					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
+					if(!empty($autoIncrementId)){
+						$sql = "INSERT INTO machingbody ( machingtable_id, serialnumber, process, workshop, processcontent, equipment, ctime )";
+						$sql .= "select REPLACE(`machingtable_id`,'".$row1['id']."','".$autoIncrementId."'),`serialnumber`,`process`,`workshop`,`processcontent`,`equipment`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `machingbody` where `machingtable_id` = '".$row1['id']."' order by id";
+						$conn->query($sql);
+					}					
+				}				
+			}
+			$json = json_encode($returnData);
+			echo $json;											
 			break;	
 		default :
 			echo '{"state":"failure","message":"没有对应的标志"}';
+			break;
 	}
 	
 	$conn->close();
