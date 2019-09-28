@@ -443,7 +443,7 @@
 			switch($tableFlag){
 				case "1":
 					//装载数据-焊接信息
-					$sql = "SELECT `id` AS `contactId`,`productcode`,`processnumber`,`producname`,`partname`,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productcode`,`processnumber`,`producname`,`partname`,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."'";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -458,7 +458,7 @@
 					break;
 				case "2":
 					//装载数据-制造信息
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."'";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -473,7 +473,7 @@
 					break;
 				case "3":
 					//装载数据-热处理
-					$sql = "SELECT `id` AS `contactId`,partsDrawingNumber,productDrawingNumber,productName,ownPartName,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,partsDrawingNumber,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId."'";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -488,7 +488,7 @@
 					break;
 				case "4":
 					//装载数据-机加工
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."'";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -504,7 +504,7 @@
 				case "0":
 					$relateId = explode(',',$relateId);
 					//装载数据-焊接信息
-					$sql = "SELECT `id` AS `contactId`,`productcode`,`partdrawingnumber` AS productDrawingNumber,`producname` AS productName,`partname` AS ownPartName,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff,'焊接工艺' AS TypeCard FROM `weldingtable` WHERE `weldingtree_id`='".$relateId[0]."'";	
+					$sql = "SELECT `id` AS `contactId`,`productcode`,`partdrawingnumber` AS productDrawingNumber,`producname` AS productName,`partname` AS ownPartName,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff,'焊接工艺' AS TypeCard FROM `weldingtable` WHERE `weldingtree_id`='".$relateId[0]."'";	
 					$result = $conn->query($sql);
 					$returnData["message"] = "获取成功";
 					$i = 0;
@@ -513,21 +513,21 @@
 						$i++;
 					}
 					//装载数据-制造信息
-					$sql2 = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `productDrawingNumber`,productname AS `productName`,`partname` AS ownPartName,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff,'机械制造' AS TypeCard FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId[1]."'";
+					$sql2 = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `productDrawingNumber`,productname AS `productName`,`partname` AS ownPartName,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff,'机械制造' AS TypeCard FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId[1]."'";
 					$result2 = $conn->query($sql2);
 					while($row2 = $result2->fetch_assoc()){
 						$returnData["data"][$i] = $row2;
 						$i++;
 					}
 					//装载数据-热处理
-					$sql3 = "SELECT `id` AS `contactId`,productDrawingNumber,productName,ownPartName,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff,'热处理' AS TypeCard FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId[0]."'";
+					$sql3 = "SELECT `id` AS `contactId`,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff,'热处理' AS TypeCard FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId[0]."'";
 					$result3 = $conn->query($sql3);
 					while($row3 = $result3->fetch_assoc()){
 						$returnData["data"][$i] = $row3;
 						$i++;
 					}
 					//装载数据-机加工
-					$sql4 = "SELECT `id` AS `contactId`,productname AS `productName`,`partname` AS ownPartName,partdrawnumber AS productDrawingNumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff,'机械加工' AS TypeCard FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId[0]."'";
+					$sql4 = "SELECT `id` AS `contactId`,productname AS `productName`,`partname` AS ownPartName,partdrawnumber AS productDrawingNumber,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff,'机械加工' AS TypeCard FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId[0]."'";
 					$result4 = $conn->query($sql4);
 					while($row4 = $result4->fetch_assoc()){
 						$returnData["data"][$i] = $row4;
@@ -2612,7 +2612,7 @@
 					$result4 = $conn->query($sql4);
 					$row4 = $result4->fetch_assoc();
 					$oldTime = $row4["ctime"];					
-					$sql4 = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM craftsmanshiptree WHERE id='".$OldrelateId[1]."'";
+					$sql4 = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM craftsmanshiptree WHERE id='".$thereId[1]."'";
 					$result4 = $conn->query($sql4);
 					$row4 = $result4->fetch_assoc();					
 					$sql2 = "SELECT ownpartname,partname,partdrawnumber,model FROM craftsmanshiptable WHERE id='".$row1['id']."'";
@@ -2655,7 +2655,7 @@
 					$result2 = $conn->query($sql2);
 					$row2 = $result2->fetch_assoc();
 					//复制首表信息，返回自增id
-					$sql3 = "INSERT INTO `heattreatment`(`weldingtree_id`,`model`,`ctime`,`productName`,`ownPartName`,`partsName`,`productDrawingNumber`) VALUES ('".$thereId[0]."','".$row2["model"]."','".time()."','".$row["procode"].$row["proname"]."','".$row2["ownPartName"]."','".$row["procode"]."','".$row2["productDrawingNumber"]."')";
+					$sql3 = "INSERT INTO `heattreatment`(`weldingtree_id`,`model`,`ctime`,`productName`,`ownPartName`,`partsName`,`productDrawingNumber`) VALUES ('".$thereId[0]."','".$row2["model"]."','".time()."','".$row["procode"].$row["proname"]."','".$row2["ownPartName"]."','".$row["pnumber"]."','".$row2["productDrawingNumber"]."')";
 					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
 					if(!empty($autoIncrementId)){
 						$sql = "INSERT INTO heattreatbody ( heattreatment_id, model, temperature, time, otherdata, selectvalue )";
