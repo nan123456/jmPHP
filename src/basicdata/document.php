@@ -88,7 +88,7 @@
 			
 			//查询大类树节点,0-15分别对应存货分类的16类
 			for($j=0;$j<16;$j++){
-				$sql = "SELECT `id`,`proname` FROM `weldingtree` where category='".$j."'";
+				$sql = "SELECT `id`,`proname`,`pnumber` FROM `weldingtree` where category='".$j."'";
 				$result = $conn->query($sql);
 				if($result->num_rows > 0){
 					$i = 0;
@@ -98,7 +98,7 @@
 						$result1 = $conn->query($sql1);
 						$row1 = $result1->fetch_assoc();
 						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
-						$returnData["data"][$j]["children"][$i]["label"] = $row["proname"];
+						$returnData["data"][$j]["children"][$i]["label"] = $row["pnumber"].$row["proname"];
 						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"].",".$row1["id"];
 						$returnData["data"][$j]["children"][$i]["children"][0]["label"] = "焊接工艺及检验记录";
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereFlag"] = 1;

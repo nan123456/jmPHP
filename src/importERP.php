@@ -162,6 +162,7 @@
 //				}
 //			}
 	        	if(($am == "A" || $am == "B")&&$d!=''){
+	        		$radio=1;
 	        		$isexterior=0; //是否外协，默认为0
 	        		//获取工艺路线的值
 		        	if($r) {
@@ -181,6 +182,16 @@
 				}
 	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','1','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
 	        		$res= $conn->query($sql);
+	        	}else if(($am != "A" && $am != "B")&&$d!=''){
+	        		$radio=1; //非关键零部件
+	        		if($r){
+		        		//判断是否外协，如果在工艺路线中存在W，则有外协
+		        		if(strpos($r,'W') !== false){ 
+ 						$isexterior=1; 
+					}else{
+ 						$isexterior=0;
+					}	        			
+	        		}
 	        	}
 	        	
 	        	if($d==''){
