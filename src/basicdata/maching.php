@@ -80,7 +80,7 @@
 				"message" => "",
 				"sql" => ""				
 			);
-
+			
 			//保存文件并返回相应的保存路径
 			$fileSaveSql = "";//保存的路径，在src目录下
 			if(count($_FILES) > 0){
@@ -95,6 +95,43 @@
 					$conn->query($sql);
 				}
 				
+			}
+			if(count($_FILES) > 0){
+				$fileSaveDir = "../uploadfiles";//文件存放目录				
+				//第一张
+				$fileSaveName = getMillisecond();//无后缀的文件名
+				if(isset($_FILES["myfileone"])){
+					$uploadfileclass = new UploadFile($_FILES["myfileone"],$fileSaveDir,$fileSaveName);
+					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
+					$fileSaveSql = substr($fileSaveSql_tmp, 3);
+				}
+					
+			}
+			//保存信息
+			if(count($machiningTableHeader) > 0){
+				$sql = "UPDATE machiningtable SET hendnumber =  '".$machiningTableHeader["hendNumber"]."',productname = '".$machiningTableHeader["productName"]."',ownpartname = '".$machiningTableHeader["ownPartName"]."',partname = '".$machiningTableHeader["partsName"]."',workpiecenumber = '".$machiningTableHeader["workpieceNumber"]."',productdrawnumber = '".$machiningTableHeader["productDrawingNumber"]."',ownpartdrawnumber = '".$machiningTableHeader["ownPartDrawingNumber"]."',quantity = '".$machiningTableHeader["quantity"]."', bottonimage = '".$fileSaveSql."',authorizedname = '".$machiningTableFooter["name1"]."',auditor = '".$machiningTableFooter["name2"]."'WHERE id = '".$machiningTableHeader["contactId"]."'";
+				$conn->query($sql);
+				//获取machingbody内id
+				$sql2 = "SELECT id FROM machingbody WHERE machingtable_id ='".$machiningTableHeader["contactId"]."'ORDER BY id";
+				$result2 = $conn->query($sql2);
+				$result2_arr=array();
+				$i = 0 ;
+				while($row2 = $result2->fetch_assoc()){
+					$result2_arr[$i]=$row2['id'];
+					$i++;
+				}
+				$j=0;
+				//保存可遍历的信息
+				foreach($machiningTableBody as $index => $datainfo){
+					$sql = "UPDATE machingbody SET serialnumber = '".$datainfo["serialNumber"]."',process = '".$datainfo["processFlow"]."',workshop = '".$datainfo["workshop"]."',processcontent = '".$datainfo["skillsRequirement"]."',equipment = '".$datainfo["equipment"]."' WHERE id = '".$result2_arr[$j]."' ";
+					$returnData["sql"]=$sql;
+					$conn->query($sql);
+					$j++;
+					}
+					echo $row2['id'];
+			}else{
+				$returnData["state"] = "failure";
+				$returnData["message"] = "主要数据为空";
 			}
 			$json = json_encode($returnData);
 			echo $json;
