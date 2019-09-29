@@ -161,8 +161,12 @@
 //					$dres = $conn->query($dsql);					
 //				}
 //			}
-	        	if(($am == "A" || $am == "B")&&$d!=''){
-	        		$radio=1;
+	        	if($d!=''){
+	        		if($am == "A" || $am == "B"){
+	        			$radio=1;  //关键零部件
+	        		}else if($am != "A" && $am != "B"){
+	        			$radio=2;  //非关键零部件
+	        		}
 	        		$isexterior=0; //是否外协，默认为0
 	        		//获取工艺路线的值
 		        	if($r) {
@@ -180,18 +184,8 @@
 						$dres = $conn->query($dsql);					
 					}
 				}
-	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','1','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
+	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','$radio','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
 	        		$res= $conn->query($sql);
-	        	}else if(($am != "A" && $am != "B")&&$d!=''){
-	        		$radio=1; //非关键零部件
-	        		if($r){
-		        		//判断是否外协，如果在工艺路线中存在W，则有外协
-		        		if(strpos($r,'W') !== false){ 
- 						$isexterior=1; 
-					}else{
- 						$isexterior=0;
-					}	        			
-	        		}
 	        	}
 	        	
 	        	if($d==''){
