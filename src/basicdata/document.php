@@ -199,7 +199,7 @@
 			
 			//查询大类树节点,0-15分别对应存货分类的16类
 			for($j=0;$j<16;$j++){
-				$sql = "SELECT `id`,`proname` FROM `weldingtree` where category='".$j."' AND proname LIKE '%$vaguelydata%'";
+				$sql = "SELECT `id`,`proname`,pnumber FROM `weldingtree` where category='".$j."' AND CONCAT(proname,pnumber) LIKE '%$vaguelydata%'";
 				$result = $conn->query($sql);
 				if($result->num_rows > 0){
 					$i = 0;
@@ -209,7 +209,7 @@
 						$result1 = $conn->query($sql1);
 						$row1 = $result1->fetch_assoc();
 						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
-						$returnData["data"][$j]["children"][$i]["label"] = $row["proname"];
+						$returnData["data"][$j]["children"][$i]["label"] = $row["pnumber"].$row["proname"];
 						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"];
 						$returnData["data"][$j]["children"][$i]["children"][0]["label"] = "焊接工艺及检验记录";
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereFlag"] = 1;
@@ -547,6 +547,30 @@
 			echo $json;
 			break;
 		
+		case "GetClassData" ://----------------异步获取类项目表格--------------------------
+			//接收数据
+			$label = isset($_GET["label"]) ? $_GET["label"] : "";
+			//返回信息
+			$returnData = array(
+				"state" => "success",
+				"message" => "",
+				"data" => array()
+			);
+			$sql = "SELECT `name`,pNumber,number,ctime FROM project WHERE type = '".$label."' ORDER BY id";
+			$result = $conn->query($sql);
+			if($result->num_rows > 0){
+				$returnData["message"] = "获取成功";
+				$i = 0;
+				while($row = $result->fetch_assoc()){
+					$returnData["data"][$i] = $row;
+					$i++;
+				}
+			}else{
+				$returnData["message"] = "没有数据";
+			}			
+			$json = json_encode($returnData);
+			echo $json;						
+			break;
 		case "getWeldingInfoData" ://----------------根据ID获取焊接相应的数据--------------------------
 			//接收数据
 			$contactId = isset($_GET["contactID"]) ? $_GET["contactID"] : "";
