@@ -250,27 +250,67 @@
 				}
 				$ret_data["success"] = 'success';
 			}else {
-				$asql = "SELECT id,fid,name,modid,figure_number FROM part  WHERE  modid='$modid'";
-				$ares=$conn->query($asql);
-				if($ares->num_rows>0){
-					while($arow=$ares->fetch_assoc()){
-						$ret_data["data"][0]["id"] = $arow["id"];
-						$ret_data["data"][0]["pid"] = $arow["fid"];  //项目id
-						$ret_data["data"][0]["lx"] = 'bj';
-						$ret_data["data"][0]["name"] = $arow["name"];
-						$ret_data["data"][0]["figure_number"] = $arow["figure_number"];
-						$ret_data["data"][0]["modid"] = $arow["modid"];
-						$ret_data["data"][0]["leaf"] = true;
+				$sql="SELECT pNumber FROM part WHERE modid='$modid'";
+				$res=$conn->query($sql);
+				$row=$res->fetch_assoc();
+				$pnumber=$row["pNumber"];
+				$i=0;
+				$arr=array();
+				function recursion($modid,$pnumber,$i,$arr){
+					require("../conn.php");
+					$asql = "SELECT id,fid,name,modid,figure_number,belong_part FROM part  WHERE  modid='$modid' AND pNumber='$pnumber' ";
+					$ares=$conn->query($asql);
+					if($ares->num_rows>0){
+						$arow=$ares->fetch_assoc();
+						$arr["data"][$i]["id"] = $arow["id"];
+						$arr["data"][$i]["pid"] = $arow["fid"];  //项目id
+						$arr["data"][$i]["lx"] = 'bj';
+						$arr["data"][$i]["name"] = $arow["name"];
+						$arr["data"][$i]["figure_number"] = $arow["figure_number"];
+						$arr["data"][$i]["modid"] = $arow["modid"];
+						$arr["data"][$i]["belong_part"] = $arow["belong_part"];
+						$arr["data"][$i]["leaf"] = true;
+						if($arow["belong_part"]){
+							$belong_part=$arow["belong_part"];
+							$bsql="SELECT modid FROM part WHERE name='$belong_part' AND pNumber='$pnumber' ";
+							$bres=$conn->query($bsql);
+							$brow=$bres->fetch_assoc();
+							$father_modid=$brow["modid"];
+							$i++;
+							recursion($father_modid,$pnumber,$i,$arr);
+						}else{
+							$arr["success"] = 'success';
+								$json=json_encode($arr);
+								echo $json;
+						}						
+					}else {
+						$arr["success"] = 'error';
 					}
-					$ret_data["success"] = 'success';
-				}else {
-					$ret_data["success"] = 'error';
 				}
+				recursion($modid,$pnumber,$i,$arr);
+				
+//				$asql = "SELECT id,fid,name,modid,figure_number FROM part  WHERE  modid='$modid'";
+//				$ares=$conn->query($asql);
+//				if($ares->num_rows>0){
+//					while($arow=$ares->fetch_assoc()){
+//						$ret_data["data"][0]["id"] = $arow["id"];
+//						$ret_data["data"][0]["pid"] = $arow["fid"];  //项目id
+//						$ret_data["data"][0]["lx"] = 'bj';
+//						$ret_data["data"][0]["name"] = $arow["name"];
+//						$ret_data["data"][0]["figure_number"] = $arow["figure_number"];
+//						$ret_data["data"][0]["modid"] = $arow["modid"];
+//						$ret_data["data"][0]["leaf"] = true;
+//					}
+//					$ret_data["success"] = 'success';
+//				}else {
+//					$ret_data["success"] = 'error';
+//				}
+			
 			}
 		}
 	}
 	
 	$conn->close();
-	$json=json_encode($ret_data);
-	echo $json;
+//	$json=json_encode($ret_data);
+//	echo $json;
 ?>
