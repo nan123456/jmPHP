@@ -29,7 +29,7 @@
 		
 	}else if($flag == "Unread"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."'";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."' ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -51,7 +51,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."' AND content LIKE  '%".$modid."%' ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."' AND content LIKE  '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -71,7 +71,7 @@
 		}
 	}else if($flag == "Read"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND department='".$department."' ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND department='".$department."' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -90,7 +90,7 @@
 			$ret_data["success"] = 'success';
 		}
 	}else if($flag == "Recycle"){
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message where state='1' or state='0' ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message where state='1' or state='0' ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
