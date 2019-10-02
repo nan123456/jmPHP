@@ -286,8 +286,8 @@
 			}
 			
 			//保存首表信息，返回自增id
-			$sql = "INSERT INTO `weldingtable`(`weldingtree_id`,`processnumber`,`quantity`,`workpiecenumber`,`workshop`,`workordernumber`,`producname`,`productcode`,`partname`,`partdrawingnumber`,`finallyresult`,`inspectorsingnature`,`finallydate`,`weldingsequence`,`weldingnumbermap`,`ctime`) VALUES(";
-			$sql .= "'".$treeId."','".$weldingtable["processNumber"]."','".$weldingtable["quantity"]."','".$weldingtable["workpieceNumber"]."','".$weldingtable["workshop"]."','".$weldingtable["workOrderNumber"]."','".$weldingtable["productName"]."','".$weldingtable["productCode"]."','".$weldingtable["partName"]."','".$weldingtable["partDrawingNumber"]."','".$weldingtable["finalInspectionResult"]."','".$weldingtable["inspectorSingnature"]."','".$weldingtable["date"]."','".$weldingtable["weldingSequence"]."','".$fileSaveSql."','".time()."')";
+			$sql = "INSERT INTO `weldingtable`(`weldingtree_id`,`processnumber`,`quantity`,`workpiecenumber`,`workshop`,`workordernumber`,`producname`,`productcode`,`partname`,`partdrawingnumber`,`finallyresult`,`inspectorsingnature`,`finallydate`,`weldingsequence`,`weldingnumbermap`,`ctime`,weldingfoot,Organization,examine) VALUES(";
+			$sql .= "'".$treeId."','".$weldingtable["processNumber"]."','".$weldingtable["quantity"]."','".$weldingtable["workpieceNumber"]."','".$weldingtable["workshop"]."','".$weldingtable["workOrderNumber"]."','".$weldingtable["productName"]."','".$weldingtable["productCode"]."','".$weldingtable["partName"]."','".$weldingtable["partDrawingNumber"]."','".$weldingtable["finalInspectionResult"]."','".$weldingtable["inspectorSingnature"]."','".$weldingtable["date"]."','".$weldingtable["weldingSequence"]."','".$fileSaveSql."','".time()."','".$weldingtable["weldingfoot"]."','".$weldingtable["Organization"]."','".$weldingtable["examine"]."')";
 			$autoIncrementId = $conn->query($sql) ? $conn->insert_id : "";//获取成功插入后的id
 			
 			if(!empty($autoIncrementId)){
@@ -370,6 +370,7 @@
 			$sql = "UPDATE `weldingtable` SET `processnumber`='".$weldingtable["processNumber"]."',`quantity`='".$weldingtable["quantity"]."',`workpiecenumber`='".$weldingtable["workpieceNumber"]."',`workshop`='".$weldingtable["workshop"]."'";
 			$sql .= ",`workordernumber`='".$weldingtable["workOrderNumber"]."',`producname`='".$weldingtable["productName"]."',`productcode`='".$weldingtable["productCode"]."',`partname`='".$weldingtable["partName"]."',`partdrawingnumber`='".$weldingtable["partDrawingNumber"]."'";
 			$sql .= ",`finallyresult`='".$weldingtable["finalInspectionResult"]."',`inspectorsingnature`='".$weldingtable["inspectorSingnature"]."',`finallydate`='".$weldingtable["date"]."',`weldingsequence`='".$weldingtable["weldingSequence"]."'";
+			$sql .=",weldingfoot = '".$weldingtable["weldingfoot"]."',Organization = '".$weldingtable["Organization"]."',examine = '".$weldingtable["examine"]."'";
 			if(!empty($fileSaveSql)){
 				$sql .= ",`weldingnumbermap`='".$fileSaveSql."'";
 			}
@@ -593,7 +594,7 @@
 			//查询数据
 			if(!empty($contactId)){
 				//查询首表信息
-				$sql = "SELECT `processnumber`,`quantity`,`workpiecenumber`,`workshop`,`workordernumber`,`producname`,`productcode`,`partname`,`partdrawingnumber`,`finallyresult`,`inspectorsingnature`,`finallydate`,`weldingsequence`,`weldingnumbermap` FROM `weldingtable` WHERE `id`='".$contactId."'";
+				$sql = "SELECT `processnumber`,`quantity`,`workpiecenumber`,`workshop`,`workordernumber`,`producname`,`productcode`,`partname`,`partdrawingnumber`,`finallyresult`,`inspectorsingnature`,`finallydate`,`weldingsequence`,`weldingnumbermap`,weldingfoot,examine,Organization FROM `weldingtable` WHERE `id`='".$contactId."'";
 				$result = $conn->query($sql);
 				if($result->num_rows > 0){
 					while($row = $result->fetch_assoc()){
@@ -606,6 +607,9 @@
 						$returnData["data"]["weldingTableOne"]["productName"] = $row["producname"];
 						$returnData["data"]["weldingTableOne"]["productCode"] = $row["productcode"];
 						$returnData["data"]["weldingTableOne"]["partName"] = $row["partname"];
+						$returnData["data"]["weldingTableOne"]["weldingfoot"] = $row["weldingfoot"];
+						$returnData["data"]["weldingTableOne"]["examine"] = $row["examine"];
+						$returnData["data"]["weldingTableOne"]["Organization"] = $row["Organization"];
 						$returnData["data"]["weldingTableOne"]["partDrawingNumber"] = $row["partdrawingnumber"];
 						
 						$returnData["data"]["weldingTableThree_3"]["finalInspectionResult"] = $row["finallyresult"];
@@ -2426,11 +2430,11 @@
 					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$type."'";
 					$result = $conn->query($sql);
 					$row = $result->fetch_assoc();
-					$sql2 = "SELECT partname,partdrawingnumber FROM weldingtable WHERE id='".$relateId."'";
+					$sql2 = "SELECT partname,partdrawingnumber,weldingfoot,Organization,examine FROM weldingtable WHERE id='".$relateId."'";
 					$result2 = $conn->query($sql2);
 					$row2 = $result2->fetch_assoc();
 					//复制首表信息，返回自增id
-					$sql3 = "INSERT INTO `weldingtable`(`weldingtree_id`,`partname`,`partdrawingnumber`,`ctime`,`workordernumber`,`producname`,`productcode`) VALUES ('".$type."','".$row2["partname"]."','".$row2["partdrawingnumber"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."')";
+					$sql3 = "INSERT INTO `weldingtable`(`weldingtree_id`,`partname`,`partdrawingnumber`,`ctime`,`workordernumber`,`producname`,`productcode`,weldingfoot,Organization,examine) VALUES ('".$type."','".$row2["partname"]."','".$row2["partdrawingnumber"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."','".$row2["weldingfoot"]."','".$row2["Organization"]."','".$row2["examine"]."')";
 					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
 				if(!empty($autoIncrementId)){
 						//复制第一个表信息
@@ -2598,11 +2602,11 @@
 					$sql = 	"SELECT id,proname,procode,pnumber,REPLACE(`ctime`,'".$oldTime."','".time()."') as ctime FROM weldingtree WHERE id='".$thereId[0]."'";
 					$result = $conn->query($sql);
 					$row = $result->fetch_assoc();
-					$sql2 = "SELECT partname,partdrawingnumber FROM weldingtable WHERE id='".$row1['id']."'";
+					$sql2 = "SELECT partname,partdrawingnumber,weldingfoot,Organization,examine FROM weldingtable WHERE id='".$row1['id']."'";
 					$result2 = $conn->query($sql2);
 					$row2 = $result2->fetch_assoc();
 					//复制首表信息，返回自增id
-					$sql3 = "INSERT INTO `weldingtable`(`weldingtree_id`,`partname`,`partdrawingnumber`,`ctime`,`workordernumber`,`producname`,`productcode`) VALUES ('".$thereId[0]."','".$row2["partname"]."','".$row2["partdrawingnumber"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."')";
+					$sql3 = "INSERT INTO `weldingtable`(`weldingtree_id`,`partname`,`partdrawingnumber`,`ctime`,`workordernumber`,`producname`,`productcode`,weldingfoot,Organization,examine) VALUES ('".$thereId[0]."','".$row2["partname"]."','".$row2["partdrawingnumber"]."','".time()."','".$row["pnumber"]."','".$row["proname"]."','".$row["procode"]."','".$row2["weldingfoot"]."','".$row2["Organization"]."','".$row2["examine"]."')";
 					$autoIncrementId = $conn->query($sql3) ? $conn->insert_id : "";//获取成功插入后的id
 					if(!empty($autoIncrementId)){
 							//复制第一个表信息
