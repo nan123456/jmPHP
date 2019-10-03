@@ -105,7 +105,7 @@
 		$list_data = json_encode($arr);
 		$fChild_material = json_encode($arr2);
 		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . '}';
-	}else if($flag = "selectData"){
+	}else if($flag == "selectData"){
 		//获取前端数据
 		$select = isset($_POST["select"]) ? $_POST["select"] : '';
 		// 获取列表数据

@@ -977,7 +977,7 @@
 			echo $json;
 			break;
 		
-		case "craftsmanshipUpdateDataOne"://产品制作工艺技术要求及检验记录表信息保存【更新】【模板二】
+		case "craftsmanshipUpdateDataTwo"://产品制作工艺技术要求及检验记录表信息保存【更新】【模板二】
 			//接收数据
 			$craftsmanshipTableHeader = isset($_POST["craftsmanshipTableHeader"]) ? json_decode($_POST["craftsmanshipTableHeader"],TRUE) : array();
 			$craftsmanshipTableBody_2 = isset($_POST["craftsmanshipTableBody_2"]) ? json_decode($_POST["craftsmanshipTableBody_2"],TRUE) : array();
