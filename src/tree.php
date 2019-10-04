@@ -17,6 +17,8 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	$json=json_encode($ret_data);
+	echo $json;
 	}else if($flag=='unreview_project'){
 		$type = isset($_POST["type"])?$_POST["type"]:'';
 //		$ret_data["type"] = $type;
@@ -35,6 +37,8 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	$json=json_encode($ret_data);
+	echo $json;
 	}
 	//未完成部分
 	else if($flag == 'type'){
@@ -49,6 +53,8 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	$json=json_encode($ret_data);
+	echo $json;
 	}else if($flag=='project'){
 		$type = isset($_POST["type"])?$_POST["type"]:'';
 //		$ret_data["type"] = $type;
@@ -67,9 +73,11 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	$json=json_encode($ret_data);
+	echo $json;
 	}
 	//已完成部分
-	if($flag == 'finished_type'){
+	else if($flag == 'finished_type'){
 		$sql = "SELECT type from project where isfinish='1' GROUP BY type";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
@@ -81,6 +89,8 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+		$json=json_encode($ret_data);
+		echo $json;
 	}else if($flag=='finished_project'){
 		$type = isset($_POST["type"])?$_POST["type"]:'';
 //		$ret_data["type"] = $type;
@@ -99,8 +109,9 @@
 			}
 			$ret_data["success"] = 'success';
 		}
-	}
-	else if($flag=='mpart'){  //项目下一级部件
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='mpart'){  //项目下一级部件
 		$id = isset($_POST["id"])?$_POST["id"]:'';
 		$name = isset($_POST["name"])?$_POST["name"]:'';
 		$number = isset($_POST["number"])?$_POST["number"]:'';
@@ -141,6 +152,8 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+		$json=json_encode($ret_data);
+		echo $json;
 	}else if($flag=='part'){ // 部件
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
 		$pid = isset($_POST["pid"])?$_POST["pid"]:'';
@@ -233,6 +246,8 @@
 //				}
 //			}
 		}
+		$json=json_encode($ret_data);
+		echo $json;
 	} else if($flag == 'treefilter'){
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
 		$state = isset($_POST["state"])?$_POST["state"]:'';
@@ -256,8 +271,8 @@
 				$pnumber=$row["pNumber"];
 				$i=0;
 				$arr=array();
-				function recursion($modid,$pnumber,$i,$arr){
-					require("../conn.php");
+				function recursion($modid,$pnumber,$i,$arr,$conn){
+//					require("../conn.php");
 					$asql = "SELECT id,fid,name,modid,figure_number,belong_part FROM part  WHERE  modid='$modid' AND pNumber='$pnumber' ";
 					$ares=$conn->query($asql);
 					if($ares->num_rows>0){
@@ -277,17 +292,21 @@
 							$brow=$bres->fetch_assoc();
 							$father_modid=$brow["modid"];
 							$i++;
-							recursion($father_modid,$pnumber,$i,$arr);
+							recursion($father_modid,$pnumber,$i,$arr,$conn);
 						}else{
 							$arr["success"] = 'success';
-								$json=json_encode($arr);
-								echo $json;
+//							return $arr;
+							$json=json_encode($arr);
+							echo $json;
 						}						
 					}else {
 						$arr["success"] = 'error';
+						$json=json_encode($arr);
+						echo $json;						
 					}
+//					return $arr;
 				}
-				recursion($modid,$pnumber,$i,$arr);
+				$ret_data=recursion($modid,$pnumber,$i,$arr,$conn);
 				
 //				$asql = "SELECT id,fid,name,modid,figure_number FROM part  WHERE  modid='$modid'";
 //				$ares=$conn->query($asql);
