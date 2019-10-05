@@ -7,7 +7,7 @@
 	}  
 	$fid = isset($_POST["fid"])?$_POST["fid"]:'';
 	$data = array();
-	$sql = "select isfinish,count(name) as count from part WHERE fid = '$fid' group by isfinish";
+	$sql = "select isfinish,count(name) as count from part WHERE fid = '$fid' and isexterior='0' group by isfinish";
 	$res=$conn->query($sql);
 	if($res->num_rows>0){
 		while($row=$res->fetch_assoc()){
@@ -25,5 +25,17 @@
 		}
 	}
 	
+	$sql = "select count(name) as count from part WHERE fid = '$fid' and isexterior in ('1','2','3')";
+	$res=$conn->query($sql);
+	if($res->num_rows>0){
+		while($row=$res->fetch_assoc()){
+			$row['isfinish'] = "外协";
+			$alter = new Alteration();
+			$alter->name = $row['isfinish'];
+			$alter->value = intval($row['count']);  
+			$data[] = $alter;
+		}
+	}
+
 	echo json_encode($data);
 ?>
