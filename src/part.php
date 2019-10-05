@@ -343,6 +343,23 @@
 				$ret_data["pro"] = $str[0].'#';
 			}
 		}
+	}else if($flag == 'plm_part') {
+		$sql = "SELECT product_id,label,figure_number,belong_part,hierarchy,material,count,remark FROM plm WHERE id = '$id'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			while($row=$res->fetch_assoc()){
+				$ret_data["product_id"] = $row["product_id"];
+				$ret_data["label"] = $row["label"];
+				$ret_data["figure_number"] = $row["figure_number"];
+				$ret_data["belong_part"] = $row["belong_part"];
+				$ret_data["hierarchy"] = $row["hierarchy"];
+				$ret_data["material"] = $row["material"];
+				$ret_data["id"] = $id;
+				$ret_data["count"] = $row["count"];
+				$ret_data["remark"] = $row["remark"];
+			}
+			$ret_data["success"] = 'success';
+		}
 	}
 	$conn->close();
 	$json = json_encode($ret_data);

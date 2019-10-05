@@ -327,7 +327,90 @@
 			
 			}
 		}
+	}else if($flag == 'plm_type'){
+		$sql = "SELECT type from project where number in (SELECT DISTINCT product_id FROM plm) GROUP BY type";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["name"] = $row["type"];
+				$ret_data["data"][$i]["leaf"] = false;
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='plm_project'){
+		$type = isset($_POST["type"])?$_POST["type"]:'';
+//		$ret_data["type"] = $type;
+		$sql = "SELECT id,name,number FROM project WHERE number in (SELECT DISTINCT product_id FROM plm) AND type = '$type'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["name"] = $row["number"].$row["name"];
+				$ret_data["data"][$i]["number"] = $row["number"];
+				$ret_data["data"][$i]["zhname"] = $row["name"];
+				$ret_data["data"][$i]["lx"] = 'xm';
+				$ret_data["data"][$i]["leaf"] = false;
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='plm_mpart'){
+		$number = isset($_POST["number"])?$_POST["number"]:'';
+		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count FROM plm WHERE belong_part='$number'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
+				$ret_data["data"][$i]["name"] = $row["label"];
+				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+				$ret_data["data"][$i]["lx"] = 'plm_part';
+				$ret_data["data"][$i]["leaf"] = false;
+				$ret_data["data"][$i]["belong_part"] = $row["belong_part"];
+				$ret_data["data"][$i]["hierarchy"] = $row["hierarchy"];
+				$ret_data["data"][$i]["material"] = $row["material"];
+				$ret_data["data"][$i]["count"] = $row["count"];
+				$ret_data["data"][$i]["remark"] = $row["remark"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='plm_part'){
+		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
+		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count FROM plm WHERE belong_part='$figure_number'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
+				$ret_data["data"][$i]["name"] = $row["label"];
+				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+				$ret_data["data"][$i]["lx"] = 'plm_part';
+				$ret_data["data"][$i]["leaf"] = false;
+				$ret_data["data"][$i]["belong_part"] = $row["belong_part"];
+				$ret_data["data"][$i]["hierarchy"] = $row["hierarchy"];
+				$ret_data["data"][$i]["material"] = $row["material"];
+				$ret_data["data"][$i]["count"] = $row["count"];
+				$ret_data["data"][$i]["remark"] = $row["remark"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
 	}
+
 	
 	$conn->close();
 //	$json=json_encode($ret_data);
