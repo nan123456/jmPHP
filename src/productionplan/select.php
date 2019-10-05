@@ -255,6 +255,7 @@
 		  
 		}
 	}else if($flag=='search'){
+		$_POST["searchValue"] = trim($_POST["searchValue"]);
 		$isfinish = isset($_POST["isfinish"]) ? $_POST["isfinish"] : '';
 		$searchValue = isset($_POST["searchValue"]) ? $_POST["searchValue"] : '';
 		$searchCondition = isset($_POST["searchCondition"]) ? $_POST["searchCondition"] : '';
