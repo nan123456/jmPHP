@@ -70,7 +70,7 @@
 					// $arr[$i]['number'] = $number[0] . "#";
 					//工单
 					// $arr[$i]['product_name'] = $number[0] . $row['product_name'];
-					$arr[$i]['number']=$row['number']; //工单
+					$arr[$i]['number']=$row['pNumber'].$row['number']; //工单
 					$arr[$i]['product_name'] = $row['product_name']; //产品名称
 					//产品名称
 					$arr[$i]['remark'] = $row['remark'];
@@ -280,7 +280,7 @@
 					//数量
 					$arr[$i]['child_material'] = $row['child_material'];
 					//规格
-					$arr[$i]['number']=$row['number']; //工单
+					$arr[$i]['number']=$row['pNumber'].$row['number']; //工单
 					$arr[$i]['product_name'] =  $row['product_name']; //产品名称
 					$arr[$i]['remark'] = $row['remark'];
 					$arr[$i]['routeid'] = $row['routeid'];
@@ -333,7 +333,7 @@
 			}
 		} else if ($isfinish == '2') {
 		// 已就工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='2' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason ,pNumber from productionplan WHERE isfinish='2' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -351,7 +351,7 @@
 	      // $number4 = explode("#",$row4['number']);
 	      // $arr4[$i]['number'] = $number4[0] . "#";
 		  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-		  $arr4[$i]['number']=$row4['number']; //工单
+		  $arr4[$i]['number']=$row4['pNumber'].$row4['number']; //工单
 		  $arr4[$i]['product_name'] =  $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
 	      $arr4[$i]['station'] = $row4['station'];
@@ -401,7 +401,7 @@
 	  
 	} else if($isfinish == '1') {
 			// 已完工数据列表
-		  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason from productionplan WHERE isfinish='1' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
+		  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason ,pNumber from productionplan WHERE isfinish='1' and $searchCondition LIKE '%$searchValue%' ORDER BY backMark DESC,routeid";
 		  $res4 = $conn->query($sql4);
 		  if($res4->num_rows > 0 ){
 		    $i = 0;
@@ -419,7 +419,7 @@
 		      // $number4 = explode("#",$row4['number']);
 		      // $arr4[$i]['number'] = $number4[0] . "#";
 			  // $arr4[$i]['product_name'] = $number4[0] . $row4['product_name'];
-			  $arr4[$i]['number']=$row4['number']; //工单
+			  $arr4[$i]['number']=$row4['pNumber'].$row4['number']; //工单
 			  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 		      $arr4[$i]['remark'] = $row4['remark'];
 		      $arr4[$i]['station'] = $row4['station'];
@@ -465,11 +465,11 @@
 		}else if($isfinish=='w'){
 			//外协
 			if($searchCondition=='product_name'){
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.name LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as p_number,a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.name LIKE '%$searchValue%') ORDER BY id";
 			}else if($searchCondition=='number'){
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.$searchCondition LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as p_number,a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (b.$searchCondition LIKE '%$searchValue%') ORDER BY id";
 			}else{
-				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as pnumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (a.$searchCondition LIKE '%$searchValue%') ORDER BY id";
+				$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,a.isfinish,b.name as product_name,b.number as p_number,a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) and (a.$searchCondition LIKE '%$searchValue%') ORDER BY id";
 			}
 		
 		
@@ -495,7 +495,7 @@
 				//规格
 				// $number = explode("#", $row['number']);
 				// $arr[$i]['number'] = $number[0] . "#"; //工单
-				$arr[$i]['number']=$row['pnumber']; //工单
+				$arr[$i]['number']=$row['pNumber'].$row['p_number']; //工单
 				$arr[$i]['product_name'] = $row['product_name']; //产品名称
 				if($row['isfinish']=='1'){
 					$arr[$i]['finish'] = '已完成';
