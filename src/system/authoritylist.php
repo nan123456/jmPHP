@@ -40,7 +40,17 @@
 		if($res==true){
 			$ret_data["success"] = 'success';
 		}
-	}else{
+	}else if($flag =="Showseemodule"){
+		$gNum = $_POST["gNum"];
+		$sql = "select seeModule from user where  gNum = '$gNum'";
+		$res=$conn->query($sql);
+		$row=$res->fetch_assoc();
+		if($res==true){
+			$ret_data["success"] = 'success';
+			$ret_data["seeModuleValue"] = $row["seeModule"];
+		}
+	}
+	else{
 		$gNum = $_POST["gNum"];
 		$sql = "DELETE FROM `user` WHERE  gNum = '$gNum'";
 		$res=$conn->query($sql);
