@@ -192,7 +192,11 @@
 	        		$esql="INSERT INTO compare_plm(project,ordernumber,name,belong_part,property,size,route,orderamount)VALUES('$a','$d','$i','$k','$j','$l','$r','$w')";//无订单号与PLM进行比对
 	        		$eres= $conn->query($esql);
 	        	}
-	       
+        	$sql = "SELECT modid FROM route WHERE pid='$number'AND route = 'S移交客户'";
+        	$result = $conn->query($sql);
+        	$row = $result->fetch_assoc();
+        	$sql2 = "UPDATE project SET modid='".$row['modid']."' WHERE id='$number'";
+	       	$result2= $conn->query($sql2);
 //	        if($partname!=$projectname){
 //	        	if($am == "A" || $am == "B"){
 //	        		$radio = 1;
