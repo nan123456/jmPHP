@@ -33,7 +33,7 @@
 			while($myrow=$myres->fetch_assoc()){
 //				$ret_data["e"] = $row["isfinish"];
 				switch($myrow["isfinish"]){
-					case 3:
+					case 0:
 					$ret_data["unfinished"][$x]["route"] = $myrow["route"];
 					$ret_data["unfinished"][$x]["id"] = $myrow["id"];
 					$x++;
@@ -44,8 +44,8 @@
 					$y++;
 					break;
 					case 2:
-					$ret_data["bulid"][$z]["route"] = $myrow["route"];
-					$ret_data["bulid"][$z]["id"] = $myrow["id"];
+					$ret_data["build"][$z]["route"] = $myrow["route"];
+					$ret_data["build"][$z]["id"] = $myrow["id"];
 					$z++;
 					break;
 				}
@@ -93,8 +93,8 @@
 							$y++;
 							break;
 							case 2:
-							$ret_data["item"][$i]["bulid"][$z]["route"] = $brow["route"];
-							$ret_data["item"][$i]["bulid"][$z]["id"] = $brow["id"];
+							$ret_data["item"][$i]["build"][$z]["route"] = $brow["route"];
+							$ret_data["item"][$i]["build"][$z]["id"] = $brow["id"];
 							$z++;
 							break;
 						}
@@ -134,8 +134,8 @@
 //								$y++;
 //								break;
 //								case 2:
-//								$ret_data["item"][$i]["bulid"][$z]["route"] = $drow["route"];
-//								$ret_data["item"][$i]["bulid"][$z]["id"] = $drow["id"];
+//								$ret_data["item"][$i]["build"][$z]["route"] = $drow["route"];
+//								$ret_data["item"][$i]["build"][$z]["id"] = $drow["id"];
 //								$z++;
 //								break;
 //							}
