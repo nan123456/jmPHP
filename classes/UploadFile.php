@@ -14,7 +14,7 @@ class UploadFile{
 	protected $fileInfo;//文件主体 
 	protected $error;
 	protected $ext;
-//	protected $fileSaveName;
+	protected $fileSaveName;
 	/**
 	 * @param string $fileName
 	 * @param string $uploadPath
@@ -24,7 +24,7 @@ class UploadFile{
 	 * @param array $allowMime
 	 */
 //	public function __construct($fileName='myFile',$uploadPath='./uploads',$imgFlag=true,$maxSize=5242880,$allowExt=array('jpeg','jpg','png','gif'),$allowMime=array('image/jpeg','image/png','image/gif')){
-	public function __construct($fileinfo,$uploadPath='../app/uploadfiles'){
+	public function __construct($fileinfo,$uploadPath='../app/uploadfiles',$fileSaveName){
 //		$this->fileName=$fileName;
 //		$this->maxSize=$maxSize;
 //		$this->allowMime=$allowMime;
@@ -33,7 +33,7 @@ class UploadFile{
 //		$this->imgFlag=$imgFlag;
 		
 		$this->fileInfo=$fileinfo;
-//		$this->fileSaveName = $fileSaveName;
+		$this->fileSaveName = $fileSaveName;
 	}
 	/**
 	 * 检测上传文件是否出错
@@ -160,14 +160,17 @@ class UploadFile{
 	 * @return string
 	 */
 	public function uploadFile(){
+//		echo $this->uploadPath.'??';
 //		if($this->checkError()&&$this->checkSize()&&$this->checkExt()&&$this->checkMime()&&$this->checkTrueImg()&&$this->checkHTTPPost()){
 		if($this->checkError()){
 			$this->checkUploadPath();//检测保存目录是否存在
 			$this->ext = strtolower(pathinfo($this->fileInfo['name'],PATHINFO_EXTENSION));//获取文件后缀
 			if(isset($this->fileSaveName)){
+//				echo $this->fileSaveName.'@@';
 				$this->destination = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;
 				$this->destination_gbk = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;				
 			}else{
+//				echo $this->fileSaveName.'!!';
 				$this->uniName = pathinfo($this->fileInfo['name'],PATHINFO_FILENAME);//重新命名问价
 				$this->destination = $this->uploadPath.'/'.$this->uniName.'.'.$this->ext;//组建完整问价路径
 				$this->destination_gbk = iconv("UTF-8", "GB2312", $this->destination);

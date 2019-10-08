@@ -1,13 +1,13 @@
 <?php
 	require("../conn.php");
 //	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$sql = "SELECT type,id FROM project";
+	$sql = "SELECT name,id FROM project";
 	$res=$conn->query($sql);
 	if($res->num_rows>0){
 		$ret_data["success"] = 'success';
 		$i = 0;
 		while($row=$res->fetch_assoc()){
-			$ret_data["data"][$i]["lable"] = $row["type"];
+			$ret_data["data"][$i]["lable"] = $row["name"];
 			$ret_data["data"][$i]["value"] = $row["id"];
 			$i++;
 		}

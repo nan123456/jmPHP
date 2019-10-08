@@ -52,18 +52,18 @@
 			}
 		}
 	}else if($flag == 'partsch'){
-		$sql = "SELECT figure_number,name FROM part WHERE id = '$id'";
+		$sql = "SELECT fid,figure_number,name FROM part WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
 				$figure_number = $row["figure_number"];
 				$name = $row["name"];
+				$fid = $row["fid"];
 			}
 		}
 		
-		$str = $figure_number.'&'.$name;
-		
-		$asql = "SELECT id,modid,name FROM part  WHERE fid <> '0' AND belong_part = '$str' ";
+//		$str = $figure_number.'&'.$name;
+		$asql = "SELECT id,modid,name FROM part  WHERE fid = '$fid' AND belong_part = '$name' ";
 		$ares=$conn->query($asql);
 		//判断belong_part字段是否是&拼接的,如不是则执行if
 		if($ares->num_rows>0){ 
@@ -102,48 +102,49 @@
 					$i++;
 				}
 			}
-		}else {
-			$csql = "SELECT id,modid,name FROM part  WHERE belong_part = '$figure_number' ";
-			$cres=$conn->query($csql);
-			//判断belong_part字段是否是&拼接的,如不是则执行if
-			if($cres->num_rows>0){ 
-				$ret_data["success"]="success";
-				$i=0;
-				while($crow=$cres->fetch_assoc()){
-					$modid = $crow["modid"];
-					$ret_data["item"][$i]["id"]=$crow["id"];
-					$dsql="SELECT id,route,isfinish FROM route WHERE pid <>'0' AND modid = '$modid' ORDER BY id ASC";
-					$dres=$conn->query($dsql);
-					if($dres->num_rows>0){
-						$x=0;
-						$y=0;
-						$z=0;
-						while($drow=$dres->fetch_assoc()){
-			//				$ret_data["e"] = $row["isfinish"];
-							$ret_data["item"][$i]["name"]=$crow["name"];
-							switch($drow["isfinish"]){
-								case 3:
-								$ret_data["item"][$i]["unfinished"][$x]["route"] = $drow["route"];
-								$ret_data["item"][$i]["unfinished"][$x]["id"] = $drow["id"];
-								$x++;
-								break;
-								case 1:
-								$ret_data["item"][$i]["finished"][$y]["route"] = $drow["route"];
-								$ret_data["item"][$i]["finished"][$y]["id"] = $drow["id"];
-								$y++;
-								break;
-								case 2:
-								$ret_data["item"][$i]["bulid"][$z]["route"] = $drow["route"];
-								$ret_data["item"][$i]["bulid"][$z]["id"] = $drow["id"];
-								$z++;
-								break;
-							}
-						}
-						$i++;
-					}
-				}
-			}	
 		}
+//		else {
+//			$csql = "SELECT id,modid,name FROM part  WHERE belong_part = '$figure_number'  ";
+//			$cres=$conn->query($csql);
+//			//判断belong_part字段是否是&拼接的,如不是则执行if
+//			if($cres->num_rows>0){ 
+//				$ret_data["success"]="success";
+//				$i=0;
+//				while($crow=$cres->fetch_assoc()){
+//					$modid = $crow["modid"];
+//					$ret_data["item"][$i]["id"]=$crow["id"];
+//					$dsql="SELECT id,route,isfinish FROM route WHERE pid <>'0' AND modid = '$modid' ORDER BY id ASC";
+//					$dres=$conn->query($dsql);
+//					if($dres->num_rows>0){
+//						$x=0;
+//						$y=0;
+//						$z=0;
+//						while($drow=$dres->fetch_assoc()){
+//			//				$ret_data["e"] = $row["isfinish"];
+//							$ret_data["item"][$i]["name"]=$crow["name"];
+//							switch($drow["isfinish"]){
+//								case 3:
+//								$ret_data["item"][$i]["unfinished"][$x]["route"] = $drow["route"];
+//								$ret_data["item"][$i]["unfinished"][$x]["id"] = $drow["id"];
+//								$x++;
+//								break;
+//								case 1:
+//								$ret_data["item"][$i]["finished"][$y]["route"] = $drow["route"];
+//								$ret_data["item"][$i]["finished"][$y]["id"] = $drow["id"];
+//								$y++;
+//								break;
+//								case 2:
+//								$ret_data["item"][$i]["bulid"][$z]["route"] = $drow["route"];
+//								$ret_data["item"][$i]["bulid"][$z]["id"] = $drow["id"];
+//								$z++;
+//								break;
+//							}
+//						}
+//						$i++;
+//					}
+//				}
+//			}	
+//		}
 	}else if($flag == 'partfile'){
 		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url FROM onfile WHERE id = '$id'";
 		$res=$conn->query($sql);
@@ -315,7 +316,7 @@
 		$ret_data["success"] = "success";
 	}
 	else if($flag=='qrcode'){
-		$sql = "SELECT name,figure_number,fid,count,child_material,modid FROM part WHERE id='$id'";
+		$sql = "SELECT name,figure_number,fid,count,child_material,modid,pNumber FROM part WHERE id='$id'";
 		$res = $conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -334,13 +335,30 @@
 				$ret_data["next"] = $arow["route"];
 			}
 		}
-		$bsql = "SELECT number FROM project WHERE id='$fid'";
+		$bsql = "SELECT pNumber,number FROM project WHERE id='$fid'";
 		$bres = $conn->query($bsql);
 		if($bres->num_rows>0){
 			while($brow=$bres->fetch_assoc()){
-				$str = explode('#',$brow["number"]);
-				$ret_data["pro"] = $str[0].'#';
+//				$str = explode('#',$brow["number"]);
+				$ret_data["pro"] = $brow["pNumber"].$brow["number"];
 			}
+		}
+	}else if($flag == 'plm_part') {
+		$sql = "SELECT product_id,label,figure_number,belong_part,hierarchy,material,count,remark FROM plm WHERE id = '$id'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			while($row=$res->fetch_assoc()){
+				$ret_data["product_id"] = $row["product_id"];
+				$ret_data["label"] = $row["label"];
+				$ret_data["figure_number"] = $row["figure_number"];
+				$ret_data["belong_part"] = $row["belong_part"];
+				$ret_data["hierarchy"] = $row["hierarchy"];
+				$ret_data["material"] = $row["material"];
+				$ret_data["id"] = $id;
+				$ret_data["count"] = $row["count"];
+				$ret_data["remark"] = $row["remark"];
+			}
+			$ret_data["success"] = 'success';
 		}
 	}
 	$conn->close();

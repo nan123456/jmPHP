@@ -161,7 +161,12 @@
 //					$dres = $conn->query($dsql);					
 //				}
 //			}
-	        	if(($am == "A" || $am == "B")&&$d!=''){
+	        	if($d!=''){
+	        		if($am == "A" || $am == "B"){
+	        			$radio=1;  //关键零部件
+	        		}else if($am != "A" && $am != "B"){
+	        			$radio=2;  //非关键零部件
+	        		}
 	        		$isexterior=0; //是否外协，默认为0
 	        		//获取工艺路线的值
 		        	if($r) {
@@ -179,7 +184,7 @@
 						$dres = $conn->query($dsql);					
 					}
 				}
-	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','1','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
+	        		$sql = "INSERT INTO part (fid,belong_part,pNumber,name,child_material,standard,radio,category,quantity,unit,count,modid,child_number,remark,isfinish,isexterior,ordernumber,figure_number,belong_figure_number) VALUES('$id','$k','$pnumber','$i','$z','$l','$radio','$am','$ab','$aa','$w','$al','$y','$v','0','$isexterior','$d','$an','$ao')"; //null 为主键id，自增可用null表示自动添加
 	        		$res= $conn->query($sql);
 	        	}
 	        	
@@ -187,7 +192,11 @@
 	        		$esql="INSERT INTO compare_plm(project,ordernumber,name,belong_part,property,size,route,orderamount)VALUES('$a','$d','$i','$k','$j','$l','$r','$w')";//无订单号与PLM进行比对
 	        		$eres= $conn->query($esql);
 	        	}
-	       
+        	$sql = "SELECT modid FROM route WHERE pid='$number'AND route = 'S移交客户'";
+        	$result = $conn->query($sql);
+        	$row = $result->fetch_assoc();
+        	$sql2 = "UPDATE project SET modid='".$row['modid']."' WHERE id='$number'";
+	       	$result2= $conn->query($sql2);
 //	        if($partname!=$projectname){
 //	        	if($am == "A" || $am == "B"){
 //	        		$radio = 1;

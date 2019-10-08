@@ -10,7 +10,7 @@
 	
 	$flag = isset($_REQUEST["flag"]) ? $_REQUEST["flag"] : "";
 	switch($flag){
-		case "heattreatmentDataOne" ://热处理工艺技术要求及检验记录表信息保存
+		case "heattreatmentDataOne" ://热处理工艺技术要求及检验记录表信息新建
 			$treeId = isset($_POST["treeId"]) ? $_POST["treeId"] :"";//表【craftsmanshiptree】的id
 			$heattreatmentTableHeader = isset($_POST["heattreatmentTableHeader"]) ? json_decode($_POST["heattreatmentTableHeader"],TRUE) : array();
 			$model = isset($_REQUEST["model"]) ? $_REQUEST["model"] : "";
@@ -49,6 +49,51 @@
 				$row2 =$res2->fetch_assoc();
 				
 				$sql3="INSERT INTO heattreatbody(heattreatment_id,model,temperature,time,otherdata,selectvalue)VALUES('".$row2["id"]."','$model','$temperature_string','$time_string','".$otherData_string."','".$selectvalue_string."')";
+				$res3=$conn->query($sql3);
+			}else{
+				$returnData["state"] = "failure";
+				$returnData["message"] = "主要数据为空";
+			}
+			
+			$json = json_encode($returnData);
+			echo $json;
+			break;
+		case "updateData"://更新保存
+			$contactId = isset($_POST["contactId"]) ? $_POST["contactId"] :"";//表heattreatment的ID
+//			$treeId = isset($_POST["treeId"]) ? $_POST["treeId"] :"";//表【craftsmanshiptree】的id
+			$heattreatmentTableHeader = isset($_POST["heattreatmentTableHeader"]) ? json_decode($_POST["heattreatmentTableHeader"],TRUE) : array();
+//			$model = isset($_REQUEST["model"]) ? $_REQUEST["model"] : "";
+			$temperature = isset($_POST["temperature"]) ? json_decode($_POST["temperature"],TRUE) : array();
+			$time = isset($_POST["time"]) ? json_decode($_POST["time"],TRUE) : array();
+//			$otherData = isset($_POST["otherData"]) ? json_decode($_POST["otherData"],TRUE) : array();
+//			$selectvalue = isset($_POST["selectvalue"]) ? json_decode($_POST["selectvalue"],TRUE) : array();
+			$otherData = isset($_POST["otherData"]) ? $_POST["otherData"] :"";
+			$selectvalue = isset($_POST["selectvalue"]) ? $_POST["selectvalue"] :"";
+			//返回数据
+			$returnData = array(
+				"state" => "success",
+				"message" => "",
+				"sql" => ""				
+			);
+			$temperature_string='';
+			for($i=0;$i<count($temperature);$i++){
+				$temperature_string=$temperature_string.$temperature[$i].'|';
+			}
+			$time_string='';
+			for($j=0;$j<count($time);$j++){
+				$time_string=$time_string.$time[$j].'|';
+			}
+			$otherData_string = $otherData;;
+			$selectvalue_string = $selectvalue;						
+			//保存单一信息
+			if(count($heattreatmentTableHeader) > 0){
+				$sql  = "UPDATE heattreatment SET productName = '".$heattreatmentTableHeader["productName"]."',ownPartName = '".$heattreatmentTableHeader["ownPartName"]."',partsName = '".$heattreatmentTableHeader["partsName"]."',productDrawingNumber = '".$heattreatmentTableHeader["productDrawingNumber"]."',ownPartDrawingNumber = '".$heattreatmentTableHeader["ownPartDrawingNumber"]."',partsDrawingNumber = '".$heattreatmentTableHeader["partsDrawingNumber"]."' WHERE id = '".$contactId."'";
+				$conn->query($sql);
+				
+//				$sql2="select id from heattreatment where productDrawingNumber='".$heattreatmentTableHeader["productDrawingNumber"]."' and partsName='".$heattreatmentTableHeader["partsName"]."' order by id desc limit 1";
+//				$res2=$conn->query($sql2);
+//				$row2 =$res2->fetch_assoc();
+				$sql3="UPDATE heattreatbody SET temperature = '".$temperature_string."',time = '".$time_string."',otherdata = '".$otherData_string."',selectvalue = '".$selectvalue_string."'WHERE heattreatment_id = '".$contactId."'";
 				$res3=$conn->query($sql3);
 			}else{
 				$returnData["state"] = "failure";

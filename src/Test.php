@@ -21,8 +21,8 @@
 					$this->projectData[$i] = $row;
 										
 					//2、根据project的id（=》fid）与name和number的#号后的组合（name+number[1]）作为第二级
-					$number_array = explode("#", $row["number"]);
-					$belong_part = $row["name"].end($number_array);
+					// $number_array = explode("#", $row["number"]);
+					$belong_part = $row["name"].$row["number"];
 					$this->projectData[$i]["part"] = $this->getMpart($row["id"],$belong_part);
 					
 					$i++;
@@ -40,7 +40,7 @@
 				while($row = $result->fetch_assoc()){
 					$arr = array();
 					$arr=explode(',',$row["part_url"]);
-					$base = "http://jmmes.oss-cn-shenzhen.aliyuncs.com/partUpload/";
+					$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
 					foreach($arr as $key => $url){
 						$arr[$key] = $base .$url;
 					}		
@@ -74,7 +74,7 @@
 				while($row = $result->fetch_assoc()){
 					$arr = array();
 					$arr=explode(',',$row["part_url"]);
-					$base = "http://jmmes.oss-cn-shenzhen.aliyuncs.com/partUpload/";
+					$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
 					foreach($arr as $key => $url){
 						$arr[$key] = $base .$url;
 					}		
@@ -102,7 +102,7 @@
 					while($row = $result->fetch_assoc()){
 						$arr = array();
 						$arr=explode(',',$row["part_url"]);
-						$base = "http://jmmes.oss-cn-shenzhen.aliyuncs.com/partUpload/";
+						$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
 						foreach($arr as $key => $url){
 							$arr[$key] = $base .$url;
 						}		
@@ -134,7 +134,7 @@
 	set_time_limit(0);//设置脚本最大执行时间
 	ini_set('memory_limit','40960M');
 //	require("../conn.php");
-	$servername = "192.168.0.133:3306"; //将本地当做服务器，端口默认3306
+	$servername = "47.106.161.130:3306"; //将本地当做服务器，端口默认3306
 	$username = "admin";  //连接对象
 	$password = "123456";  //连接密码
 	
@@ -152,7 +152,7 @@
 	$test = new Test($conn);
 	$test->main();
 	$json = json_encode($test->projectData,JSON_UNESCAPED_UNICODE);
-//	echo $json;
+	// echo $json;
 //	$testData = $test->getPart_3(2,"吊钩组件","FY-48B.05.01-00&吊钩组件");
 //	print_r($testData);
 

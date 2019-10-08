@@ -130,8 +130,8 @@
 				}else{
 					$ret_data["data"][$i]["show_btn3"] = true;
 				}
-				$img_arr=explode(',',$row["photourl"]);
-				$ret_data["data"][$i]["photourl"] = $img_arr[0];
+//				$img_arr=explode(',',$row["photourl"]);
+				$ret_data["data"][$i]["photourl"] = $row["photourl"];
 				$ret_data["data"][$i]["show_img"] = isset( $row["photourl"]) ? true : false;
 				if($row["radio"]==2){
 					$ret_data["data"][$i]["radio"] = "非关键零部件";
