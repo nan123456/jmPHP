@@ -363,7 +363,7 @@
 		echo $json;
 	}else if($flag=='plm_mpart'){
 		$number = isset($_POST["number"])?$_POST["number"]:'';
-		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count FROM plm WHERE belong_part='$number'";
+		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count,remark FROM plm WHERE belong_part='$number'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -387,7 +387,7 @@
 		echo $json;
 	}else if($flag=='plm_part'){
 		$figure_number = isset($_POST["figure_number"])?$_POST["figure_number"]:'';
-		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count FROM plm WHERE belong_part='$figure_number'";
+		$sql = "SELECT id,product_id,label,figure_number,belong_part,hierarchy,material,count,remark FROM plm WHERE belong_part='$figure_number'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
