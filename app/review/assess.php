@@ -1,7 +1,7 @@
 <?php
 require("../../conn.php");
 
-$time = date("Y-m-d h:i:s");
+$time = date("Y-m-d H:i:s");
 $flag = $_POST["flag"];
 // $flag = '2';
 
