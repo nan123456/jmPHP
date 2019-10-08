@@ -88,7 +88,7 @@
 				$i++;
 			}
 }
-		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material order by id desc";
+		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material";
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
