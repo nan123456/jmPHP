@@ -1,7 +1,7 @@
 <?php
 require ("../conn.php");
 	$flag = $_POST["flag"];
-	$time = date("Y-m-d h:i:s");
+	$time = date("Y-m-d H:i:s");
 //$flag = "9";
 
 switch ($flag) {
@@ -346,7 +346,7 @@ switch ($flag) {
         	$route=$row['route'];
         	}
         }
-        $time = date("Y-m-d h:i:s");
+        $time = date("Y-m-d H:i:s");
         $sql_exist= "select routeid from workshop_k where routeid='$routeid'";
 		$res_exist=$conn->query($sql_exist);
 		if($res_exist->num_rows > 0){

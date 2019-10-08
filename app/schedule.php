@@ -35,7 +35,7 @@ switch ($flag) {
         $count=$_POST['count'];
         $cuser=$_POST['writtenBy'];
         $schedule_date = date("Y-m-d");
-        $time = date("Y-m-d h:i:s");
+        $time = date("Y-m-d H:i:s");
         $sql_oldupdate= "UPDATE route SET isfinish='0' where modid='$modid' and id='$routeid'";
 		$conn->query($sql_oldupdate);
         $sql =  "INSERT INTO workshop_k (modid, routeid, schedule_date, isfinish,ctime,cuser) VALUES ('$modid', '$routeid', '$schedule_date', '0','$time','$cuser')";
