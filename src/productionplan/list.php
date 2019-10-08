@@ -44,7 +44,7 @@
 	
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and isexterior='0' and Pisfinish='0' ORDER BY backMark DESC,routeid";
+		$sql = "select modid,fid,id,isexterior,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='0' and isexterior='0' and Pisfinish='0' ORDER BY id DESC,routeid";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -142,7 +142,7 @@
 		$json = '{"success":true,"rows":' . $list_data . ',"fStandard":' . $fStandard . ',"fChild_material":' . $fChild_material . '}';
 	}else if($flag =="Delivered") {
 		// 已就工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason ,pNumber from productionplan WHERE isfinish='2' ORDER BY backMark DESC,routeid";
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason ,pNumber from productionplan WHERE isfinish='2' ORDER BY id DESC,routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -198,7 +198,7 @@
 	  }
 	}else if($flag=='Production'){
 		// 已完工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='1' ORDER BY backMark DESC,routeid";
+	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='1' ORDER BY id DESC,routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -328,7 +328,7 @@
 		$json = '{"success":true,"rows4":' . $list_data . '}';
 	}else if($flag=='exterior'){
 		// 获取列表数据
-		$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,a.isfinish,b.number as p_number,a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY id";
+		$sql = "select a.modid,a.fid,a.id,a.isexterior,a.figure_number,a.name,a.standard,a.count,a.child_material,a.remark,b.name as product_name,a.isfinish,b.number as p_number,a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY id DESC";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {

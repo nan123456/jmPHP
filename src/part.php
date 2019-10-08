@@ -316,7 +316,7 @@
 		$ret_data["success"] = "success";
 	}
 	else if($flag=='qrcode'){
-		$sql = "SELECT name,figure_number,fid,count,child_material,modid FROM part WHERE id='$id'";
+		$sql = "SELECT name,figure_number,fid,count,child_material,modid,pNumber FROM part WHERE id='$id'";
 		$res = $conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -335,12 +335,12 @@
 				$ret_data["next"] = $arow["route"];
 			}
 		}
-		$bsql = "SELECT number FROM project WHERE id='$fid'";
+		$bsql = "SELECT pNumber,number FROM project WHERE id='$fid'";
 		$bres = $conn->query($bsql);
 		if($bres->num_rows>0){
 			while($brow=$bres->fetch_assoc()){
-				$str = explode('#',$brow["number"]);
-				$ret_data["pro"] = $str[0].'#';
+//				$str = explode('#',$brow["number"]);
+				$ret_data["pro"] = $brow["pNumber"].$brow["number"];
 			}
 		}
 	}else if($flag == 'plm_part') {

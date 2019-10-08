@@ -279,10 +279,13 @@
 			$fileSaveSql = '';//保存的路径，在src目录下
 			if(count($_FILES) > 0){
 				$fileSaveDir = "../uploadfiles";//文件存放目录
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
+//				echo $fileSaveName;
 				$uploadfileclass = new UploadFile($_FILES["myfile"],$fileSaveDir,$fileSaveName);
 				$fileSaveSql = $uploadfileclass->uploadFile();
+				echo $fileSaveSql.'|||';
 				$fileSaveSql = substr($fileSaveSql, 3);
+				echo $fileSaveSql;
 			}
 			
 			//保存首表信息，返回自增id
@@ -360,7 +363,7 @@
 					}
 				}				
 				$fileSaveDir = "../uploadfiles";//文件存放目录
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				$uploadfileclass = new UploadFile($_FILES["myfile"],$fileSaveDir,$fileSaveName);
 				$fileSaveSql = $uploadfileclass->uploadFile();
 				$fileSaveSql = substr($fileSaveSql, 3);
@@ -444,7 +447,7 @@
 			switch($tableFlag){
 				case "1":
 					//装载数据-焊接信息
-					$sql = "SELECT `id` AS `contactId`,`productcode`,`processnumber`,`producname`,`partname`,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productcode`,`processnumber`,`producname`,`partname`,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -459,7 +462,7 @@
 					break;
 				case "2":
 					//装载数据-制造信息
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -474,7 +477,7 @@
 					break;
 				case "3":
 					//装载数据-热处理
-					$sql = "SELECT `id` AS `contactId`,partsDrawingNumber,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,partsDrawingNumber,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -489,7 +492,7 @@
 					break;
 				case "4":
 					//装载数据-机加工
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."'";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -505,7 +508,7 @@
 				case "0":
 					$relateId = explode(',',$relateId);
 					//装载数据-焊接信息
-					$sql = "SELECT `id` AS `contactId`,`productcode`,`partdrawingnumber` AS productDrawingNumber,`producname` AS productName,`partname` AS ownPartName,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff,'焊接工艺' AS TypeCard FROM `weldingtable` WHERE `weldingtree_id`='".$relateId[0]."'";	
+					$sql = "SELECT `id` AS `contactId`,`productcode`,`partdrawingnumber` AS productDrawingNumber,`producname` AS productName,`partname` AS ownPartName,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff,'焊接工艺' AS TypeCard FROM `weldingtable` WHERE `weldingtree_id`='".$relateId[0]."' order by `id` desc";	
 					$result = $conn->query($sql);
 					$returnData["message"] = "获取成功";
 					$i = 0;
@@ -514,21 +517,21 @@
 						$i++;
 					}
 					//装载数据-制造信息
-					$sql2 = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `productDrawingNumber`,productname AS `productName`,`partname` AS ownPartName,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff,'机械制造' AS TypeCard FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId[1]."'";
+					$sql2 = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `productDrawingNumber`,productname AS `productName`,`partname` AS ownPartName,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff,'机械制造' AS TypeCard FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId[1]."' order by `id` desc";
 					$result2 = $conn->query($sql2);
 					while($row2 = $result2->fetch_assoc()){
 						$returnData["data"][$i] = $row2;
 						$i++;
 					}
 					//装载数据-热处理
-					$sql3 = "SELECT `id` AS `contactId`,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff,'热处理' AS TypeCard FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId[0]."'";
+					$sql3 = "SELECT `id` AS `contactId`,productDrawingNumber,productName,ownPartName,partsName AS pnumber,FROM_UNIXTIME( `ctime`, '%Y-%m-%d %H:%i:%s' ) AS ctime,'heattreatment' AS diff,'热处理' AS TypeCard FROM `heattreatment` WHERE	`weldingtree_id` = '".$relateId[0]."' order by `id` desc";
 					$result3 = $conn->query($sql3);
 					while($row3 = $result3->fetch_assoc()){
 						$returnData["data"][$i] = $row3;
 						$i++;
 					}
 					//装载数据-机加工
-					$sql4 = "SELECT `id` AS `contactId`,productname AS `productName`,`partname` AS ownPartName,partdrawnumber AS productDrawingNumber,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff,'机械加工' AS TypeCard FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId[0]."'";
+					$sql4 = "SELECT `id` AS `contactId`,productname AS `productName`,`partname` AS ownPartName,partdrawnumber AS productDrawingNumber,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff,'机械加工' AS TypeCard FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId[0]."' order by `id` desc";
 					$result4 = $conn->query($sql4);
 					while($row4 = $result4->fetch_assoc()){
 						$returnData["data"][$i] = $row4;
@@ -794,7 +797,7 @@
 			if(count($_FILES) > 0){
 				$fileSaveDir = "../uploadfiles";//文件存放目录				
 				//第一张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfile"])){
 					$uploadfileclass = new UploadFile($_FILES["myfile"],$fileSaveDir,$fileSaveName);
 					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
@@ -919,21 +922,21 @@
 			if(count($_FILES) > 0){
 				$fileSaveDir = "../uploadfiles";//文件存放目录				
 				//第一张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfileone"])){
 					$uploadfileclass = new UploadFile($_FILES["myfileone"],$fileSaveDir,$fileSaveName);
 					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
 					$fileSaveSql[0] = substr($fileSaveSql_tmp, 3);
 				}
 				//第二张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfiletwo"])){
 					$uploadfileclass = new UploadFile($_FILES["myfiletwo"],$fileSaveDir,$fileSaveName);
 					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
 					$fileSaveSql[1] = substr($fileSaveSql_tmp, 3);
 				}
 				//第三张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfilethree"])){
 					$uploadfileclass = new UploadFile($_FILES["myfilethree"],$fileSaveDir,$fileSaveName);
 					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
@@ -996,7 +999,7 @@
 			if(count($_FILES) > 0){
 				$fileSaveDir = "../uploadfiles";//文件存放目录				
 				//第一张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfileone"])){
 					//删除原有文件
 					$sql = "SELECT `secondmodelimageone` FROM `craftsmanshiptable` WHERE id='".$craftsmanshipTableHeader["contactId"]."'";
@@ -1017,7 +1020,7 @@
 					$conn->query($sql);
 				}
 				//第二张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfiletwo"])){
 					//删除原有文件
 					$sql = "SELECT `secondmodelimagetwo` FROM `craftsmanshiptable` WHERE id='".$craftsmanshipTableHeader["contactId"]."'";
@@ -1038,7 +1041,7 @@
 					$conn->query($sql);
 				}
 				//第三张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfilethree"])){
 					//删除原有文件
 					$sql = "SELECT `secondmodelimagethree` FROM `craftsmanshiptable` WHERE id='".$craftsmanshipTableHeader["contactId"]."'";
@@ -1120,7 +1123,7 @@
 			if(count($_FILES) > 0){
 				$fileSaveDir = "../uploadfiles";//文件存放目录				
 				//第一张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfile"])){
 					$uploadfileclass = new UploadFile($_FILES["myfile"],$fileSaveDir,$fileSaveName);
 					$fileSaveSql_tmp = $uploadfileclass->uploadFile();
@@ -1132,13 +1135,13 @@
 			//保存单一信息
 			if(count($craftsmanshipTableHeader) > 0){
 				$sql = "INSERT INTO `craftsmanshiptable`(`craftsmanshiptree_id`,`model`,`productname`,`ownpartname`,`partname`,`workpiecenumber`,`productdrawnumber`,`ownpartdrawnumber`,`partdrawnumber`";
-				$sql .= ",`quantity`,`finalconclusion`,`inspector`,`inspectionaudit`,`mark`,`numberofplaces`,`changethefilenumber`,`signature`,`date`,`establishment`,`review`,`thirdmodelimage`,`ctime`) VALUES(";
+				$sql .= ",`quantity`,`finalconclusion`,`inspector`,`inspectionaudit`,`mark`,`numberofplaces`,`changethefilenumber`,`signature`,`date`,`establishment`,`review`,`thirdmodelimage`,`ctime`,`pnumber`) VALUES(";
 				$sql .= "'".$treeId."','3'";
 				$sql .= ",'".$craftsmanshipTableHeader["productName"]."','".$craftsmanshipTableHeader["ownPartName"]."','".$craftsmanshipTableHeader["partsName"]."','".$craftsmanshipTableHeader["workpieceNumber"]."'";
 				$sql .= ",'".$craftsmanshipTableHeader["productDrawingNumber"]."','".$craftsmanshipTableHeader["ownPartDrawingNumber"]."','".$craftsmanshipTableHeader["partsDrawingNumber"]."','".$craftsmanshipTableHeader["quantity"]."'";
 				$sql .= ",'".$craftsmanshipTableFooter["finalConclusion"]."','".$craftsmanshipTableFooter["inspector"]."','".$craftsmanshipTableFooter["inspectionAudit"]."','".$craftsmanshipTableFooter["mark"]."','".$craftsmanshipTableFooter["numberOfPlaces"]."'";
 				$sql .= ",'".$craftsmanshipTableFooter["changeTheFileNumber"]."','".$craftsmanshipTableFooter["signature"]."','".$craftsmanshipTableFooter["date"]."','".$craftsmanshipTableFooter["establishment"]."','".$craftsmanshipTableFooter["review"]."'";
-				$sql .= ",'".$fileSaveSql."','".time()."')";
+				$sql .= ",'".$fileSaveSql."','".time()."','".$craftsmanshipTableHeader["pnumber"]."')";
 				
 				$returnData["sql"] = $sql;
 				if(!$conn->query($sql)){
@@ -1170,7 +1173,7 @@
 			$fileSaveSql = "";//保存的路径，在src目录下
 			if(count($_FILES) > 0){
 				//第一张
-				$fileSaveName = getMillisecond();//无后缀的文件名
+				$fileSaveName = getMillisecond().'_'.rand(100,999);//无后缀的文件名,毫秒级时间戳+3位随机数
 				if(isset($_FILES["myfile"])){
 					//先删除
 					$sql = "SELECT `thirdmodelimage` FROM `craftsmanshiptable` WHERE id='".$craftsmanshipTableHeader["contactId"]."'";

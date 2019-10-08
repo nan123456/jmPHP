@@ -64,6 +64,8 @@
 				$ret_data["data"]["Pmodid"] = $row["Pmodid"];
 			}
 			$ret_data["success"] = 'success';
+		}else{
+			$ret_data["success"] = 'error';
 		}
 	}else{
 		
