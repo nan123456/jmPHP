@@ -9,7 +9,7 @@
 //	$flag = "Undelivered";
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0";
+		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0 order by id desc";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -88,7 +88,7 @@
 				$i++;
 			}
 }
-		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material";
+		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material order by id desc";
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
@@ -109,7 +109,7 @@
 		//获取前端数据
 		$select = isset($_POST["select"]) ? $_POST["select"] : '';
 		// 获取列表数据
-		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0";
+		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 order by id desc";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -188,7 +188,7 @@
 				$i++;
 			}
 		}
-		$sql2 = "SELECT DISTINCT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 group by child_material";
+		$sql2 = "SELECT DISTINCT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish IN ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 group by child_material order by id desc";
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
