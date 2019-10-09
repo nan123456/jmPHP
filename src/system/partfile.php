@@ -41,7 +41,7 @@
 		}
 	}else if($flag=="partdata"){
 		$id = isset($_POST["id"])?$_POST["id"]:'';
-		$sql = "SELECT figure_number,name,count,standard,radio,child_material,id,child_number,quantity,material,Pmodid FROM onfile WHERE id  = '$id'";
+		$sql = "SELECT figure_number,name,count,standard,radio,child_material,id,child_number,quantity,material,Pmodid,pNumber FROM onfile WHERE id  = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -62,6 +62,7 @@
 				$ret_data["data"]["quantity"] = $row["quantity"];
 				$ret_data["data"]["material"] = $row["material"];
 				$ret_data["data"]["Pmodid"] = $row["Pmodid"];
+				$ret_data["data"]["pNumber"] = $row["pNumber"];
 			}
 			$ret_data["success"] = 'success';
 		}else{
