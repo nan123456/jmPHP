@@ -121,20 +121,20 @@
 //		$ret_data["type"] = $type;
 		if($key==1){
 			//1关键部件
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and radio = '1'";
+			$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0) and radio = '1'";
 		}
 		else if($key==3){
 			//进行中
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='2'";
+			$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='2'";
 		}else if($key==4){
 			//已完成
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='1'";
+			$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$id'  AND (isexterior=0) and isfinish='1'";
 		}else if($key==5){
 			//外协
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (isexterior=1||isexterior=2||isexterior=3)";
+			$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$id' AND (isexterior=1||isexterior=2||isexterior=3)";
 		}else if($key==6){
 			//所有部件
-			$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0)";
+			$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$id' AND (belong_part='') AND (isexterior=0)";
 		}
 		
 		$res=$conn->query($sql);
@@ -146,6 +146,7 @@
 				$ret_data["data"][$i]["lx"] = 'bj';
 				$ret_data["data"][$i]["name"] = $row["name"];
 				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+				$ret_data["data"][$i]["pNumber"] = $row["pNumber"];
 				$ret_data["data"][$i]["modid"] = $row["modid"];
 				$ret_data["data"][$i]["leaf"] = false;
 				$i++;
@@ -164,9 +165,9 @@
 		$ret_data["level"] = $figure_number.'&'.$name;
 		if($level == 5) {
 			if($key==1){
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '1' AND (isexterior=0)";
+				$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '1' AND (isexterior=0)";
 			}else if($key==6){
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' AND (isexterior=0)";
+				$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$pid' AND belong_part='$name' AND (isexterior=0)";
 			}
 			
 			$res=$conn->query($sql);
@@ -177,7 +178,7 @@
 					$ret_data["data"][$i]["pid"] = $pid;  //项目id
 					$ret_data["data"][$i]["lx"] = 'bj';
 					$ret_data["data"][$i]["name"] = $row["name"];
-//					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+					$ret_data["data"][$i]["pNumber"] = $row["pNumber"];
 					$ret_data["data"][$i]["modid"] = $row["modid"];
 					$ret_data["data"][$i]["leaf"] = false;
 					$i++;
@@ -206,9 +207,9 @@
 		
 		}else {
 			if($key==1){
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '1' AND (isexterior=0)";
+				$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$pid' AND belong_part='$name' and radio = '1' AND (isexterior=0)";
 			}else if($key==6){
-				$sql = "SELECT id,name,modid,figure_number FROM part  WHERE fid = '$pid' AND belong_part='$name' AND (isexterior=0)";
+				$sql = "SELECT id,name,modid,figure_number,pNumber FROM part  WHERE fid = '$pid' AND belong_part='$name' AND (isexterior=0)";
 			}
 
 			$res=$conn->query($sql);
@@ -219,7 +220,7 @@
 					$ret_data["data"][$i]["pid"] = $pid;  //项目id
 					$ret_data["data"][$i]["lx"] = 'bj';
 					$ret_data["data"][$i]["name"] = $row["name"];
-//					$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+					$ret_data["data"][$i]["pNumber"] = $row["pNumber"];
 					$ret_data["data"][$i]["modid"] = $row["modid"];
 					$ret_data["data"][$i]["leaf"] = false;
 					$i++;
@@ -250,9 +251,10 @@
 		echo $json;
 	} else if($flag == 'treefilter'){
 		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
-		$state = isset($_POST["state"])?$_POST["state"]:'';
+//		$state = isset($_POST["state"])?$_POST["state"]:'';
 		if($modid) {
-			$sql = "SELECT id,name,number FROM project WHERE isfinish='$state' AND modid = '$modid'";
+//			$sql = "SELECT id,name,number FROM project WHERE isfinish='$state' AND modid = '$modid'";
+			$sql = "SELECT id,name,number FROM project WHERE  modid = '$modid'";
 			$res=$conn->query($sql);
 			if($res->num_rows>0){
 				while($row=$res->fetch_assoc()){
@@ -273,7 +275,7 @@
 				$arr=array();
 				function recursion($modid,$pnumber,$i,$arr,$conn){
 //					require("../conn.php");
-					$asql = "SELECT id,fid,name,modid,figure_number,belong_part FROM part  WHERE  modid='$modid' AND pNumber='$pnumber' ";
+					$asql = "SELECT id,fid,name,modid,figure_number,belong_part,pNumber FROM part  WHERE  modid='$modid' AND pNumber='$pnumber' ";
 					$ares=$conn->query($asql);
 					if($ares->num_rows>0){
 						$arow=$ares->fetch_assoc();
@@ -284,6 +286,7 @@
 						$arr["data"][$i]["figure_number"] = $arow["figure_number"];
 						$arr["data"][$i]["modid"] = $arow["modid"];
 						$arr["data"][$i]["belong_part"] = $arow["belong_part"];
+						$arr["data"][$i]["pNumber"] = $arow["pNumber"];
 						$arr["data"][$i]["leaf"] = true;
 						if($arow["belong_part"]){
 							$belong_part=$arow["belong_part"];

@@ -1256,6 +1256,7 @@
 					$returnData["data"]["craftsmanshipTableHeader"]["ownPartDrawingNumber"] = $row["ownpartdrawnumber"];
 					$returnData["data"]["craftsmanshipTableHeader"]["partsDrawingNumber"] = $row["partdrawnumber"];
 					$returnData["data"]["craftsmanshipTableHeader"]["quantity"] = $row["quantity"];
+					$returnData["data"]["craftsmanshipTableHeader"]["pnumber"] = $row["pnumber"];
 					
 					//尾部信息
 					$returnData["data"]["craftsmanshipTableFooter"]["finalConclusion"] = $row["finalconclusion"];
@@ -1273,7 +1274,6 @@
 							//结论与不符合确定【模板一、二】
 							$returnData["data"]["craftsmanshipTableBodyResult"]["conclusion"] = $row["conclusion"];
 							$returnData["data"]["craftsmanshipTableBodyResult"]["inconsistentConfirmation"] = $row["inconsistentconfirmation"];
-							
 							$returnData["data"]["craftsmanshipTableBody_1"]["fileOne"] = $row["firstfive"];
 							$returnData["data"]["craftsmanshipTableBody_1"]["imgHtml"] = "";
 							//模板一可遍历的数据

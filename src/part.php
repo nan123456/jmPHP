@@ -6,7 +6,7 @@
 	$id = isset($_POST["id"])?$_POST["id"]:'';
 	
 	if($flag == 'part') {
-		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number FROM part WHERE id = '$id'";
+		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number,pNumber FROM part WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -20,6 +20,7 @@
 				$ret_data["radio"] = $row["radio"];
 				$ret_data["child_material"] = $row["child_material"];
 				$ret_data["child_number"] = $row["child_number"];
+				$ret_data["pNumber"] = $row["pNumber"];
 				$modid = $row["modid"];
 			}
 			$ret_data["success"] = 'success';
@@ -146,7 +147,7 @@
 //			}	
 //		}
 	}else if($flag == 'partfile'){
-		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url FROM onfile WHERE id = '$id'";
+		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url,pNumber FROM onfile WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -160,6 +161,7 @@
 				$ret_data["station"] = $row["station"];
 				$ret_data["remark"] = $row["remark"];
 				$ret_data["radio"] = $row["radio"];
+				$ret_data["pNumber"] = $row["pNumber"];
 				$arr = array();
 				$arr=explode(',',$row["part_url"]);
 				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
@@ -340,7 +342,7 @@
 		if($bres->num_rows>0){
 			while($brow=$bres->fetch_assoc()){
 //				$str = explode('#',$brow["number"]);
-				$ret_data["pro"] = $brow["pNumber"].$brow["number"];
+				$ret_data["pro"] = $brow["pNumber"];
 			}
 		}
 	}else if($flag == 'plm_part') {
