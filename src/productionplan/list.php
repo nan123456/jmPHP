@@ -112,37 +112,37 @@
 			}
 		}
 		// 过滤重复作为下拉checkbox数据
-		$sql2 = "SELECT DISTINCT standard from productionplan";
+		$sql2 = "SELECT DISTINCT product_name from productionplan";
 		//DISTINCT通过关键字standard来过滤掉多余的重复记录只保留一条
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
 			while ($row2 = $res2 -> fetch_assoc()) {
-				// 开料尺寸
-				$arr2[$i]['f6'] = $row2['standard'];
+				// 产品名称
+				$arr2[$i]['f6'] = $row2['product_name'];
 				$i++;
 			}
 		}
 	
-		$sql3 = "SELECT DISTINCT child_material from productionplan";
+		$sql3 = "SELECT DISTINCT pNumber from productionplan";
 		$res3 = $conn -> query($sql3);
 		if ($res3 -> num_rows > 0) {
 			$i = 0;
 			while ($row3 = $res3 -> fetch_assoc()) {
-				// 规格
-				$arr3[$i]['f5'] = $row3['child_material'];
+				// 工单
+				$arr3[$i]['f5'] = $row3['pNumber'];
 				$i++;
 			}
 		}
 	
 		// 未排产
 		$list_data = json_encode($arr);
-		$fStandard = json_encode($arr2);
-		$fChild_material = json_encode($arr3);
-		$json = '{"success":true,"rows":' . $list_data . ',"fStandard":' . $fStandard . ',"fChild_material":' . $fChild_material . '}';
+		$product_name = json_encode($arr2);
+		$pNumber = json_encode($arr3);
+		$json = '{"success":true,"rows":' . $list_data . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
 	}else if($flag =="Delivered") {
 		// 已就工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason ,pNumber from productionplan WHERE isfinish='2' ORDER BY id DESC,routeid";
+	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason ,a.pNumber,b.stime from productionplan a,workshop_k b WHERE a.isfinish='2' AND a.modid=b.modid AND a.route=b.route ORDER BY id DESC,a.routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -163,42 +163,43 @@
 		  $arr4[$i]['number']=$row4['pNumber']; //工单
 		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
+	      $arr4[$i]['stime'] = $row4['stime'];
 //	      $arr4[$i]['station'] = $row4['station'];
 //	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
 	
-	    // 规格下拉筛选数据
-	    $sql5 = "SELECT DISTINCT child_material FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    // 下拉项目名称
+	    $sql5 = "SELECT DISTINCT c.`name`AS product_name FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
 	    $res5 = $conn->query($sql5);
 	    if($res5->num_rows > 0) {
 	      $i = 0;
 	      while($row5 = $res5->fetch_assoc()) {
-	        $arr5[$i]['F5'] = $row5['child_material'];
+	        $arr5[$i]['F5'] = $row5['product_name'];
 	        $i++;
 	      }
 	    }
 	
-	    // 开料尺寸下拉筛选数据
-	    $sql6 = "SELECT DISTINCT standard FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    // 下拉筛选工单
+	    $sql6 = "SELECT DISTINCT A.pNumber FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
 	    $res6 = $conn->query($sql6);
 	    if($res6->num_rows > 0) {
 	      $i = 0;
 	      while($row6 = $res6->fetch_assoc()) {
-	        $arr6[$i]['F6'] = $row6['standard'];
+	        $arr6[$i]['F6'] = $row6['pNumber'];
 	        $i++;
 	      }
 	    }
 	
 	    // 已就工
 	    $list_data2 = json_encode($arr4);
-	    $FChild_material = json_encode($arr5);
-	    $FStandard = json_encode($arr6);
-	    $json = '{"success":true,"rows2":'.$list_data2.',"FStandard":'.$FStandard.',"FChild_material":'.$FChild_material.'}';
+	    $product_name = json_encode($arr5);
+	    $pNumber = json_encode($arr6);
+	    $json = '{"success":true,"rows2":'.$list_data2.',"Product_name":'.$product_name.',"PNumber":'.$pNumber.'}';
 	  }
 	}else if($flag=='Production'){
 		// 已完工数据列表
-	  $sql4 = "select modid,fid,id,figure_number,name,standard,route,count,child_material,number,product_name,remark,routeid,backMark,reason,pNumber from productionplan WHERE isfinish='1' ORDER BY id DESC,routeid";
+	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason,a.pNumber,b.stime,b.ftime from productionplan a ,workshop_k b WHERE a.isfinish='1' AND a.modid=b.modid AND a.route=b.route ORDER BY id DESC,a.routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -219,38 +220,40 @@
 		  $arr4[$i]['number']=$row4['pNumber']; //工单
 		  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 	      $arr4[$i]['remark'] = $row4['remark'];
+	      $arr4[$i]['stime'] = $row4['stime'];
+	      $arr4[$i]['ftime'] = $row4['ftime'];
 //	      $arr4[$i]['station'] = $row4['station'];
 //	      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 	      $i++;
 	    }
 	
 	    // 规格下拉筛选数据
-	    $sql5 = "SELECT DISTINCT child_material FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql5 = "SELECT DISTINCT c.`name`AS product_name FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
 	    $res5 = $conn->query($sql5);
 	    if($res5->num_rows > 0) {
 	      $i = 0;
 	      while($row5 = $res5->fetch_assoc()) {
-	        $arr5[$i]['F5'] = $row5['child_material'];
+	        $arr5[$i]['F5'] = $row5['product_name'];
 	        $i++;
 	      }
 	    }
 	
 	    // 开料尺寸下拉筛选数据
-	    $sql6 = "SELECT DISTINCT standard FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql6 = "SELECT DISTINCT A.pNumber FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
 	    $res6 = $conn->query($sql6);
 	    if($res6->num_rows > 0) {
 	      $i = 0;
 	      while($row6 = $res6->fetch_assoc()) {
-	        $arr6[$i]['F6'] = $row6['standard'];
+	        $arr6[$i]['F6'] = $row6['pNumber'];
 	        $i++;
 	      }
 	    }
 	
 	    // 已完工
 	    $list_data2 = json_encode($arr4);
-	    $FChild_material = json_encode($arr5);
-	    $FStandard = json_encode($arr6);
-	    $json = '{"success":true,"rows3":'.$list_data2.',"FStandard":'.$FStandard.',"FChild_material":'.$FChild_material.'}';
+	    $product_name = json_encode($arr5);
+	    $pNumber = json_encode($arr6);
+	    $json = '{"success":true,"rows3":'.$list_data2.',"product_name":'.$product_name.',"pNumber":'.$pNumber.'}';
 	  }
 	
 			//已完工
@@ -372,34 +375,34 @@
 			}
 		}
 		// 过滤重复作为下拉checkbox数据
-		$sql2 = "SELECT DISTINCT standard from productionplan";
+		$sql2 = "SELECT DISTINCT product_name from productionplan";
 		//DISTINCT通过关键字standard来过滤掉多余的重复记录只保留一条
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
 			while ($row2 = $res2 -> fetch_assoc()) {
 				// 开料尺寸
-				$arr2[$i]['f6'] = $row2['standard'];
+				$arr2[$i]['f6'] = $row2['product_name'];
 				$i++;
 			}
 		}
 	
-		$sql3 = "SELECT DISTINCT child_material from productionplan";
+		$sql3 = "SELECT DISTINCT pNumber from productionplan";
 		$res3 = $conn -> query($sql3);
 		if ($res3 -> num_rows > 0) {
 			$i = 0;
 			while ($row3 = $res3 -> fetch_assoc()) {
 				// 规格
-				$arr3[$i]['f5'] = $row3['child_material'];
+				$arr3[$i]['f5'] = $row3['pNumber'];
 				$i++;
 			}
 		}
 	
 		// 未排产
 		$list_data = json_encode($arr);
-		$fStandard = json_encode($arr2);
-		$fChild_material = json_encode($arr3);
-		$json = '{"success":true,"rows4":' . $list_data . ',"fStandard":' . $fStandard . ',"fChild_material":' . $fChild_material . '}';
+		$product_name = json_encode($arr2);
+		$pNumber = json_encode($arr3);
+		$json = '{"success":true,"rows4":' . $list_data . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
 	
 		
 	}
