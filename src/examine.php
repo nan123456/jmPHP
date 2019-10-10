@@ -67,13 +67,13 @@
 		$state = $_POST["state"];
 		if($state==1){
 			//未检验
-			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,pNumber from test where isfinish = '1'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,pNumber from test where isfinish = '1' order by id desc";
 		}else if($state==4){
 			//不合格
-			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where isfinish = '3' and unqualified>'0'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where isfinish = '3' and unqualified>'0' order by id desc";
 		}else if($state==3){
 			//合格
-			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio,pNumber from test where isfinish = '3' and (count-unqualified-reviews-dumping)>'0'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio,pNumber from test where isfinish = '3' and (count-unqualified-reviews-dumping)>'0' order by id desc";
 		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
