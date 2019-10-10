@@ -163,11 +163,14 @@
 				$ret_data["radio"] = $row["radio"];
 				$ret_data["pNumber"] = $row["pNumber"];
 				$arr = array();
-				$arr=explode(',',$row["part_url"]);
-				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
-				foreach($arr as $key => $url){
-					$arr[$key] = $base .$url;
-				}	
+				if($row["part_url"]){
+					$arr=explode(',',$row["part_url"]);
+					$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
+					foreach($arr as $key => $url){
+						$arr[$key] = $base .$url;
+					}	
+				}
+				
 				$ret_data["photourl"] = $arr;
 				}
 			$ret_data["success"] = 'success';
