@@ -33,7 +33,7 @@
 	$date = $ret_data["date"];
 	$typevalue = $ret_data["typevalue"];
 	//查询数据库，检查是否已存在该项目
-	$asql = "SELECT id FROM project WHERE number = '$number'";
+	$asql = "SELECT id FROM project WHERE pNumber = '$pnumber'";
 	$ares = $conn->query($asql);
 //	if($ret_data["ftype"] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'&& $ares->num_rows==0){
 	if($ret_data["ftype"] == 'xls'&& $ares->num_rows==0){
