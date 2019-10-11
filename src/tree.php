@@ -250,27 +250,28 @@
 		$json=json_encode($ret_data);
 		echo $json;
 	} else if($flag == 'treefilter'){
-		$modid = isset($_POST["modid"])?$_POST["modid"]:'';
+		$name = isset($_POST["name"])?$_POST["name"]:'';
+		$pnumber = isset($_POST["pnumber"])?$_POST["pnumber"]:'';
 //		$state = isset($_POST["state"])?$_POST["state"]:'';
-		if($modid) {
+		if($name) {
 //			$sql = "SELECT id,name,number FROM project WHERE isfinish='$state' AND modid = '$modid'";
-			$sql = "SELECT id,name,number FROM project WHERE  modid = '$modid'";
-			$res=$conn->query($sql);
-			if($res->num_rows>0){
-				while($row=$res->fetch_assoc()){
-					$ret_data["data"][0]["id"] = $row["id"];
-					$ret_data["data"][0]["name"] = $row["number"].$row["name"];
-					$ret_data["data"][0]["number"] = $row["number"];
-					$ret_data["data"][0]["zhname"] = $row["name"];
-					$ret_data["data"][0]["lx"] = 'xm';
-					$ret_data["data"][0]["leaf"] = true;
-				}
-				$ret_data["success"] = 'success';
-			}else {
-				$sql="SELECT pNumber FROM part WHERE modid='$modid'";
+//			$sql = "SELECT id,name,number FROM project WHERE  modid = '$modid'";
+//			$res=$conn->query($sql);
+//			if($res->num_rows>0){
+//				while($row=$res->fetch_assoc()){
+//					$ret_data["data"][0]["id"] = $row["id"];
+//					$ret_data["data"][0]["name"] = $row["number"].$row["name"];
+//					$ret_data["data"][0]["number"] = $row["number"];
+//					$ret_data["data"][0]["zhname"] = $row["name"];
+//					$ret_data["data"][0]["lx"] = 'xm';
+//					$ret_data["data"][0]["leaf"] = true;
+//				}
+//				$ret_data["success"] = 'success';
+//			}else {
+				$sql="SELECT modid FROM part WHERE name='$name' and pNumber='$pnumber'";
 				$res=$conn->query($sql);
 				$row=$res->fetch_assoc();
-				$pnumber=$row["pNumber"];
+				$modid=$row["modid"];
 				$i=0;
 				$arr=array();
 				function recursion($modid,$pnumber,$i,$arr,$conn){
@@ -328,7 +329,7 @@
 //					$ret_data["success"] = 'error';
 //				}
 			
-			}
+			
 		}
 	}else if($flag == 'plm_type'){
 		$sql = "SELECT type from project where number in (SELECT DISTINCT product_id FROM plm) GROUP BY type";
@@ -412,6 +413,40 @@
 		}
 		$json=json_encode($ret_data);
 		echo $json;
+	}else if($flag=='data_project'){
+		$type = isset($_POST["type"])?$_POST["type"]:'';
+//		$ret_data["type"] = $type;
+		$sql = "SELECT id,name,number FROM project WHERE  type = '$type'";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["name"] = $row["number"].$row["name"];
+				$ret_data["data"][$i]["number"] = $row["number"];
+				$ret_data["data"][$i]["zhname"] = $row["name"];
+				$ret_data["data"][$i]["lx"] = 'xm';
+				$ret_data["data"][$i]["leaf"] = false;
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+	$json=json_encode($ret_data);
+	echo $json;
+	}else if($flag == 'data_type'){
+		$sql = "SELECT type from project  GROUP BY type";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["name"] = $row["type"];
+				$ret_data["data"][$i]["leaf"] = false;
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+	$json=json_encode($ret_data);
+	echo $json;
 	}
 
 	
