@@ -591,7 +591,7 @@
 			$i = 0;
 			while ($row2 = $res2 -> fetch_assoc()) {
 				// 开料尺寸
-				$arr2[$i]['f6'] = $row2['product_name'];
+				$arr2[$i]['F5'] = $row2['product_name'];
 				$i++;
 			}
 		}
@@ -601,7 +601,7 @@
 			$i = 0;
 			while ($row3 = $res3 -> fetch_assoc()) {
 				// 规格
-				$arr3[$i]['f5'] = $row3['pNumber'];
+				$arr3[$i]['F6'] = $row3['pNumber'];
 				$i++;
 			}
 		}
@@ -609,7 +609,7 @@
 		$list_data = json_encode($arr);
 		$product_name = json_encode($arr2);
 		$pNumber = json_encode($arr3);
-		$json = '{"success":true,"rows4":' . $list_data . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
+		$json = '{"success":true,"rows4":' . $list_data . ',"Product_name":' . $product_name . ',"PNumber":' . $pNumber . '}';
 	
 			
 		}
