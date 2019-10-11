@@ -29,7 +29,7 @@
 		
 	}else if($flag == "Unread"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."' ORDER BY `id` desc ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0'  ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -48,7 +48,7 @@
 			$ret_data["success"] = 'success';
 		}
 		//获取下拉车间筛选
-		$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='0' AND department='".$department."' ORDER BY `id` desc";
+		$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='0' ORDER BY `id` desc";
 		$res2 = $conn->query($sql2);
 		if($res2->num_rows > 0) {
 	      $i = 0;
@@ -58,7 +58,7 @@
 	      }
 	    }
 	    //获取下拉状态筛选
-		$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='0' AND department='".$department."' ORDER BY `id` desc";
+		$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='0' ORDER BY `id` desc";
 		$res3 = $conn->query($sql3);
 		if($res3->num_rows > 0) {
 	      $i = 0;
@@ -71,7 +71,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND department='".$department."' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -93,7 +93,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND department='".$department."' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -113,7 +113,7 @@
 		}
 	}else if($flag == "Read"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND department='".$department."' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -130,7 +130,7 @@
 				$i++;
 			}
 			//获取下拉车间筛选
-			$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='1' AND department='".$department."' ORDER BY `id` desc";
+			$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='1' ORDER BY `id` desc";
 			$res2 = $conn->query($sql2);
 			if($res2->num_rows > 0) {
 		      $i = 0;
@@ -140,7 +140,7 @@
 		      }
 		    }
 		    //获取下拉状态筛选
-			$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='1' AND department='".$department."' ORDER BY `id` desc";
+			$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='1' ORDER BY `id` desc";
 			$res3 = $conn->query($sql3);
 			if($res3->num_rows > 0) {
 		      $i = 0;
