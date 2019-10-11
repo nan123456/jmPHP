@@ -112,7 +112,7 @@
 			}
 		}
 		// 过滤重复作为下拉checkbox数据
-		$sql2 = "SELECT DISTINCT product_name from productionplan";
+		$sql2 = "SELECT DISTINCT product_name from productionplan WHERE isfinish='0' and isexterior='0' and Pisfinish='0' ORDER BY id DESC,routeid";
 		//DISTINCT通过关键字standard来过滤掉多余的重复记录只保留一条
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
@@ -124,7 +124,7 @@
 			}
 		}
 	
-		$sql3 = "SELECT DISTINCT pNumber from productionplan";
+		$sql3 = "SELECT DISTINCT pNumber from productionplan WHERE isfinish='0' and isexterior='0' and Pisfinish='0' ORDER BY id DESC,routeid";
 		$res3 = $conn -> query($sql3);
 		if ($res3 -> num_rows > 0) {
 			$i = 0;
@@ -170,7 +170,7 @@
 	    }
 	
 	    // 下拉项目名称
-	    $sql5 = "SELECT DISTINCT c.`name`AS product_name FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql5 = "SELECT DISTINCT a.product_name FROM productionplan a,workshop_k b WHERE a.isfinish='2' AND a.modid=b.modid AND a.route=b.route ORDER BY a.id DESC,a.routeid";
 	    $res5 = $conn->query($sql5);
 	    if($res5->num_rows > 0) {
 	      $i = 0;
@@ -181,7 +181,7 @@
 	    }
 	
 	    // 下拉筛选工单
-	    $sql6 = "SELECT DISTINCT A.pNumber FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql6 = "SELECT DISTINCT A.pNumber FROM productionplan a,workshop_k b WHERE a.isfinish='2' AND a.modid=b.modid AND a.route=b.route ORDER BY a.id DESC,a.routeid";
 	    $res6 = $conn->query($sql6);
 	    if($res6->num_rows > 0) {
 	      $i = 0;
@@ -228,7 +228,7 @@
 	    }
 	
 	    // 规格下拉筛选数据
-	    $sql5 = "SELECT DISTINCT c.`name`AS product_name FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql5 = "SELECT DISTINCT a.product_name FROM productionplan a ,workshop_k b WHERE a.isfinish='1' AND a.modid=b.modid AND a.route=b.route ORDER BY a.id DESC,a.routeid";
 	    $res5 = $conn->query($sql5);
 	    if($res5->num_rows > 0) {
 	      $i = 0;
@@ -239,7 +239,7 @@
 	    }
 	
 	    // 开料尺寸下拉筛选数据
-	    $sql6 = "SELECT DISTINCT A.pNumber FROM part A,route B,project C,workshop_k D WHERE B.id = D.routeid AND A.fid = C.id AND A.modid = D.modid";
+	    $sql6 = "SELECT DISTINCT a.pNumber FROM productionplan a ,workshop_k b WHERE a.isfinish='1' AND a.modid=b.modid AND a.route=b.route ORDER BY a.id DESC,a.routeid";
 	    $res6 = $conn->query($sql6);
 	    if($res6->num_rows > 0) {
 	      $i = 0;
@@ -375,7 +375,7 @@
 			}
 		}
 		// 过滤重复作为下拉checkbox数据
-		$sql2 = "SELECT DISTINCT product_name from productionplan";
+		$sql2 = "SELECT DISTINCT b.name as product_name from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY a.id DESC";
 		//DISTINCT通过关键字standard来过滤掉多余的重复记录只保留一条
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
@@ -387,7 +387,7 @@
 			}
 		}
 	
-		$sql3 = "SELECT DISTINCT pNumber from productionplan";
+		$sql3 = "SELECT DISTINCT a.pNumber from part a,project b WHERE (a.isexterior='1' or a.isexterior='2' or a.isexterior='3') and (a.fid=b.id) ORDER BY a.id DESC";
 		$res3 = $conn -> query($sql3);
 		if ($res3 -> num_rows > 0) {
 			$i = 0;
