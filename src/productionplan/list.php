@@ -405,6 +405,13 @@
 		$json = '{"success":true,"rows4":' . $list_data . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
 	
 		
+	}else if($flag=="getlxid"){
+		$modid = isset($_POST["modid"]) ? $_POST["modid"] : '';
+		$sql="select id from part where modid='$modid'";
+		$res = $conn->query($sql);
+		$row = $res -> fetch_assoc();
+		$lxid=$row["id"];
+		$json=$lxid;
 	}
 	echo $json;
 	$conn -> close();
