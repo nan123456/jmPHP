@@ -365,6 +365,15 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	}else if($flag=='getPLMProject'){
+		$i=0;
+		$sql="select product_name,work_order from plan_table";
+		$res=$conn->query($sql);
+		while($row=$res->fetch_assoc()){
+			$ret_data["data"][$i]["label"]=$row["product_name"];
+			$ret_data["data"][$i]["value"]=$row["work_order"];
+			$i++;
+		}		
 	}
 	$conn->close();
 	$json = json_encode($ret_data);
