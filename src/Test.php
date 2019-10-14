@@ -40,7 +40,7 @@
 				while($row = $result->fetch_assoc()){
 					$arr = array();
 					$arr=explode(',',$row["part_url"]);
-					$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
 					foreach($arr as $key => $url){
 						$arr[$key] = $base .$url;
 					}		
@@ -74,7 +74,7 @@
 				while($row = $result->fetch_assoc()){
 					$arr = array();
 					$arr=explode(',',$row["part_url"]);
-					$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
 					foreach($arr as $key => $url){
 						$arr[$key] = $base .$url;
 					}		
@@ -102,7 +102,7 @@
 					while($row = $result->fetch_assoc()){
 						$arr = array();
 						$arr=explode(',',$row["part_url"]);
-						$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
+						$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
 						foreach($arr as $key => $url){
 							$arr[$key] = $base .$url;
 						}		
