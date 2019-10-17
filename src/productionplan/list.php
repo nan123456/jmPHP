@@ -358,9 +358,9 @@
 				$arr[$i]['number']=$row['pNumber']; //工单
 				$arr[$i]['product_name'] = $row['product_name']; //产品名称
 				if($row['isfinish']=='1'){
-					$arr[$i]['finish'] = '已完成';
+					$arr[$i]['finish'] = '已检验';
 				}else{
-					$arr[$i]['finish'] = '未完成';
+					$arr[$i]['finish'] = '未检验';
 				}
 //				$arr[$i]['remark'] = $row['remark'];
 //				$arr[$i]['routeid'] = $row['routeid'];

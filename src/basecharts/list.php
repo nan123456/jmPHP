@@ -9,7 +9,7 @@
 //	$flag = "Undelivered";
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0 order by id desc";
+		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0 order by id desc";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -30,7 +30,7 @@
 				//数量
 				$arr[$i]['child_material'] = $row['child_material'];
 				//规格
-				$arr[$i]['number']=$row['number']. "#"; //工单
+				$arr[$i]['number']=$row['pNumber']; //工单
 				$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
 				$arr[$i]['remark'] = $row['remark'];
 				$arr[$i]['routeid'] = $row['routeid'];
@@ -88,6 +88,7 @@
 				$i++;
 			}
 }
+		//规格筛选
 		$sql2 = "SELECT DISTINCT b.child_material,a.isfinish,a.modid,b.modid FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material";
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
@@ -100,16 +101,44 @@
 				}
 			}
 		}
+		//项目名称筛选
+		$sql3 = "SELECT DISTINCT b.product_name,b.number FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material";
+		$res3 = $conn -> query($sql3);
+		if ($res3 -> num_rows > 0) {
+			$i = 0;
+			while ($row3 = $res3 -> fetch_assoc()) {
+				// 规格
+				if($row3['product_name'] != ""&&$row3['product_name'] != Null&&$row3['number'] != ""&&$row3['number'] != Null){
+					$arr3[$i]['f6'] = $row3['number'] . $row3['product_name'];
+					$i++;					
+				}
+			}
+		}
+		//工单号筛选
+		$sql4 = "SELECT DISTINCT b.pNumber FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.isfinish IN ('1','3') AND b.isexterior = 0 group by child_material";
+		$res4 = $conn -> query($sql4);
+		if ($res4 -> num_rows > 0) {
+			$i = 0;
+			while ($row4 = $res4 -> fetch_assoc()) {
+				// 规格
+				if($row4['pNumber'] != ""&&$row4['pNumber'] != Null){
+					$arr4[$i]['f7'] = $row4['pNumber'];
+					$i++;					
+				}
+			}
+		}
 	
 		// 工时统计
 		$list_data = json_encode($arr);
 		$fChild_material = json_encode($arr2);
-		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . '}';
+		$product_name =  json_encode($arr3);
+		$pNumber = json_encode($arr4);
+		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
 	}else if($flag == "selectData"){
 		//获取前端数据
 		$select = isset($_POST["select"]) ? $_POST["select"] : '';
 		// 获取列表数据
-		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 order by id desc";
+		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 order by id desc";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
@@ -130,7 +159,7 @@
 				//数量
 				$arr[$i]['child_material'] = $row['child_material'];
 				//规格
-				$arr[$i]['number']=$row['number']. "#"; //工单
+				$arr[$i]['number']=$row['pNumber']; //工单
 				$arr[$i]['product_name'] = $row['number'] . $row['product_name']; //产品名称
 				$arr[$i]['remark'] = $row['remark'];
 				$arr[$i]['routeid'] = $row['routeid'];
@@ -188,7 +217,7 @@
 				$i++;
 			}
 		}
-		$sql2 = "SELECT DISTINCT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish IN ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 group by child_material order by id desc";
+		$sql2 = "SELECT DISTINCT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish IN ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.number,b.pNumber,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 group by child_material order by a.id desc";
 		$res2 = $conn -> query($sql2);
 		if ($res2 -> num_rows > 0) {
 			$i = 0;
@@ -200,11 +229,39 @@
 				}
 			}
 		}
+		//项目名称筛选
+		$sql3 = "SELECT DISTINCT b.product_name,b.number FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 order by a.id desc";
+		$res3 = $conn -> query($sql3);
+		if ($res3 -> num_rows > 0) {
+			$i = 0;
+			while ($row3 = $res3 -> fetch_assoc()) {
+				// 规格
+				if($row3['product_name'] != ""&&$row3['product_name'] != Null&&$row3['number'] != ""&&$row3['number'] != Null){
+					$arr3[$i]['f6'] = $row3['number'] . $row3['product_name'];
+					$i++;					
+				}
+			}
+		}
+		//工单号筛选
+		$sql4 = "SELECT DISTINCT b.pNumber FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND a.isfinish in ('1','3') AND CONCAT(b.figure_number,b.`name`,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,a.stime,a.ftime)LIKE '%".$select."%' AND b.isexterior = 0 order by a.id desc";
+		$res4 = $conn -> query($sql4);
+		if ($res4 -> num_rows > 0) {
+			$i = 0;
+			while ($row4 = $res4 -> fetch_assoc()) {
+				// 规格
+				if($row4['pNumber'] != ""&&$row4['pNumber'] != Null){
+					$arr4[$i]['f7'] = $row4['pNumber'];
+					$i++;					
+				}
+			}
+		}
 	
 		// 工时统计
 		$list_data = json_encode($arr);
 		$fChild_material = json_encode($arr2);
-		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . '}';						
+		$product_name =  json_encode($arr3);
+		$pNumber = json_encode($arr4);
+		$json = '{"success":true,"rows":' . $list_data . ',"fChild_material":' . $fChild_material . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';					
 	}
 	echo $json;
 	$conn -> close();		

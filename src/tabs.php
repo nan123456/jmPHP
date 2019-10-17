@@ -67,6 +67,16 @@
 	        $i++;
 	      }
 	    }
+	    //获取下拉状态筛选
+		$sql4 = "SELECT DISTINCT cuser FROM message WHERE state='0' ORDER BY `id` desc";
+		$res4 = $conn->query($sql4);
+		if($res4->num_rows > 0) {
+	      $i = 0;
+	      while($row4 = $res4->fetch_assoc()) {
+	        $ret_data["WorkcuserBox"][$i]["f7"] = $row4['cuser'];
+	        $i++;
+	      }
+	    }
 	}else if($flag == "Search"){
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
@@ -146,6 +156,16 @@
 		      $i = 0;
 		      while($row3 = $res3->fetch_assoc()) {
 		        $ret_data["WorkstateBox1"][$i]["f6"] = $row3['workstate'];
+		        $i++;
+		      }
+		    }
+		    //获取下拉状态筛选
+			$sql4 = "SELECT DISTINCT cuser FROM message WHERE state='1' ORDER BY `id` desc";
+			$res4 = $conn->query($sql4);
+			if($res4->num_rows > 0) {
+		      $i = 0;
+		      while($row4 = $res4->fetch_assoc()) {
+		        $ret_data["WorkcuserBox1"][$i]["f7"] = $row4['cuser'];
 		        $i++;
 		      }
 		    }
