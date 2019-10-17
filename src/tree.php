@@ -49,6 +49,7 @@
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["name"] = $row["type"];
 				$ret_data["data"][$i]["leaf"] = false;
+				$ret_data["data"][$i]["id"] = 1;
 				$i++;
 			}
 			$ret_data["success"] = 'success';
