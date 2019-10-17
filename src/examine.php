@@ -93,7 +93,7 @@
 				$ret_data["data"][$i]["project"] = $project;
 				$partdrawnumber = $row["figure_number"];
 				$pnumber=$row["pNumber"];
-			if($row["pNumber"]){
+			if($row["pNumber"]!=''){
 				//使用部件图号查询制造工艺卡信息
 				$sql1 = "select craftsmanshiptree_id,id from craftsmanshiptable where partdrawnumber = '$partdrawnumber' and pnumber='$pnumber'";//使用部件图号查询制造工艺卡信息
 				$res1 = $conn ->query($sql1);
