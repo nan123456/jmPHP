@@ -743,6 +743,13 @@ switch ($flag) {
 		        	$name=$row['name'];
 		        	}
 		        }
+		        $sql_line = "select route_line from route where modid='" . $modid . "' limit 1";
+				$res_line = $conn->query($sql_line);
+		        if ($res_line->num_rows > 0) {
+		        	while ($row = $res_line->fetch_assoc()) {
+		        	$route_line=$row['route_line'];
+		        	}
+		        }
 		        $time = date("Y-m-d H:i:s");
 		        $sql_exist="select modid from workshop_k where modid='".$modid."'";
 		        $res_exist = $conn->query($sql_exist);
@@ -756,7 +763,7 @@ switch ($flag) {
 		            $data="update";
 		        }
 		        else{
-		        	$sql_1 =  "INSERT INTO workshop_k (modid,name,isfinish,ctime) VALUES ('$modid','$name', '2','$time')";
+		        	$sql_1 =  "INSERT INTO workshop_k (modid,name,isfinish,ctime,pid,route_line) VALUES ('$modid','$name', '2','$time','$pid','$route_line')";
 		        	$res_1 = $conn->query($sql_1);
 		        	$data="success";
 		        	$sql5 = "UPDATE workshop_k SET todocount='0'  ,inspectcount= '".$count."' where modid='" . $modid . "' ";

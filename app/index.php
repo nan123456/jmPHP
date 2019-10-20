@@ -327,6 +327,7 @@ switch ($flag) {
 		$json = json_encode($arr);
 		echo $json;
 		break;
+//就工前存入ws_K
 	case '9':
 		$partid = $_POST["partid"];
         $pid = $_POST["pid"];
@@ -338,12 +339,14 @@ switch ($flag) {
 //      $pid='51';
 //      $routeid='43157';
 //      $cuser='小郭';
-        $sql = "select name,figure_number,product_name,count,route from productionplan where id='" . $partid . "' and routeid='".$routeid."'";
+        $sql = "select name,figure_number,product_name,count,route,route_line,pid from productionplan where id='" . $partid . "' and routeid='".$routeid."'";
 		$res = $conn->query($sql);
         if ($res->num_rows > 0) {
         	while ($row = $res->fetch_assoc()) {
         	$count=$row['count'];
         	$route=$row['route'];
+        	$route_line=$row['route_line'];
+        	$pid=$row['pid'];
         	}
         }
         $time = date("Y-m-d H:i:s");
@@ -355,7 +358,7 @@ switch ($flag) {
        		$data="update";
 		}
 		else{
-			$sql2 =  "INSERT INTO workshop_k (modid, routeid, isfinish,ctime,cuser) VALUES ('$modid', '$routeid','0','$time','$cuser')";
+			$sql2 =  "INSERT INTO workshop_k (modid, routeid, isfinish,ctime,cuser,route_line,pid) VALUES ('$modid', '$routeid','0','$time','$cuser','$route_line','$pid')";
        		$res2 = $conn->query($sql2);
        		$data="succcess";
 		}
