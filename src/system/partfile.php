@@ -22,13 +22,13 @@
 					$ret_data["data"][$i]["backMark"] = "是";
 				}
 				$arr = array();
-				$arr=explode(',',$row["part_url"]);
-//				$part_url=$row["part_url"];
-				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
-				foreach($arr as $key => $url){
-					$arr[$key] = $base .$url;
-				}	
-//				$ret_data["data"][$i]["photourl"] = $base.$part_url;
+				if($row["part_url"]){
+					$arr=explode(',',$row["part_url"]);
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
+					foreach($arr as $key => $url){
+						$arr[$key] = $base .$url;
+					}	
+				}
 				$ret_data["data"][$i]["photourl"] = $arr;
 				$ret_data["data"][$i]["reason"] = $row["reason"];
 				$ret_data["data"][$i]["otime"] = $row["otime"];
@@ -41,7 +41,7 @@
 		}
 	}else if($flag=="partdata"){
 		$id = isset($_POST["id"])?$_POST["id"]:'';
-		$sql = "SELECT figure_number,name,count,standard,radio,child_material,id,child_number,quantity,material,Pmodid FROM onfile WHERE id  = '$id'";
+		$sql = "SELECT figure_number,name,count,standard,radio,child_material,id,child_number,quantity,material,Pmodid,pNumber FROM onfile WHERE id  = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -62,6 +62,7 @@
 				$ret_data["data"]["quantity"] = $row["quantity"];
 				$ret_data["data"]["material"] = $row["material"];
 				$ret_data["data"]["Pmodid"] = $row["Pmodid"];
+				$ret_data["data"]["pNumber"] = $row["pNumber"];
 			}
 			$ret_data["success"] = 'success';
 		}else{

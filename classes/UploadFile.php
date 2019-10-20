@@ -179,8 +179,8 @@ class UploadFile{
 			if(@move_uploaded_file($this->fileInfo['tmp_name'], $this->destination_gbk)){
 				return  $this->destination;//返回文件完整目录
 			}else{
-				$this->error='文件移动失败';
-				$this->showError();
+//				$this->error='文件移动失败';
+//				$this->showError();
 			}
 		}else{
 			$this->showError();

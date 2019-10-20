@@ -21,66 +21,82 @@
 				"data" => array(
 					0 => array(
 						"label" => "转马类",
-						"children" => array()
+						"id"=>0,
+						"children" => array(),
 					),
 					1 => array(
 						"label" => "滑行类",
+						"id"=>0,
 						"children" => array()
 					),
 					2 => array(
 						"label" => "陀螺类",
+						"id"=>0,
 						"children" => array()
 					),
 					3 => array(
 						"label" => "飞行塔类",
+						"id"=>0,
 						"children" => array()
 					),
 					4 => array(
 						"label" => "赛车类",
+						"id"=>0,
 						"children" => array()
 					),
 					5 => array(
 						"label" => "自控飞机类",
+						"id"=>0,
 						"children" => array()
 					),
 					6 => array(
 						"label" => "观览车类",
+						"id"=>0,
 						"children" => array()
 					),
 					7 => array(
 						"label" => "小火车类",
+						"id"=>0,
 						"children" => array()
 					),
 					8 => array(
 						"label" => "架空游览车类",
+						"id"=>0,
 						"children" => array()
 					),
 					9 => array(
 						"label" => "水上游乐设施",
+						"id"=>0,
 						"children" => array()
 					),
 					10 => array(
 						"label" => "碰碰车类",
+						"id"=>0,
 						"children" => array()
 					),
 					11 => array(
 						"label" => "电池车类",
+						"id"=>0,
 						"children" => array()
 					),
 					12 => array(
 						"label" => "摇摆类",
+						"id"=>0,
 						"children" => array()
 					),
 					13 => array(
 						"label" => "回旋类",
+						"id"=>0,
 						"children" => array()
 					),
 					14 => array(
 						"label" => "其他类",
+						"id"=>0,
 						"children" => array()
 					),
 					15 => array(
 						"label" => "科技娱乐类",
+						"id"=>0,
 						"children" => array()
 					)
 				)
@@ -132,66 +148,82 @@
 				"data" => array(
 					0 => array(
 						"label" => "转马类",
+						"id"=>1,
 						"children" => array()
 					),
 					1 => array(
 						"label" => "滑行类",
+						"id"=>1,
 						"children" => array()
 					),
 					2 => array(
 						"label" => "陀螺类",
+						"id"=>1,
 						"children" => array()
 					),
 					3 => array(
 						"label" => "飞行塔类",
+						"id"=>1,
 						"children" => array()
 					),
 					4 => array(
 						"label" => "赛车类",
+						"id"=>1,
 						"children" => array()
 					),
 					5 => array(
 						"label" => "自控飞机类",
+						"id"=>1,
 						"children" => array()
 					),
 					6 => array(
 						"label" => "观览车类",
+						"id"=>1,
 						"children" => array()
 					),
 					7 => array(
 						"label" => "小火车类",
+						"id"=>1,
 						"children" => array()
 					),
 					8 => array(
 						"label" => "架空游览车类",
+						"id"=>1,
 						"children" => array()
 					),
 					9 => array(
 						"label" => "水上游乐设施",
+						"id"=>1,
 						"children" => array()
 					),
 					10 => array(
 						"label" => "碰碰车类",
+						"id"=>1,
 						"children" => array()
 					),
 					11 => array(
 						"label" => "电池车类",
+						"id"=>1,
 						"children" => array()
 					),
 					12 => array(
 						"label" => "摇摆类",
+						"id"=>1,
 						"children" => array()
 					),
 					13 => array(
 						"label" => "回旋类",
+						"id"=>1,
 						"children" => array()
 					),
 					14 => array(
 						"label" => "其他类",
+						"id"=>1,
 						"children" => array()
 					),
 					15 => array(
 						"label" => "科技娱乐类",
+						"id"=>1,
 						"children" => array()
 					)
 				)
@@ -210,7 +242,8 @@
 						$row1 = $result1->fetch_assoc();
 						$returnData["data"][$j]["children"][$i]["tableFlag"] = 1;//用于判断第二层树
 						$returnData["data"][$j]["children"][$i]["label"] = $row["pnumber"].$row["proname"];
-						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"];
+						$returnData["data"][$j]["children"][$i]["id"] = 2;
+						$returnData["data"][$j]["children"][$i]["relateId"] = $row["id"].",".$row1["id"];
 						$returnData["data"][$j]["children"][$i]["children"][0]["label"] = "焊接工艺及检验记录";
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereFlag"] = 1;
 						$returnData["data"][$j]["children"][$i]["children"][0]["thereId"] = $row["id"];
@@ -1256,6 +1289,7 @@
 					$returnData["data"]["craftsmanshipTableHeader"]["ownPartDrawingNumber"] = $row["ownpartdrawnumber"];
 					$returnData["data"]["craftsmanshipTableHeader"]["partsDrawingNumber"] = $row["partdrawnumber"];
 					$returnData["data"]["craftsmanshipTableHeader"]["quantity"] = $row["quantity"];
+					$returnData["data"]["craftsmanshipTableHeader"]["pnumber"] = $row["pnumber"];
 					
 					//尾部信息
 					$returnData["data"]["craftsmanshipTableFooter"]["finalConclusion"] = $row["finalconclusion"];
@@ -1273,7 +1307,6 @@
 							//结论与不符合确定【模板一、二】
 							$returnData["data"]["craftsmanshipTableBodyResult"]["conclusion"] = $row["conclusion"];
 							$returnData["data"]["craftsmanshipTableBodyResult"]["inconsistentConfirmation"] = $row["inconsistentconfirmation"];
-							
 							$returnData["data"]["craftsmanshipTableBody_1"]["fileOne"] = $row["firstfive"];
 							$returnData["data"]["craftsmanshipTableBody_1"]["imgHtml"] = "";
 							//模板一可遍历的数据

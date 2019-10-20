@@ -6,7 +6,7 @@
 	$id = isset($_POST["id"])?$_POST["id"]:'';
 	
 	if($flag == 'part') {
-		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number FROM part WHERE id = '$id'";
+		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number,pNumber FROM part WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -20,6 +20,7 @@
 				$ret_data["radio"] = $row["radio"];
 				$ret_data["child_material"] = $row["child_material"];
 				$ret_data["child_number"] = $row["child_number"];
+				$ret_data["pNumber"] = $row["pNumber"];
 				$modid = $row["modid"];
 			}
 			$ret_data["success"] = 'success';
@@ -33,7 +34,7 @@
 			while($myrow=$myres->fetch_assoc()){
 //				$ret_data["e"] = $row["isfinish"];
 				switch($myrow["isfinish"]){
-					case 3:
+					case 0:
 					$ret_data["unfinished"][$x]["route"] = $myrow["route"];
 					$ret_data["unfinished"][$x]["id"] = $myrow["id"];
 					$x++;
@@ -44,8 +45,8 @@
 					$y++;
 					break;
 					case 2:
-					$ret_data["bulid"][$z]["route"] = $myrow["route"];
-					$ret_data["bulid"][$z]["id"] = $myrow["id"];
+					$ret_data["build"][$z]["route"] = $myrow["route"];
+					$ret_data["build"][$z]["id"] = $myrow["id"];
 					$z++;
 					break;
 				}
@@ -93,8 +94,8 @@
 							$y++;
 							break;
 							case 2:
-							$ret_data["item"][$i]["bulid"][$z]["route"] = $brow["route"];
-							$ret_data["item"][$i]["bulid"][$z]["id"] = $brow["id"];
+							$ret_data["item"][$i]["build"][$z]["route"] = $brow["route"];
+							$ret_data["item"][$i]["build"][$z]["id"] = $brow["id"];
 							$z++;
 							break;
 						}
@@ -134,8 +135,8 @@
 //								$y++;
 //								break;
 //								case 2:
-//								$ret_data["item"][$i]["bulid"][$z]["route"] = $drow["route"];
-//								$ret_data["item"][$i]["bulid"][$z]["id"] = $drow["id"];
+//								$ret_data["item"][$i]["build"][$z]["route"] = $drow["route"];
+//								$ret_data["item"][$i]["build"][$z]["id"] = $drow["id"];
 //								$z++;
 //								break;
 //							}
@@ -146,7 +147,7 @@
 //			}	
 //		}
 	}else if($flag == 'partfile'){
-		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url FROM onfile WHERE id = '$id'";
+		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url,pNumber FROM onfile WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -160,12 +161,16 @@
 				$ret_data["station"] = $row["station"];
 				$ret_data["remark"] = $row["remark"];
 				$ret_data["radio"] = $row["radio"];
+				$ret_data["pNumber"] = $row["pNumber"];
 				$arr = array();
-				$arr=explode(',',$row["part_url"]);
-				$base = "http://47.106.161.130:8081/jmmes/app/uploadfiles/";
-				foreach($arr as $key => $url){
-					$arr[$key] = $base .$url;
-				}	
+				if($row["part_url"]){
+					$arr=explode(',',$row["part_url"]);
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
+					foreach($arr as $key => $url){
+						$arr[$key] = $base .$url;
+					}	
+				}
+				
 				$ret_data["photourl"] = $arr;
 				}
 			$ret_data["success"] = 'success';
@@ -340,7 +345,7 @@
 		if($bres->num_rows>0){
 			while($brow=$bres->fetch_assoc()){
 //				$str = explode('#',$brow["number"]);
-				$ret_data["pro"] = $brow["pNumber"].$brow["number"];
+				$ret_data["pro"] = $brow["pNumber"];
 			}
 		}
 	}else if($flag == 'plm_part') {
@@ -360,6 +365,15 @@
 			}
 			$ret_data["success"] = 'success';
 		}
+	}else if($flag=='getPLMProject'){
+		$i=0;
+		$sql="select product_name,work_order from plan_table";
+		$res=$conn->query($sql);
+		while($row=$res->fetch_assoc()){
+			$ret_data["data"][$i]["label"]=$row["product_name"];
+			$ret_data["data"][$i]["value"]=$row["work_order"];
+			$i++;
+		}		
 	}
 	$conn->close();
 	$json = json_encode($ret_data);

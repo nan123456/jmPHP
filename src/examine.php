@@ -65,15 +65,20 @@
 		$ret_data["success"] = 'success';
 	}else if($flag=='State'){
 		$state = $_POST["state"];
+		$pnumber = $_POST["selectvalue"];
+		$sql_p="select name from project where pNumber='$pnumber'";
+		$res_p=$conn->query($sql_p);
+		$row_p=$res_p->fetch_assoc();
+		$project=$pnumber.$row_p["name"];
 		if($state==1){
 			//未检验
-			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,pNumber from test where isfinish = '1'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '1' order by id desc";
 		}else if($state==4){
 			//不合格
-			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where isfinish = '3' and unqualified>'0'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '3' and unqualified>'0' order by id desc";
 		}else if($state==3){
 			//合格
-			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio,pNumber from test where isfinish = '3' and (count-unqualified-reviews-dumping)>'0'";
+			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '3' and (count-unqualified-reviews-dumping)>'0' order by id desc";
 		}
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
@@ -85,8 +90,10 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["count"] = $row["count"];
 				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
+				$ret_data["data"][$i]["project"] = $project;
 				$partdrawnumber = $row["figure_number"];
 				$pnumber=$row["pNumber"];
+			if($row["pNumber"]!=''){
 				//使用部件图号查询制造工艺卡信息
 				$sql1 = "select craftsmanshiptree_id,id from craftsmanshiptable where partdrawnumber = '$partdrawnumber' and pnumber='$pnumber'";//使用部件图号查询制造工艺卡信息
 				$res1 = $conn ->query($sql1);
@@ -130,6 +137,7 @@
 				}else{
 					$ret_data["data"][$i]["show_btn3"] = true;
 				}
+			}
 //				$img_arr=explode(',',$row["photourl"]);
 				$ret_data["data"][$i]["photourl"] = $row["photourl"];
 				$ret_data["data"][$i]["show_img"] = isset( $row["photourl"]) ? true : false;
@@ -144,6 +152,15 @@
 		}else{
 			$ret_data["success"] = 'error';
 		}
+	}else if($flag='getProject'){
+		$i=0;
+		$sql="select name,pNumber from project";
+		$res=$conn->query($sql);
+		while($row=$res->fetch_assoc()){
+			$ret_data["data"][$i]["label"]=$row["pNumber"].$row["name"];
+			$ret_data["data"][$i]["value"]=$row["pNumber"];
+			$i++;
+		}		
 	}
 	$conn->close();
 	$json = json_encode($ret_data);
