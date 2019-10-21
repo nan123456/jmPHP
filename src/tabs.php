@@ -81,7 +81,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND CONCAT(content,time,workstate,station,route,cuser) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -103,7 +103,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND CONCAT(content,time,workstate,station,route,workshop,cuser) LIKE  '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND CONCAT(content,time,workstate,station,route,cuser) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
