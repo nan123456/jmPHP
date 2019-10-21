@@ -217,8 +217,112 @@
 		$sql = "UPDATE message SET state='1' WHERE id='".$id."' ";
 		$res=$conn->query($sql);
 		
-	}else {
-		
+	}else if($flag == "selectUnreadTime"){
+		$DateData = isset($_POST["DateData"])?$_POST["DateData"]:'';
+		$DateData = explode(",",$DateData);
+		$startime = $DateData[0]." 00:00:00";
+		$endtime = $DateData[1]." 23:59:59";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc ";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				
+				$ret_data["data"][$i]["address"] = $row["content"];
+				$ret_data["data"][$i]["date"] = $row["time"];
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["tag"] = $row["station"];
+				$ret_data["data"][$i]["state"] = $row["workstate"];
+				$ret_data["data"][$i]["route"] = $row["route"];
+				$ret_data["data"][$i]["workshop"] = $row["workshop"];
+				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
+		//获取下拉车间筛选
+		$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc";
+		$res2 = $conn->query($sql2);
+		if($res2->num_rows > 0) {
+	      $i = 0;
+	      while($row2 = $res2->fetch_assoc()) {
+	        $ret_data["WorkshopBox"][$i]["f5"] = $row2['workshop'];
+	        $i++;
+	      }
+	    }
+	    //获取下拉状态筛选
+		$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc";
+		$res3 = $conn->query($sql3);
+		if($res3->num_rows > 0) {
+	      $i = 0;
+	      while($row3 = $res3->fetch_assoc()) {
+	        $ret_data["WorkstateBox"][$i]["f6"] = $row3['workstate'];
+	        $i++;
+	      }
+	    }
+	    //获取下拉状态筛选
+		$sql4 = "SELECT DISTINCT cuser FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc";
+		$res4 = $conn->query($sql4);
+		if($res4->num_rows > 0) {
+	      $i = 0;
+	      while($row4 = $res4->fetch_assoc()) {
+	        $ret_data["WorkcuserBox"][$i]["f7"] = $row4['cuser'];
+	        $i++;
+	      }
+	    }
+	}else if($flag == "selectReadTime"){
+		$DateData = isset($_POST["DateData"])?$_POST["DateData"]:'';
+		$DateData = explode(",",$DateData);
+		$startime = $DateData[0]." 00:00:00";
+		$endtime = $DateData[1]." 23:59:59";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				
+				$ret_data["data"][$i]["address"] = $row["content"];
+				$ret_data["data"][$i]["date"] = $row["time"];
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["tag"] = $row["station"];
+				$ret_data["data"][$i]["state"] = $row["workstate"];
+				$ret_data["data"][$i]["route"] = $row["route"];
+				$ret_data["data"][$i]["workshop"] = $row["workshop"];
+				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$i++;
+			}
+			//获取下拉车间筛选
+			$sql2 = "SELECT DISTINCT workshop FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
+			$res2 = $conn->query($sql2);
+			if($res2->num_rows > 0) {
+		      $i = 0;
+		      while($row2 = $res2->fetch_assoc()) {
+		        $ret_data["WorkshopBox1"][$i]["f5"] = $row2['workshop'];
+		        $i++;
+		      }
+		    }
+		    //获取下拉状态筛选
+			$sql3 = "SELECT DISTINCT workstate FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
+			$res3 = $conn->query($sql3);
+			if($res3->num_rows > 0) {
+		      $i = 0;
+		      while($row3 = $res3->fetch_assoc()) {
+		        $ret_data["WorkstateBox1"][$i]["f6"] = $row3['workstate'];
+		        $i++;
+		      }
+		    }
+		    //获取下拉状态筛选
+			$sql4 = "SELECT DISTINCT cuser FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
+			$res4 = $conn->query($sql4);
+			if($res4->num_rows > 0) {
+		      $i = 0;
+		      while($row4 = $res4->fetch_assoc()) {
+		        $ret_data["WorkcuserBox1"][$i]["f7"] = $row4['cuser'];
+		        $i++;
+		      }
+		    }
+			$ret_data["success"] = 'success';
+		}
 	}
 		
 	
