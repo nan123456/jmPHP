@@ -495,7 +495,7 @@
 					break;
 				case "2":
 					//装载数据-制造信息
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'craftsmanship' AS diff FROM `craftsmanshiptable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
@@ -525,7 +525,7 @@
 					break;
 				case "4":
 					//装载数据-机加工
-					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`ownpartdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
+					$sql = "SELECT `id` AS `contactId`,`productdrawnumber` AS `productcode`,`partdrawnumber` AS `processnumber`,productname AS `producname`,`partname`,pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'machining' AS diff FROM `machiningtable` WHERE `craftsmanshiptree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";

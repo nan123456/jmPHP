@@ -50,6 +50,90 @@
 		if ($res -> num_rows > 0) {
 			$i = 0;
 			while ($row = $res -> fetch_assoc()) {
+//				//车间
+//				$K = array(
+//		            "K",
+//		            "K坡"
+//		        );
+//		        $S = array(
+//		            "S安装补贴",
+//		            "S玻璃钢",
+//		            "S厂检",
+//		            "S电气",
+//		            "S调试",
+//		            "S钢结构",
+//		            "S国（省）检",
+//		            "S派人维修",
+//		            "S移交客户",
+//		            "S座舱"
+//		        );
+//		        $F = array(
+//		            "F成型",
+//		            "F翻模",
+//		            "F模具",
+//		            "F喷涂",
+//		            "F装配",
+//		            "M木工"
+//		        );
+//		        $G = array(
+//		            "GS",
+//		            "G接线",
+//		            "G装灯",
+//		            "G装箱"
+//		        );
+//		        $T = array(
+//		            "T粗",
+//		            "T淬",
+//		            "T调",
+//		            "T发黑",
+//		            "T焊",
+//		            "T划线",
+//		            "T坡",
+//		            "T退",
+//		            "T线",
+//		            "T正火",
+//		            "T装"
+//		        );
+//		        $TK = array(
+//		            "TK"
+//		        );
+//		        $I = array(
+//		            "IA",
+//		            "IA1",
+//		            "IB",
+//		            "ID",
+//		            "IG",
+//		            "IS",
+//		            "I钻"
+//		        );
+//		        $L = array(
+//		            "LK",
+//		            "L焊",
+//		            "L转",
+//		            "L装"
+//		        );
+//		        $J = array(
+//		            "J探"
+//		        );
+//				if(in_array($row['route'], $K)){
+//		            $arr[$i]['workshop'] = "K开料车间";
+//		        }else if(in_array($row['route'], $S)){
+//		            $arr[$i]['workshop'] = "安装S";
+//		        }else if(in_array($row['route'], $F)){
+//		            $arr[$i]['workshop'] = "玻璃钢F";
+//		        }else if(in_array($row['route'], $G)){
+//		        	$arr[$i]['workshop'] = "电器G";
+//		        }else if(in_array($row['route'], $T)){
+//		        	$arr[$i]['workshop'] = "机加T";
+//		        }else if(in_array($row['route'], $TK)){
+//		        	$arr[$i]['workshop'] = "TK开料车间";
+//		        }else if(in_array($row['route'], $I)){
+//		        	$arr[$i]['workshop'] = "机械车间";
+//		        }else if(in_array($row['route'], $L)){
+//		        	$arr[$i]['workshop'] = "结构L";
+//		        }else if(in_array($row['route'], $J)){
+//		        	$arr[$i]['workshop'] = "探伤";
+//		        }
 				$arr[$i]['modid'] = $row['modid'];
 				$arr[$i]['external']=$row['isexterior'];//外协标志
 				$arr[$i]['fid'] = $row['fid'];
