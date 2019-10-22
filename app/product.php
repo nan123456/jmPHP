@@ -113,129 +113,16 @@ switch ($flag) {
         //			$conn -> query($sql3);
         //			//				die();
         //		}
-        //		判断route处于哪个车间
-        $K = array(
-            "K",
-            "K坡"
-        );
-        $S = array(
-            "S安装补贴",
-            "S玻璃钢",
-            "S厂检",
-            "S电气",
-            "S调试",
-            "S钢结构",
-            "S国（省）检",
-            "S派人维修",
-            "S移交客户",
-            "S座舱"
-        );
-        $F = array(
-            "F成型",
-            "F翻模",
-            "F模具",
-            "F喷涂",
-            "F装配",
-            "M木工"
-        );
-        $G = array(
-            "GS",
-            "G接线",
-            "G装灯",
-            "G装箱"
-        );
-        $T = array(
-            "T粗",
-            "T淬",
-            "T调",
-            "T发黑",
-            "T焊",
-            "T划线",
-            "T坡",
-            "T退",
-            "T线",
-            "T正火",
-            "T装"
-        );
-        $TK = array(
-            "TK"
-        );
-        $I = array(
-            "IA",
-            "IA1",
-            "IB",
-            "ID",
-            "IG",
-            "IS",
-            "I钻"
-        );
-        $L = array(
-            "LK",
-            "L焊",
-            "L转",
-            "L装"
-        );
-        $J = array(
-            "J探"
-        );
-        $W = array(
-            "FW成型",
-            "FW成型底漆",
-            "FW底漆",
-            "FW面漆",
-            "FW模具",
-            "TW半精车",
-            "TW插",
-            "TW粗车",
-            "TW调质",
-            "TW高频",
-            "TW滚",
-            "TW精车",
-            "TW拉",
-            "TW磨",
-            "TW刨",
-            "TW镗",
-            "TW铣",
-            "TW线割",
-            "W彩锌",
-            "W冲压",
-            "W镀铬",
-            "W镀锌",
-            "W发黑",
-            "W发泡",
-            "W改制",
-            "W回火",
-            "W机",
-            "W浸",
-            "W卷",
-            "W喷塑",
-            "W漆",
-            "W渗氮",
-            "W折",
-            "W退火"
-        );
-        if (in_array($route, $K)) {
-            $workshop = "K开料车间";
-        } else if (in_array($route, $S)) {
-            $workshop = "安装S";
-        } else if (in_array($route, $F)) {
-            $workshop = "玻璃钢F";
-        } else if (in_array($route, $G)) {
-            $workshop = "电气G";
-        } else if (in_array($route, $T)) {
-            $workshop = "机加T";
-        } else if (in_array($route, $TK)) {
-            $workshop = "TK开料车间";
-        } else if (in_array($route, $I)) {
-            $workshop = "机械车间";
-        } else if (in_array($route, $L)) {
-            $workshop = "结构L";
-        } else if (in_array($route, $J)) {
-            $workshop = "探伤";
-        } else if (in_array($route, $W)) {
-            $workshop = "外协W";
-        } else {
-            $workshop = "";
+        //判断route处于哪个车间
+		$sql_class="SELECT workshop FROM workshop_class where route='" . $route . "'";
+		$res_class = $conn->query($sql_class);
+		if ($res_class->num_rows > 0) {
+            while ($row = $res_class->fetch_assoc()) {
+                $workshop = $row['workshop'];
+            }
+        }
+        else{
+        	$workshop ="无";
         }
         // 更新message
         $sql3 = "INSERT INTO message (content,time,department,state,workstate,route,station,cuser,workshop) VALUES ('" . $message . "','" . $time . "','" .$department. "','0','" . $workstate . "','" . $route . "','" . $station . "','" . $writtenBy . "','" . $workshop . "')";
@@ -338,8 +225,19 @@ switch ($flag) {
             //			$conn -> query($sql3);
             
         }
+         //判断route处于哪个车间
+		$sql_class="SELECT workshop FROM workshop_class where route='" . $route . "'";
+		$res_class = $conn->query($sql_class);
+		if ($res_class->num_rows > 0) {
+            while ($row = $res_class->fetch_assoc()) {
+                $workshop = $row['workshop'];
+            }
+        }
+        else{
+        	$workshop ="无";
+        }
         //更新message
-        $sql1 = "INSERT INTO message (content,time,department,state,workstate,route,cuser) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','" . $department . "','0','" . $workstate . "','" . $route . "','" . $writtenBy . "')";
+        $sql1 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','" . $department . "','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
         $conn->query($sql1);
         $sql2 = "UPDATE message SET state='1' where id='" . $messageid . "' ";
         $conn->query($sql2);
@@ -367,8 +265,20 @@ switch ($flag) {
         $message = $name . "的" . $route . "已检验！";
         if($isexternal=="1"){//外协
         	$routeid = "";
+			$workshop="外协";
         }
         else{
+			//判断route处于哪个车间
+			$sql_class="SELECT workshop FROM workshop_class where route='" . $route . "'";
+			$res_class = $conn->query($sql_class);
+			if ($res_class->num_rows > 0) {
+			    while ($row = $res_class->fetch_assoc()) {
+			        $workshop = $row['workshop'];
+			    }
+			}
+			else{
+				$workshop ="无";
+			}
         	$routeid = $_POST["routeid"];
         }
         if ($inspect === "3") {
@@ -377,12 +287,6 @@ switch ($flag) {
                 $inspectcount = $inspectcount - $finishcount;
                 $sql = "UPDATE workshop_k SET remark='" . $remark . "' ,utime='" . $time . "' ,inspectcount='" . $inspectcount . "' WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
                 $conn->query($sql);
-                // 更新message
-                $sql1 = "UPDATE message SET state='1' where id='" . $messageid . "' ORDER by id LIMIT 1 ";
-                $conn->query($sql1);
-                //将检验信息更新到消息通知
-                $sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "')";
-                $conn->query($sql2);
                 // 循环检测是否所有零件完成
                 $sql3 = "SELECT todocount ,reviews,unqualified from workshop_k where modid='" . $modid . "' and routeid='" . $routeid . "'  ";
                 $res = $conn->query($sql3);
@@ -391,6 +295,14 @@ switch ($flag) {
                         if ($row['todocount'] == '0' && $row['reviews'] == '0'&& $row['unqualified'] == '0') {
                             $sql4 = "UPDATE workshop_k SET isfinish='3'  WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
                             $conn->query($sql4);
+							//更新message
+							$sql1 = "UPDATE message SET state='1' where id='" . $messageid . "' ORDER by id LIMIT 1 ";
+							$conn->query($sql1);
+							//将检验信息更新到消息通知
+							$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+							$conn->query($sql2);
+							$sql_update = "UPDATE message SET state='1' where id='" . $messageid . "' ";
+							$conn->query($sql_update);
                         }
                     }
                 }
@@ -779,7 +691,7 @@ switch ($flag) {
 		        //更新message
 		        $message= $name . "的" . $route . "待检验";
 		        $workstate = '已完工';
-		        $sql_ex = "INSERT INTO message (content,time,department,state,workstate,route) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','外协部件','0','" . $workstate . "','" . $route . "')";
+		        $sql_ex = "INSERT INTO message (content,time,department,state,workstate,route,workshop,cuser) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','外协','0','" . $workstate . "','" . $route . "','外协','外协部件')";
 		        $conn->query($sql_ex);
 //		        $sql2 = "UPDATE message SET state='1' where id='" . $messageid . "' ";
 //		        $conn->query($sql2);
