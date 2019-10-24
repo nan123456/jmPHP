@@ -321,7 +321,7 @@
 		$ret_data["success"] = "success";
 	}
 	else if($flag=='qrcode'){
-		$sql = "SELECT name,figure_number,fid,count,child_material,modid,pNumber FROM part WHERE id='$id'";
+		$sql = "SELECT name,figure_number,fid,count,child_material,modid,pNumber,isexterior FROM part WHERE id='$id'";
 		$res = $conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -330,6 +330,9 @@
 				$fid = $row["fid"];
 				$ret_data["count"] = $row["count"];
 				$ret_data["child_material"]=$row["child_material"];
+				$ret_data["modid"]=$row["modid"];
+				$ret_data["fid"]=$row["fid"];
+				$ret_data["isexterior"]=$row["isexterior"];
 				$modid =$row["modid"];
 			}
 		}
