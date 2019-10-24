@@ -484,6 +484,8 @@
 			  $arr4[$i]['number']=$row4['pNumber']; //工单
 			  $arr4[$i]['product_name'] = $row4['product_name']; //产品名称
 		      $arr4[$i]['remark'] = $row4['remark'];
+		      $arr4[$i]['stime'] = $row4['stime'];
+		      $arr4[$i]['ftime'] = $row4['ftime'];
 //		      $arr4[$i]['station'] = $row4['station'];
 //		      $arr4[$i]['schedule_date'] = $row4['schedule_date'];
 		      $i++;

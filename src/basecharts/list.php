@@ -9,7 +9,7 @@
 //	$flag = "Undelivered";
 	if ($flag == 'Undelivered') {
 		// 获取列表数据
-		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0 order by id desc";
+		$sql = "SELECT b.modid,a.modid,b.fid,b.id,b.figure_number,b.name,b.standard,b.route,b.count,b.child_material,b.pNumber,b.number,b.product_name,b.remark,b.routeid,b.backMark,b.reason,a.isfinish,a.stime,a.ftime,b.isexterior FROM workshop_k a,productionplan b WHERE a.modid = b.modid AND a.route = b.route AND  a.isfinish in ('1','3') AND b.isexterior = 0 order by a.ftime desc";
 		
 		$res = $conn -> query($sql);
 		if ($res -> num_rows > 0) {
