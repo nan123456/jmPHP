@@ -226,7 +226,7 @@
 		$json = '{"success":true,"rows":' . $list_data . ',"product_name":' . $product_name . ',"pNumber":' . $pNumber . '}';
 	}else if($flag =="Delivered") {
 		// 已就工数据列表
-	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason ,a.pNumber,b.stime from productionplan a,workshop_k b WHERE a.isfinish='2' AND a.modid=b.modid AND a.route=b.route ORDER BY id DESC,a.routeid";
+	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason ,a.pNumber,b.stime from productionplan a,workshop_k b WHERE a.isfinish='2' AND a.modid=b.modid AND a.route=b.route ORDER BY b.stime DESC,a.routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
@@ -283,7 +283,7 @@
 	  }
 	}else if($flag=='Production'){
 		// 已完工数据列表
-	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason,a.pNumber,b.stime,b.ftime from productionplan a ,workshop_k b WHERE a.isfinish='1' AND a.modid=b.modid AND a.route=b.route ORDER BY id DESC,a.routeid";
+	  $sql4 = "select a.modid,a.fid,a.id,a.figure_number,a.name,a.standard,a.route,a.count,a.child_material,a.number,a.product_name,a.remark,a.routeid,a.backMark,a.reason,a.pNumber,b.stime,b.ftime from productionplan a ,workshop_k b WHERE a.isfinish='1' AND a.modid=b.modid AND a.route=b.route ORDER BY b.stime DESC,a.routeid";
 	  $res4 = $conn->query($sql4);
 	  if($res4->num_rows > 0 ){
 	    $i = 0;
