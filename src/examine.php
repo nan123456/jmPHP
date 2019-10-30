@@ -75,7 +75,7 @@
 			$sql = "select Wmodid,station,name,utime,photourl,route,count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '1' order by ftime desc";
 		}else if($state==4){
 			//不合格
-			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '3' and unqualified>'0' order by utime desc";
+			$sql = "select Wmodid,station,name,utime,photourl,route,unqualified as count,figure_number,radio,pNumber from test where pNumber='$pnumber' and unqualified>'0' order by utime desc";
 		}else if($state==3){
 			//合格
 			$sql = "select Wmodid,station,name,utime,photourl,route,(count-unqualified-reviews-dumping) as count,figure_number,radio,pNumber from test where pNumber='$pnumber' and isfinish = '3' and (count-unqualified-reviews-dumping)>'0' order by utime desc";
