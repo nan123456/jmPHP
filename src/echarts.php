@@ -32,12 +32,13 @@
 				$alter = new Alteration();
 				if($i==0){
 					$alter->name = "不合格次数";
+					$alter->value = intval($row['count']);
+					$un = $row['count'];
 					$i++;
 				}else{
-					$alter->name = "总检测次数";
-				}
-				
-				$alter->value = intval($row['count']);  
+					$alter->name = "合格次数";
+					$alter->value = intval($row['count']-$un);
+				}  
 				$data[] = $alter;
 			}
 		}
