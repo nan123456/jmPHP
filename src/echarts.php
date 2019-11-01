@@ -22,7 +22,7 @@
 		}else {
 			$data["success"] = 'error';
 		}
-	}else{
+	}else if($flag == "getData"){
 		$pNumber = isset($_POST["pNumber"])?$_POST["pNumber"]:'';
 		$sql = "select count(a.name) as count from workshop_k a,route b where notNum > 0  AND a.routeid = b.id AND b.pNumber = '".$pNumber."' UNION select count(a.name) as count from workshop_k a,route b where a.routeid = b.id AND b.pNumber = '".$pNumber."'";
 		$res=$conn->query($sql);

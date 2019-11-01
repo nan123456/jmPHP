@@ -27,7 +27,7 @@
 
 	
 	$name = $ret_data["name"];
-	$pnumber = $ret_data["pnumber"];
+	$pnumber = $ret_data["pnumber"].$ret_data["number"];
 	$number = $ret_data["number"];
 	$type = $ret_data["type"];
 	$date = $ret_data["date"];
