@@ -1,7 +1,7 @@
 <?php
 	require("../conn.php");
 //	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
-	$sql = "SELECT name,id FROM project";
+	$sql = "SELECT name,id,pNumber FROM project";
 	$res=$conn->query($sql);
 	if($res->num_rows>0){
 		$ret_data["success"] = 'success';
@@ -9,6 +9,7 @@
 		while($row=$res->fetch_assoc()){
 			$ret_data["data"][$i]["lable"] = $row["name"];
 			$ret_data["data"][$i]["value"] = $row["id"];
+			$ret_data["pNumber"][$i] = $row["pNumber"];
 			$i++;
 		}
 	}else {
