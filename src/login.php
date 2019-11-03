@@ -5,12 +5,15 @@
 	if($flag == "Login"){
 		$username = $_POST["username"];
 		$password = $_POST["password"];
-		$sql = "SELECT password,department FROM user WHERE account = '$username' and terminal = '0' ";
+		$sql = "SELECT password,department,seeModule,id FROM user WHERE account = '$username' and terminal = '0' ";
 		$result = $conn->query($sql);
 		$row = $result->fetch_assoc();
 		if(sha1($password)==$row["password"])	{
 			$data['status']='success';
 			$data['department'] = $row['department'];
+//			$data['seeModule'] = $row['seeModule'];
+			$data['id'] = $row['id'];
+			
 		}else{
 			$data='error';
 		}
