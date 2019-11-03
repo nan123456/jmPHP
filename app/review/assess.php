@@ -64,26 +64,36 @@ switch ($flag) {
 		$rid = $_POST["rid"];
 		$routeid = $_POST["routeid"];
 //		$routeid = '19067';
-//		$route = $_POST["route"];
+		$route = $_POST["route"];
 //		$station = $_POST["station"];
-//		$messageid = $_POST["messageid"];
-//		$name = $_POST["name"];
+		//$messageid = $_POST["messageid"];
+		$name = $_POST["name"];
 //		$figure_number = $_POST["figure_number"];
 		$reviews = $_POST["reviews"];
 		$finishcount = $_POST["finishcount"];
-//		$writtenBy = $_POST["writtenBy"];
+		$writtenBy = $_POST["writtenBy"];
 		$inspect = $_POST["inspect"];
+		$department=$_POST['department'];
 		// $finishcount = '2';
 		// $inspect = '8';
 //		$remark = $_POST["remark"];
-//		$workstate = '检验';
-//		$message = $name . "的" . $route . "的" . $station . "已检验！";
 		$sql_search = "SELECT isexterior FROM part WHERE modid = '".$modid."' and fid = '".$pid."'";
 		$res_search = $conn->query($sql_search);
 		if($res_search -> num_rows > 0) {
 			while($row1 = $res_search->fetch_assoc()) {
 				$isexterior = $row1['isexterior'];
 			}
+		}
+		//判断route处于哪个车间
+		$sql_class="SELECT workshop FROM workshop_class where route='" . $route . "'";
+		$res_class = $conn->query($sql_class);
+		if ($res_class->num_rows > 0) {
+		    while ($row = $res_class->fetch_assoc()) {
+		        $workshop = $row['workshop'];
+		    }
+		}
+		else{
+			$workshop ="其他";
 		}
 		//让步接收
 		if ($inspect === "8") {
@@ -96,11 +106,11 @@ switch ($flag) {
 				$sql2 = "UPDATE review SET reviews='".$reviews."', isfinish='3' WHERE modid='".$modid."' and routeid='".$routeid."' and id='" . $rid . "' ORDER by id LIMIT 1";
 				$conn -> query($sql2);
 //	//			// 更新message
+ 				$message = $name . "的" . $route .  "已评审！";
+           		 $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','让步接收','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+				$conn->query($sql_mes);
 //				$sql1 = "UPDATE message SET state='1' where id='" . $messageid . "' ORDER by id LIMIT 1 ";
 //				$conn -> query($sql1);
-//				//将检验信息更新到消息通知
-//				$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,station,cuser) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','计划部','0','" . $workstate . "','" . $route . "','" . $station . "','" . $writtenBy . "')";
-//				$conn -> query($sql2);
 				// 循环检测是否所有零件完成
 				$sql3 = "SELECT todocount ,reviews ,inspectcount from workshop_k where modid='".$modid."' and routeid='".$routeid."'  ";
 				$res = $conn -> query($sql3);
@@ -171,11 +181,14 @@ switch ($flag) {
 				$sql10 = "UPDATE review SET reviews='".$reviews."' WHERE modid='".$modid."' and routeid='".$routeid."' and id='" . $rid . "'  ORDER by id LIMIT 1";
 				$conn -> query($sql10);
 			}
+			$message = $name . "的" . $route .  "已评审！";
+       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','返工','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql_mes);
 		} 
 		//报废，默认不改变完成数量，记录检查数量作为报废数量
 		else if ($inspect === "6") {
 			$reviews = $reviews - $finishcount;
-			$sql11 = "UPDATE workshop_k SET isfinish='6' ,reviews='".$reviews."' ,dumping=dumping + '".$finishcount."' WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
+			$sql11 = "UPDATE workshop_k SET reviews='".$reviews."' ,dumping=dumping + '".$finishcount."' WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
 			$conn -> query($sql11);
 			$sql12 = "UPDATE review SET reviews='".$reviews."'  WHERE modid='".$modid."' and routeid='".$routeid."'and id='" . $rid . "' ORDER by id LIMIT 1";
 			$conn -> query($sql12);
@@ -201,6 +214,9 @@ switch ($flag) {
 			}
 //			$sql19 = "UPDATE scrap SET scrapNum=scrapNum + '" . $reviews . "'  WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
 //			$conn -> query($sql19);
+			$message = $name . "的" . $route .  "已评审！";
+       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','报修','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql_mes);
 		}
 		// 循环检测是否所有工序完成
 		$sql13 = "SELECT isfinish from workshop_k where modid='" . $modid . "' and routeid='" . $routeid . "' ";

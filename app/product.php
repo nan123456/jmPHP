@@ -299,6 +299,7 @@ switch ($flag) {
 							$sql1 = "UPDATE message SET state='1' where id='" . $messageid . "' ORDER by id LIMIT 1 ";
 							$conn->query($sql1);
 							//将检验信息更新到消息通知
+							$workstate = '合格';
 							$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
 							$conn->query($sql2);
 							$sql_update = "UPDATE message SET state='1' where id='" . $messageid . "' ";
@@ -317,6 +318,12 @@ switch ($flag) {
             $inspectcount = $inspectcount - $finishcount;
             $sql14 = "UPDATE workshop_k SET unqualified=unqualified +  '" . $finishcount . "',inspectcount='" . $inspectcount . "' WHERE modid='" . $modid . "' and routeid='" . $routeid . "'  ORDER by id LIMIT 1";
             $conn->query($sql14);
+            //将检验信息更新到消息通知
+			$workstate = '不合格';
+			$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql2);
+			$sql_update = "UPDATE message SET state='1' where id='" . $messageid . "' ";
+			$conn->query($sql_update);
         }
         // 循环检测是否所有工序完成
         $sql9 = "SELECT isfinish from workshop_k where modid='" . $modid . "' and routeid='" . $routeid . "' ";
@@ -335,6 +342,12 @@ switch ($flag) {
 	            $conn->query($sql10);
                 $sql12 = "UPDATE part SET isfinish='1' where modid='" . $modid . "' and fid='" . $pid . "' ORDER by id LIMIT 1 ";
                 $res2 = $conn->query($sql12);
+                $workstate = '完成';
+                $message = $name . "的" . $route . "已完成！";
+				$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+				$conn->query($sql2);
+				$sql_update = "UPDATE message SET state='1' where id='" . $messageid . "' ";
+				$conn->query($sql_update);
        		}
        		else{
        			 // 更新route进度为完成状态
@@ -353,6 +366,12 @@ switch ($flag) {
 	                // 更新part进度为完成状态
 	                $sql12 = "UPDATE part SET isfinish='1' where modid='" . $modid . "' and fid='" . $pid . "' ORDER by id LIMIT 1 ";
 	                $res2 = $conn->query($sql12);
+	                $workstate = '完成';
+		            $message = $name . "的" . $route . "已完成！";
+					$sql2 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+					$conn->query($sql2);
+					$sql_update = "UPDATE message SET state='1' where id='" . $messageid . "' ";
+					$conn->query($sql_update);
 	            }
        		}
         }
@@ -496,6 +515,17 @@ switch ($flag) {
         $isexterior=$_POST["isexterior"];
         $workstate = '检验';
         $message = $name . "的" . $route .  "已检验！";
+        //判断route处于哪个车间
+		$sql_class="SELECT workshop FROM workshop_class where route='" . $route . "'";
+		$res_class = $conn->query($sql_class);
+		if ($res_class->num_rows > 0) {
+		    while ($row = $res_class->fetch_assoc()) {
+		        $workshop = $row['workshop'];
+		    }
+		}
+		else{
+			$workshop ="无";
+		}
         //返工返修
         if ($inspect === "4") {
             $unqualified = $unqualified - $finishcount;
@@ -515,6 +545,9 @@ switch ($flag) {
 //	                $conn->query($sql5);
 //	            }
             }
+            $message = $name . "的" . $route .  "返工！";
+            $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','返工','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql_mes);
             
         }
         //进入评审，等待评审后才能继续流程
@@ -525,12 +558,15 @@ switch ($flag) {
             //			//保存数据进review
             $sql7 = "INSERT INTO review (pid,modid,routeid,name,figure_number,reviews,route,isfinish,uuser) VALUES ('" . $pid . "','" . $modid . "','" . $routeid . "','" . $name . "','" . $figure_number . "','" . $finishcount . "','" . $route . "','5','" . $writtenBy . "')";
             $conn->query($sql7);
+            $message = $name . "的" . $route .  "待评审！";
+            $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','待评审','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql_mes);
             
         }
         //报废，默认不改变完成数量，记录检查数量作为报废数量
         else if ($inspect === "6") {
             $unqualified = $unqualified - $finishcount;
-            $sql8 = "UPDATE workshop_k SET isfinish='6' ,unqualified='" . $unqualified . "' ,dumping=dumping + '" . $finishcount . "' WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
+            $sql8 = "UPDATE workshop_k SET  unqualified='" . $unqualified . "' ,dumping=dumping + '" . $finishcount . "' WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
             $conn->query($sql8);
             // 检测当前零件不合格处理是否完成
 			$sql_finish = "SELECT todocount ,reviews ,inspectcount,unqualified from workshop_k where modid='".$modid."' and routeid='".$routeid."'  ";
@@ -555,6 +591,9 @@ switch ($flag) {
             //			$sql19 = "INSERT INTO scrap (modid,routeid,scrapNum) VALUES ('".$modid."','".$routeid."','".$unqualified."')";
             //			$conn -> query($sql19);
             // 不合格处理
+            $message = $name . "的" . $route .  "报废！";
+            $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','检验部','0','报废','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+			$conn->query($sql_mes);
             
         }
         // 循环检测是否所有工序完成
