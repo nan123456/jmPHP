@@ -32,7 +32,7 @@
 		$seeModule = isset($_POST["seeModule"])?$_POST["seeModule"]:'';
 		$cuser = isset($_POST["cuser"])?$_POST["cuser"]:'';
 		$password = sha1($password);
-		$sql = "UPDATE `user` SET account='$account',`password`='$password',seeModule='$seeModule',cuser='$cuser' WHERE gNum = '$gNum'";
+		$sql = "UPDATE `user` SET account='$account',`password`='$password',seeModule='$seeModule',cuser='$cuser',terminal='0' WHERE gNum = '$gNum'";
 		$result = $conn->query($sql);
 		$data["success"]='success';
 	}
