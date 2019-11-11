@@ -480,7 +480,7 @@
 			switch($tableFlag){
 				case "1":
 					//装载数据-焊接信息
-					$sql = "SELECT `id` AS `contactId`,`productcode`,`processnumber`,`producname`,`partname`,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."' order by `id` desc";
+					$sql = "SELECT `id` AS `contactId`,`productcode`,partdrawingnumber AS processnumber,`producname`,`partname`,workordernumber AS pnumber,FROM_UNIXTIME(`ctime`,'%Y-%m-%d %H:%i:%s') AS ctime,'welding' AS diff FROM `weldingtable` WHERE `weldingtree_id`='".$relateId."' order by `id` desc";
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){
 						$returnData["message"] = "获取成功";
