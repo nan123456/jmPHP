@@ -6,7 +6,7 @@
 	$id = isset($_POST["id"])?$_POST["id"]:'';
 	
 	if($flag == 'part') {
-		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number,pNumber FROM part WHERE id = '$id'";
+		$sql = "SELECT figure_number,name,count,standard,modid,remark,radio,child_material,child_number,pNumber,isfinish FROM part WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){
@@ -22,6 +22,13 @@
 				$ret_data["child_number"] = $row["child_number"];
 				$ret_data["pNumber"] = $row["pNumber"];
 				$modid = $row["modid"];
+				if($row["isfinish"]==0){
+					$ret_data["isfinish_state"] ='未开工';
+				}else if($row["isfinish"]==2){
+					$ret_data["isfinish_state"] ='已就工';
+				}else if($row["isfinish"]==1){
+					$ret_data["isfinish_state"] ='已完成';
+				}
 			}
 			$ret_data["success"] = 'success';
 		}
