@@ -19,6 +19,7 @@
 				$ret_data["number"] = $row["number"];
 				$ret_data["date"] = $row["end_date"];
 				$ret_data["remark"] = $row["remark"];
+				$ret_data["pNumber"] = $row["pNumber"];
 				$ret_data["id"]=$id;
 				$modid = $row["modid"];
 			}
