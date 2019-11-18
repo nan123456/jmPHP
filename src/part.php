@@ -80,7 +80,7 @@
 			while($arow=$ares->fetch_assoc()){
 				$modid = $arow["modid"];
 				$ret_data["item"][$i]["id"]=$arow["id"];
-				$bsql="SELECT id,route,isfinish FROM route WHERE pid<>'0' AND modid = '$modid' ORDER BY id ASC";
+				$bsql="SELECT id,route,isfinish,pNumber FROM route WHERE pid<>'0' AND modid = '$modid' ORDER BY id ASC";
 				$bres=$conn->query($bsql);
 				if($bres->num_rows>0){
 					$x=0;
@@ -89,6 +89,7 @@
 					while($brow=$bres->fetch_assoc()){
 		//				$ret_data["e"] = $row["isfinish"];
 						$ret_data["item"][$i]["name"]=$arow["name"];
+						$ret_data["item"][$i]["pNumber"] = $brow["pNumber"];
 						switch($brow["isfinish"]){
 							case 0:
 							$ret_data["item"][$i]["unfinished"][$x]["route"] = $brow["route"];
