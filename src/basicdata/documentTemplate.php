@@ -2450,6 +2450,7 @@
 			$type = isset($_GET["type"]) ? $_GET["type"] : "";
 			$relateId = isset($_GET["contactId"]) ? $_GET["contactId"] : "";
 			$cardtype = isset($_GET["cardtype"]) ? $_GET["cardtype"] : "";
+			$account = isset($_GET["account"]) ? $_GET["account"] : "";
 			switch($cardtype){
 				case("welding"):
 					//返回给前端的数据
@@ -2494,6 +2495,11 @@
 						$conn->query($sql);
 						$returnData["message"] = "保存成功";
 						$returnData["autoIncrementId"] = $autoIncrementId;
+						$sql4 = "SELECT `name` FROM`user` WHERE account = '$account'";
+						$result4 = $conn->query($sql4);
+						$row4 = $result4->fetch_assoc();
+						$sql5 = "INSERT INTO message(content,time,state,cuser,count,totalnum) VALUES ('".$row["pnumber"].$row["proname"].$row2["partname"].$row2["partdrawingnumber"]."焊接工艺报表已生成！','".date("Y-m-d H:i:s")."','0','".$row4["name"]."','0','0')";
+						$conn->query($sql5);
 					}else{
 						$returnData["state"] = "failure";
 						$returnData["message"] = "自增值ID为空";
@@ -2535,6 +2541,11 @@
 						$sql .= "select REPLACE(`craftsmanship_id`,'".$relateId."','".$autoIncrementId."'),`serialnumber`,`processflow`,`inspectioncontent`,`skillsrequirement`,`selftest`,`signature`,REPLACE(`ctime`,'".$oldTime."','".time()."') from `craftsmanshiptabletwo_template` where `craftsmanship_id` = '".$relateId."' ORDER BY `id`";
 						$conn->query($sql);
 						$returnData["message"] = "保存成功";
+						$sql4 = "SELECT `name` FROM`user` WHERE account = '$account'";
+						$result4 = $conn->query($sql4);
+						$row4 = $result4->fetch_assoc();
+						$sql5 = "INSERT INTO message(content,time,state,cuser,count,totalnum) VALUES ('".$row["pnumber"].$row["proname"].$row2["partname"].$row2["partdrawnumber"]."机械制造报表已生成！','".date("Y-m-d H:i:s")."','0','".$row4["name"]."','0','0')";
+						$conn->query($sql5);
 					}else{
 						$returnData["state"] = "failure";
 						$returnData["message"] = "自增值ID为空";
@@ -2569,6 +2580,11 @@
 						$sql .= "select REPLACE(`heattreatment_id`,'".$relateId."','".$autoIncrementId."'),`model`,`temperature`,`time`,`otherdata`,`selectvalue` from `heattreatbody_template` where `heattreatment_id` = '".$relateId."' order by id";
 						$conn->query($sql);
 						$returnData["message"] = "保存成功";
+						$sql4 = "SELECT `name` FROM`user` WHERE account = '$account'";
+						$result4 = $conn->query($sql4);
+						$row4 = $result4->fetch_assoc();
+						$sql5 = "INSERT INTO message(content,time,state,cuser,count,totalnum) VALUES ('".$row["pnumber"].$row["proname"].$row2["ownPartName"].$row2["productDrawingNumber"]."热处理报表已生成！','".date("Y-m-d H:i:s")."','0','".$row4["name"]."','0','0')";
+						$conn->query($sql5);
 					}else{
 						$returnData["state"] = "failure";
 						$returnData["message"] = "自增值ID为空";
@@ -2604,6 +2620,11 @@
 						$conn->query($sql);
 						
 						$returnData["message"] = "保存成功";
+						$sql4 = "SELECT `name` FROM`user` WHERE account = '$account'";
+						$result4 = $conn->query($sql4);
+						$row4 = $result4->fetch_assoc();
+						$sql5 = "INSERT INTO message(content,time,state,cuser,count,totalnum) VALUES ('".$row["pnumber"].$row["proname"].$row2["partname"].$row2["partdrawnumber"]."机械加工报表已生成！','".date("Y-m-d H:i:s")."','0','".$row4["name"]."','0','0')";
+						$conn->query($sql5);
 					}else{
 						$returnData["state"] = "failure";
 						$returnData["message"] = "自增值ID为空";
@@ -2932,6 +2953,7 @@
 			$OldrelateId = isset($_GET["OldrelateId"]) ? $_GET["OldrelateId"] : "";
 			$thereId = explode(',',$thereId);
 			$OldrelateId = explode(',',$OldrelateId);
+			$account = isset($_GET["account"]) ? $_GET["account"] : "";
 			//返回给前端的数据
 			$returnData = array(
 				"state" => "success",
@@ -3066,6 +3088,12 @@
 					}					
 				}				
 			}
+			$sql4 = "SELECT `name` FROM`user` WHERE account = '$account'";
+			$result4 = $conn->query($sql4);
+			$row4 = $result4->fetch_assoc();
+			$sql5 = "INSERT INTO message(content,time,state,cuser,count,totalnum) VALUES ('".$row["pnumber"].$row["proname"]."项目报表已生成！','".date("Y-m-d H:i:s")."','0','".$row4["name"]."','0','0')";
+			$conn->query($sql5);
+			
 			$json = json_encode($returnData);
 			echo $json;											
 			break;		
