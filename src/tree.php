@@ -333,13 +333,15 @@
 			
 		}
 	}else if($flag == 'plm_type'){
-		$sql = "SELECT type from project where number in (SELECT DISTINCT product_id FROM plm) GROUP BY type";
+//		$sql = "SELECT type from project where number in (SELECT DISTINCT product_id FROM plm) GROUP BY type";
+		$sql="SELECT DISTINCT product_id FROM plm";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
 			while($row=$res->fetch_assoc()){
-				$ret_data["data"][$i]["name"] = $row["type"];
-				$ret_data["data"][$i]["leaf"] = false;
+				$ret_data["data"][$i]["name"] = $row["product_id"];
+				$ret_data["data"][$i]["lx"] = 'plm_tree';
+//				$ret_data["data"][$i]["leaf"] = false;
 				$i++;
 			}
 			$ret_data["success"] = 'success';
@@ -448,6 +450,16 @@
 		}
 	$json=json_encode($ret_data);
 	echo $json;
+	}else if($flag=='plm_change_tree'){
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		
+		$sql="SELECT product_id,label,figure_number,belong_part,material,count FROM plm where belong_part = '$product_id'";
+	}else if($flag=='getPLMchangeTree'){
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		$sql="SELECT json from plm_json where product_id = '$product_id' ";
+		$res=$conn->query($sql);
+		$row=$res->fetch_assoc();
+		echo $row['json'];
 	}
 
 	
