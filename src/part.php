@@ -155,7 +155,7 @@
 //			}	
 //		}
 	}else if($flag == 'partfile'){
-		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url,pNumber FROM onfile WHERE id = '$id'";
+		$sql = "SELECT notNum,reason,backMark,station,remark,radio,part_url,pNumber,finishurl,inspecturl,unqualifiedurl FROM onfile WHERE id = '$id'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			while($row=$res->fetch_assoc()){

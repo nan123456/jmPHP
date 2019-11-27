@@ -7,7 +7,7 @@
 	if($flag == "partfile"){
 		$id = isset($_POST["id"])?$_POST["id"]:'';
 //		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,photourl from onfile where id = '$id' order by Rid ";
-		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,part_url from onfile where id = '$id' order by Rid ";
+		$sql = "select route,route_line,notNum,remark,backMark,reason,otime,stime,utime,ctime,part_url,finishurl,inspecturl,unqualifiedurl from onfile where id = '$id' order by Rid ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -21,15 +21,33 @@
 				}else{
 					$ret_data["data"][$i]["backMark"] = "是";
 				}
-				$arr = array();
-				if($row["part_url"]){
-					$arr=explode(',',$row["part_url"]);
+				$arr1 = array();
+				$arr2 = array();
+				$arr3 = array();
+				if($row["finishurl"]){
+					$arr1=explode(',',$row["finishurl"]);
 					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
-					foreach($arr as $key => $url){
-						$arr[$key] = $base .$url;
+					foreach($arr1 as $key => $url){
+						$arr1[$key] = $base .$url;
 					}	
 				}
-				$ret_data["data"][$i]["photourl"] = $arr;
+				if($row["inspecturl"]){
+					$arr2=explode(',',$row["inspecturl"]);
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
+					foreach($arr2 as $key => $url){
+						$arr2[$key] = $base .$url;
+					}	
+				}
+				if($row["unqualifiedurl"]){
+					$arr3=explode(',',$row["unqualifiedurl"]);
+					$base = "http://47.106.161.130:80/jmmes/app/uploadfiles/";
+					foreach($arr3 as $key => $url){
+						$arr3[$key] = $base .$url;
+					}	
+				}
+				$ret_data["data"][$i]["finishurl"] = $arr1;
+				$ret_data["data"][$i]["inspecturl"] = $arr2;
+				$ret_data["data"][$i]["unqualifiedurl"] = $arr3;
 				$ret_data["data"][$i]["reason"] = $row["reason"];
 				$ret_data["data"][$i]["otime"] = $row["otime"];
 				$ret_data["data"][$i]["stime"] = $row["stime"];
