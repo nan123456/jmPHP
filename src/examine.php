@@ -91,6 +91,7 @@
 				$ret_data["data"][$i]["count"] = $row["count"];
 				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 				$ret_data["data"][$i]["project"] = $project;
+				$ret_data["data"][$i]["pNumber"] = $row["pNumber"];
 				$partdrawnumber = $row["figure_number"];
 				$pnumber=$row["pNumber"];
 			if($row["pNumber"]!=''){
@@ -152,7 +153,7 @@
 		}else{
 			$ret_data["success"] = 'error';
 		}
-	}else if($flag='getProject'){
+	}else if($flag=='getProject'){
 		$i=0;
 		$sql="select name,pNumber from project";
 		$res=$conn->query($sql);
@@ -161,6 +162,61 @@
 			$ret_data["data"][$i]["value"]=$row["pNumber"];
 			$i++;
 		}		
+	}else if($flag=='getCard'){
+		$figure_number = isset($_POST["figure_number"]) ? $_POST["figure_number"] : '';
+		$pNumber = isset($_POST["pNumber"]) ? $_POST["pNumber"] : '';
+		$type = isset($_POST["type"]) ? $_POST["type"] : '';
+		switch($type){
+			case 'mode':
+				//使用部件图号查询制造工艺卡信息
+				$sql1 = "select craftsmanshiptree_id,id from craftsmanshiptable where partdrawnumber = '$figure_number' and pnumber='$pNumber'";//使用部件图号查询制造工艺卡信息
+				$res1 = $conn ->query($sql1);
+				$i = 0;
+				while($row1=$res1->fetch_assoc()){
+					$ret_data["data"][$i]["contactId"] = isset( $row1["id"]) ?  $row1["id"] : '';
+					$ret_data["data"][$i]["selectedTreeNode"] = $row1["craftsmanshiptree_id"];
+					$i++;
+				}
+				$ret_data["success"] = "success";
+				break;
+			case 'check':
+				//使用部件图号查询焊接工艺卡信息
+				$sql2 = "select id from weldingtable where partdrawingnumber = '$figure_number' and workordernumber='$pNumber'";//使用部件图号查询焊接工艺卡信息
+				$res2 = $conn ->query($sql2);
+				$i = 0;
+				while($row2=$res2->fetch_assoc()){
+					$ret_data["data"][$i]["weldingcontactId"] = isset( $row2["id"]) ? $row2["id"] : '';
+					$i++;
+				}
+				$ret_data["success"] = "success";
+				break;
+			case 'heat':
+			//使用部件图号查询热处理工艺卡信息
+				$sql3 = "select weldingtree_id,id from heattreatment where productDrawingNumber = '$figure_number' and partsName='$pNumber'";//使用部件图号查询热处理工艺卡信息
+				$res3 = $conn ->query($sql3);
+				$i = 0;
+				while($row3=$res3->fetch_assoc()){
+					$ret_data["data"][$i]["heatId"] = isset( $row3["id"]) ?  $row3["id"] : '';
+					$ret_data["data"][$i]["selectedTreeNode2"] = $row3["weldingtree_id"];
+					$i++;
+				}
+				$ret_data["success"] = "success";
+				break;
+			case 'mach':
+				//使用部件图号查询加工工艺卡信息
+				$sql4 = "select craftsmanshiptree_id,id from machiningtable where partdrawnumber = '$figure_number' and pnumber='$pNumber'";//使用部件图号查询加工工艺卡信息
+				$res4 = $conn ->query($sql4);
+				$i = 0;
+				while($row4=$res4->fetch_assoc()){
+					$ret_data["data"][$i]["machingId"] = isset( $row4["id"]) ?  $row4["id"] : '';
+					$ret_data["data"][$i]["selectedTreeNode3"] = $row4["craftsmanshiptree_id"];
+					$i++;
+				}
+				$ret_data["success"] = "success";
+				break;
+			default:
+				$ret_data["success"] = "error";
+		}
 	}
 	$conn->close();
 	$json = json_encode($ret_data);
