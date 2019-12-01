@@ -59,13 +59,13 @@
 	}else if($flag=='project'){
 		$type = isset($_POST["type"])?$_POST["type"]:'';
 //		$ret_data["type"] = $type;
-		$sql = "SELECT id,name,number FROM project WHERE isfinish='0' AND type = '$type'";
+		$sql = "SELECT id,name,number,pNumber FROM project WHERE isfinish='0' AND type = '$type'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["id"] = $row["id"];
-				$ret_data["data"][$i]["name"] = $row["number"].$row["name"];
+				$ret_data["data"][$i]["name"] = $row["pNumber"].$row["name"];
 				$ret_data["data"][$i]["number"] = $row["number"];
 				$ret_data["data"][$i]["zhname"] = $row["name"];
 				$ret_data["data"][$i]["lx"] = 'xm';
@@ -419,13 +419,13 @@
 	}else if($flag=='data_project'){
 		$type = isset($_POST["type"])?$_POST["type"]:'';
 //		$ret_data["type"] = $type;
-		$sql = "SELECT id,name,number FROM project WHERE  type = '$type'";
+		$sql = "SELECT id,name,number,pNumber FROM project WHERE  type = '$type'";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["id"] = $row["id"];
-				$ret_data["data"][$i]["name"] = $row["number"].$row["name"];
+				$ret_data["data"][$i]["name"] = $row["pNumber"].$row["name"];
 				$ret_data["data"][$i]["number"] = $row["number"];
 				$ret_data["data"][$i]["zhname"] = $row["name"];
 				$ret_data["data"][$i]["lx"] = 'xm';
