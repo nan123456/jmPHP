@@ -2,8 +2,9 @@
 	require("../conn.php");
 //	header("Access-Control-Allow-Origin: *"); // 允许任意域名发起的跨域请求
 	$ret_data=array();
+	//设置时区为东八区
+	date_default_timezone_set("PRC");
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
-	
 	//未审核部分
 	if($flag == 'unreview_type'){
 		$sql = "SELECT type from project where isfinish='2' GROUP BY type";
@@ -340,6 +341,7 @@
 			$i = 0;
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["name"] = $row["product_id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
 				$ret_data["data"][$i]["lx"] = 'plm_tree';
 //				$ret_data["data"][$i]["leaf"] = false;
 				$i++;
@@ -450,16 +452,24 @@
 		}
 	$json=json_encode($ret_data);
 	echo $json;
-	}else if($flag=='plm_change_tree'){
-		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
-		
-		$sql="SELECT product_id,label,figure_number,belong_part,material,count FROM plm where belong_part = '$product_id'";
 	}else if($flag=='getPLMchangeTree'){
 		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
 		$sql="SELECT json from plm_json where product_id = '$product_id' ";
 		$res=$conn->query($sql);
 		$row=$res->fetch_assoc();
 		echo $row['json'];
+	}else if($flag=='savePlmJson'){
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		$tree_json = isset($_POST["tree_json"])?$_POST["tree_json"]:'';
+		$tree_name = isset($_POST["tree_name"])?$_POST["tree_name"]:'';
+		json_encode($tree_json);
+		$create_user_account = isset($_POST["create_user_account"])?$_POST["create_user_account"]:'';
+		$time=date('Y-m-d h:i:s', time());
+		$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time')";
+		$res=$conn->query($sql);
+		$ret_data["success"] = 'success';
+		$json=json_encode($ret_data);
+		echo $json;
 	}
 
 	
