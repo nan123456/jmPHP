@@ -3,7 +3,7 @@ require ("../conn.php");
 	$flag = $_POST["flag"];
 	$time = date("Y-m-d H:i:s");
 //$flag = "9";
-	$arr = array();
+
 switch ($flag) {
 
 	case '0' :
