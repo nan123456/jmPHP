@@ -491,6 +491,28 @@
 		}
 		$json=json_encode($ret_data);
 		echo $json;
+	}else if($flag=='getRechangeTreeData'){
+		$list_id = isset($_POST["list_id"])?$_POST["list_id"]:'';
+		$sql="SELECT tree_json from plm_tree_list where id = '$list_id' ";
+		$res=$conn->query($sql);
+		$row=$res->fetch_assoc();
+		echo $row['tree_json'];
+	}else if($flag=='changePLMjson'){
+		$id = isset($_POST["id"])?$_POST["id"]:'';
+		$tree_json = isset($_POST["tree_json"])?$_POST["tree_json"]:'';
+		$sql="UPDATE plm_tree_list SET tree_json='$tree_json' WHERE id='$id'";
+		$res=$conn->query($sql);
+		$ret_data["success"] = 'success';
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='deletePLMTree'){
+		$id = isset($_POST["id"])?$_POST["id"]:'';
+		$sql="DELETE FROM plm_tree_list WHERE id='$id'";
+		$res=$conn->query($sql);
+		$ret_data["success"] = 'success';
+		$json=json_encode($ret_data);
+		echo $json;
+
 	}
 	
 	$conn->close();
