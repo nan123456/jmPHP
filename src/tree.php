@@ -470,8 +470,28 @@
 		$ret_data["success"] = 'success';
 		$json=json_encode($ret_data);
 		echo $json;
+	}else if($flag=='getTreeList'){
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		$sql="SELECT id,product_id,tree_json,tree_name,create_user_account,create_time FROM plm_tree_list WHERE product_id='$product_id' ORDER BY id DESC";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i=0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["list_id"] = $row["id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
+				$ret_data["data"][$i]["tree_json"] = $row["tree_json"];
+				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
+				$ret_data["data"][$i]["create_user_account"] = $row["create_user_account"];
+				$ret_data["data"][$i]["create_time"] = $row["create_time"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';			
+		}else{
+			$ret_data["success"] = 'null';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
 	}
-
 	
 	$conn->close();
 //	$json=json_encode($ret_data);
