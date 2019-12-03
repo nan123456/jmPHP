@@ -4,7 +4,8 @@ $flag = $_POST["flag"];
 //$flag ='12';
 $time = date("Y-m-d H:i:s");
 switch ($flag) {
-    case '0'://获取就工前的信息
+	//获取就工前的信息
+    case '0':
         $id = $_POST["id"];
         $pid = $_POST["pid"];
         $modid = $_POST["modid"];
@@ -78,10 +79,8 @@ switch ($flag) {
         $json = json_encode($arr);
         echo $json;
         break;
-
+	//即就工状态，更新isfinish状态为在建
     case '2':
-        // 更新isfinish状态在建，
-        //即就工状态
         $modid = $_POST["modid"];
         $pid = $_POST["pid"];
         $routeid = $_POST["routeid"];
@@ -125,7 +124,7 @@ switch ($flag) {
         	$workshop ="无";
         }
         // 更新message
-        $sql3 = "INSERT INTO message (content,time,department,state,workstate,route,station,cuser,workshop) VALUES ('" . $message . "','" . $time . "','" .$department. "','0','" . $workstate . "','" . $route . "','" . $station . "','" . $writtenBy . "','" . $workshop . "')";
+        $sql3 = "INSERT INTO message (content,time,department,state,workstate,route,station,cuser,workshop,count) VALUES ('" . $message . "','" . $time . "','" .$department. "','0','" . $workstate . "','" . $route . "','" . $station . "','" . $writtenBy . "','" . $workshop . "','" . $count . "')";
         $res = $conn->query($sql3);
         $messageid = $conn->insert_id;
         $data['messageid'] = $messageid;
@@ -188,9 +187,8 @@ switch ($flag) {
         $json = json_encode($arr);
         echo $json;
         break;
-	//完工确认
+	//完工确认,更新isfinish状态完成
     case '5':
-        // 更新isfinish状态完成
         $modid = $_POST["modid"];
         $pid = $_POST["pid"];
         $routeid = $_POST["routeid"];
@@ -208,14 +206,23 @@ switch ($flag) {
         $department = $_POST["department"];
 		$sql6 = "UPDATE warehouse SET count='".$finishcount."' where pid='".$pid."' and figure_number='".$figure_number."' and pNumber='".$pNumber."' ";
 		$conn->query($sql6);
+		//完工人员信息添加
+        	$sql_people = "select workuser from workshop_k where modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1 ";
+			$result = $conn -> query($sql_people);
+			$row_num = $result -> fetch_assoc();
+			if (strlen($row_num["workuser"]) > 0) {
+				$workuser = $row_num["workuser"] . "," . $writtenBy;
+			} else {
+				$workuser = $writtenBy;
+			}
         if ($todocount === $finishcount) {
             $todocount = $todocount - $finishcount;
-            $sql = "UPDATE workshop_k SET isfinish='1' ,todocount='" . $todocount . "' ,inspectcount=inspectcount + '" . $finishcount . "' ,ftime='" . $time . "' where modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1 ";
+            $sql = "UPDATE workshop_k SET isfinish='1' ,workuser='" . $workuser . "' ,todocount='" . $todocount . "' ,inspectcount=inspectcount + '" . $finishcount . "' ,ftime='" . $time . "' where modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1 ";
             $conn->query($sql);
 			
         } else {
             $todocount = $todocount - $finishcount;
-            $sql5 = "UPDATE workshop_k SET todocount='" . $todocount . "' ,inspectcount=inspectcount + '" . $finishcount . "' where modid='" . $modid . "' and routeid='" . $routeid . "'  ORDER by id LIMIT 1 ";
+            $sql5 = "UPDATE workshop_k SET workuser='" . $workuser . "' ,todocount='" . $todocount . "' ,inspectcount=inspectcount + '" . $finishcount . "' where modid='" . $modid . "' and routeid='" . $routeid . "'  ORDER by id LIMIT 1 ";
             $conn->query($sql5);
             //			$sql4 = "SELECT finishcount from workshop_k where modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1 ";
             //			$res = $conn -> query($sql4);
@@ -237,7 +244,7 @@ switch ($flag) {
         	$workshop ="无";
         }
         //更新message
-        $sql1 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','" . $department . "','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+        $sql1 = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop,count) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','" . $department . "','0','" . $workstate . "','" . $route . "','" . $writtenBy . "','" . $workshop . "','" . $finishcount . "')";
         $conn->query($sql1);
         $sql2 = "UPDATE message SET state='1' where id='" . $messageid . "' ";
         $conn->query($sql2);

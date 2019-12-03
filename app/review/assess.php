@@ -31,10 +31,10 @@ switch ($flag) {
 			$json = json_encode($data);
 			echo $json;
 			break;
-			
+		//显示评审信息	
 		case '1' : 
 			$rid = $_POST["rid"];
-			$sql = "SELECT id,name,figure_number,reviews,route FROM review WHERE id = '".$rid."'";
+			$sql = "SELECT id,name,figure_number,reviews,route,photourl FROM review WHERE id = '".$rid."'";
 			$res = $conn->query($sql);
 			if($res -> num_rows > 0) {
 				
@@ -45,6 +45,7 @@ switch ($flag) {
                     $data[$i]['figure_number'] = $row['figure_number'];
 					$data[$i]['reviews'] = $row['reviews'];
 					$data[$i]['route'] = $row['route'];
+					$data[$i]['photourl'] = $row['photourl'];
 					$i++;
 				}
 			} else{

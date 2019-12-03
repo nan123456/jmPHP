@@ -1,7 +1,7 @@
 <?php
 	require("../../conn.php");
 	$flag = $_POST["flag"];
-//	 $flag = '4';
+	// $flag = '0';
 	switch ($flag) {
 		//0为查询未完成装配单数据
 		case '0' : 

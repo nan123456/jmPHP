@@ -24,16 +24,16 @@ class UploadFile{
 	 * @param array $allowMime
 	 */
 //	public function __construct($fileName='myFile',$uploadPath='./uploads',$imgFlag=true,$maxSize=5242880,$allowExt=array('jpeg','jpg','png','gif'),$allowMime=array('image/jpeg','image/png','image/gif')){
-	public function __construct($fileinfo,$uploadPath='../app/uploadfiles',$fileSaveName){
+	public function __construct($fileinfo){
 //		$this->fileName=$fileName;
 //		$this->maxSize=$maxSize;
 //		$this->allowMime=$allowMime;
 //		$this->allowExt=$allowExt;
-		$this->uploadPath=$uploadPath;
+		$this->uploadPath='../app/uploadfiles';
 //		$this->imgFlag=$imgFlag;
 		
 		$this->fileInfo=$fileinfo;
-		$this->fileSaveName = $fileSaveName;
+		$this->fileSaveName = $this->fileInfo['name'];
 	}
 	/**
 	 * 检测上传文件是否出错
@@ -164,23 +164,22 @@ class UploadFile{
 //		if($this->checkError()&&$this->checkSize()&&$this->checkExt()&&$this->checkMime()&&$this->checkTrueImg()&&$this->checkHTTPPost()){
 		if($this->checkError()){
 			$this->checkUploadPath();//检测保存目录是否存在
-			$this->ext = strtolower(pathinfo($this->fileInfo['name'],PATHINFO_EXTENSION));//获取文件后缀
 			if(isset($this->fileSaveName)){
 //				echo $this->fileSaveName.'@@';
-				$this->destination = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;
-				$this->destination_gbk = $this->uploadPath.'/'.$this->fileSaveName.'.'.$this->ext;				
+				$this->destination = $this->uploadPath.'/'.$this->fileSaveName;
+				$this->destination_gbk = $this->uploadPath.'/'.$this->fileSaveName;				
 			}else{
 //				echo $this->fileSaveName.'!!';
 				$this->uniName = pathinfo($this->fileInfo['name'],PATHINFO_FILENAME);//重新命名问价
-				$this->destination = $this->uploadPath.'/'.$this->uniName.'.'.$this->ext;//组建完整问价路径
+				$this->destination = $this->uploadPath.'/'.$this->uniName;//组建完整问价路径
 				$this->destination_gbk = iconv("UTF-8", "GB2312", $this->destination);
 			}				
 			
 			if(@move_uploaded_file($this->fileInfo['tmp_name'], $this->destination_gbk)){
 				return  $this->destination;//返回文件完整目录
 			}else{
-//				$this->error='文件移动失败';
-//				$this->showError();
+				$this->error='文件移动失败';
+				$this->showError();
 			}
 		}else{
 			$this->showError();

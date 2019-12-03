@@ -1,46 +1,45 @@
 <?php
 require ("../conn.php");
-	$flag = $_POST["flag"];
-	$time = date("Y-m-d H:i:s");
-//$flag = "9";
-
+$flag = $_POST["flag"];
+//$flag = '11';
+$time = date("Y-m-d H:i:s");
 switch ($flag) {
-
 	case '0' :
-		// 获取isfinish状态
-		$modid = $_POST["modid"];
-		$pid = $_POST["pid"];
-		$isexterior=$_POST["isexterior"];
-		if($isexterior=="1"){
-			$sql = "SELECT isfinish FROM part WHERE modid='" . $modid . "' AND fid='" . $pid . "' ";
-			$res = $conn -> query($sql);
-			if ($res -> num_rows > 0) {
-				$i = 0;
-				while ($row = $res -> fetch_assoc()) {
-					$arr[$i]['isfinish'] = $row['isfinish'];
-					$arr[$i]['routeid'] ='';
-					$arr[$i]['isexterior'] = '1';
-					$i++;
-				}
+	
+// 获取isfinish状态
+	$modid = $_POST["modid"];
+	$pid = $_POST["pid"];
+    $isexterior=$_POST["isexterior"];
+//	$modid = '1000604639';
+//	$pid = '62';
+//	$isexterior='0';
+	if($isexterior=="1"){
+//		$sql = "SELECT isfinish FROM part WHERE modid='" . $modid . "' AND fid='" . $pid . "' ";
+		$sql = "SELECT isfinish FROM part WHERE modid='" . $modid . "'";
+		$res = $conn -> query($sql);
+		if ($res -> num_rows > 0) {
+			$i = 0;
+			while ($row = $res -> fetch_assoc()) {
+				$arr[$i]['isfinish'] = $row['isfinish'];
+				$arr[$i]['routeid'] ='';
+				$arr[$i]['isexterior'] = '1';
+				$i++;
 			}
 		}
-		else{
-			$sql = "SELECT isfinish,id,isexterior FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
-			$res = $conn -> query($sql);
-			if ($res -> num_rows > 0) {
-				$i = 0;
-				while ($row = $res -> fetch_assoc()) {
-					$arr[$i]['isfinish'] = $row['isfinish'];
-					$arr[$i]['routeid'] = $row['id'];
-					$arr[$i]['isexterior'] = $row['isexterior'];
-					$i++;
-				}
+	}else{
+		$sql = "SELECT isfinish,id,isexterior FROM route WHERE modid='" . $modid . "' AND pid='" . $pid . "' AND isfinish!='1' ORDER by id LIMIT 1";
+		$res = $conn -> query($sql);
+		if ($res -> num_rows > 0) {
+			$i = 0;
+			while ($row = $res -> fetch_assoc()) {
+				$arr[$i]['isfinish'] = $row['isfinish'];
+				$arr[$i]['routeid'] = $row['id'];
+				$arr[$i]['isexterior'] = $row['isexterior'];
+				$i++;
 			}
 		}
-//		$modid = '1000634968';
-//		$pid = '17';
+	}
 		$json = json_encode($arr);
-		//			echo gettype($json);
 		echo $json;
 		break;
 	case '1' :
@@ -381,6 +380,74 @@ switch ($flag) {
         $json = json_encode($data);
 		echo $json;
         break;
+    //未完成进行相应的记录
+    case '11':
+	    	//查询下个是否完成
+		function chaxun($modid){
+			global $conn;
+			$sql1="select modid,isfinish from part where belong_part=(select name from part where modid='".$modid."') and isfinish='0'";
+			$res = $conn->query($sql1);
+			$nowlong=$res -> num_rows;
+			if($nowlong>0){
+				xunhuan($res);
+			}
+			else{
+				return;
+			}
+		}
+		//循环
+		function xunhuan($res){
+			$i = 0;
+			while ($row = $res -> fetch_assoc()) {
+				$isfinish=$row['isfinish'];
+//				if($isfinish=="1"){
+//					$i++;
+//				}else{
+					$modid=$row['modid'];
+					record($modid);
+					chaxun($modid);
+					$i++;
+//				}
+			}
+			return;
+		}
+			//记录未完成记录
+		function record($modid) {
+	//		$sql_insert=
+			global $conn;
+			$sql_mes="SELECT * FROM part WHERE modid='".$modid."'";
+			$res_mes = $conn -> query($sql_mes);
+			if ($res_mes -> num_rows > 0) {
+				$i = 0;
+				while ($row = $res_mes -> fetch_assoc()) {
+					$name= $row['name'];
+					$totalnum =$row['count'];
+					$content="部件".$name."未完成";
+					$workstate="未完成";
+					//未完成通知消息
+					$sql_message="INSERT INTO message (content,workstate,totalnum,time) VALUES ('".$content."','".$workstate."','".$totalnum."','".date("Y-m-d H:i:s")."')";
+					$conn->query($sql_message);
+					$i++;
+				}
+			}
+	//      echo $modid;
+	//		echo $state='未完成';
+			return;
+		}
+		$modid = $_POST["modid"];
+//		$modid = '1000667013';
+		$sql="select * from part where belong_part=(select name from part where modid='".$modid."') and isfinish='0'";
+		$res = $conn -> query($sql);
+		$nowlong=$res -> num_rows;
+		$arr['mark']='0';
+		if($nowlong>0){
+			//若子部件们若存在未完成的记录下来存进通知内
+			xunhuan($res);
+			$arr['mark']='1';
+		}
+		$json = json_encode($arr);
+		echo $json;
+		break;
 }
 $conn -> close();
 ?>
