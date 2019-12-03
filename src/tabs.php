@@ -29,7 +29,7 @@
 		
 	}else if($flag == "Unread"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0'  ORDER BY `id` desc ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='0'  ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -43,6 +43,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';
@@ -81,7 +82,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND CONCAT(content,time,workstate,station,route,cuser) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='0' AND CONCAT(content,time,workstate,station,route,cuser,count) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -95,6 +96,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';
@@ -103,7 +105,7 @@
 		$department = $_POST["department"]; 
 		$modid = $_POST["modid"]; 
 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND CONCAT(content,time,workstate,station,route,cuser) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='1' AND CONCAT(content,time,workstate,station,route,cuser,count) LIKE  '%".$modid."%' or workshop like '%".$modid."%' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -117,13 +119,14 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';
 		}
 	}else if($flag == "Read"){
 		$department = $_POST["department"]; 
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='1' ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -137,6 +140,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			//获取下拉车间筛选
@@ -172,7 +176,7 @@
 			$ret_data["success"] = 'success';
 		}
 	}else if($flag == "Recycle"){
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message where state='1' or state='0' ORDER BY `id` desc ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message where state='1' or state='0' ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -186,6 +190,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';
@@ -222,7 +227,7 @@
 		$DateData = explode(",",$DateData);
 		$startime = $DateData[0]." 00:00:00";
 		$endtime = $DateData[1]." 23:59:59";
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc ";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='0' AND time BETWEEN '".$startime."' AND '".$endtime."' ORDER BY `id` desc ";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -236,6 +241,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';
@@ -275,7 +281,7 @@
 		$DateData = explode(",",$DateData);
 		$startime = $DateData[0]." 00:00:00";
 		$endtime = $DateData[1]." 23:59:59";
-		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
+		$sql = "SELECT content,time,id,station,workstate,route,workshop,cuser,count FROM message WHERE state='1' AND time BETWEEN '".$startime."' AND '".$endtime."'  ORDER BY `id` desc";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i = 0;
@@ -289,6 +295,7 @@
 				$ret_data["data"][$i]["route"] = $row["route"];
 				$ret_data["data"][$i]["workshop"] = $row["workshop"];
 				$ret_data["data"][$i]["cuser"] = $row["cuser"];
+				$ret_data["data"][$i]["count"] = $row["count"];
 				$i++;
 			}
 			//获取下拉车间筛选
