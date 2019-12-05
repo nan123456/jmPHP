@@ -462,12 +462,23 @@
 		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
 		$tree_json = isset($_POST["tree_json"])?$_POST["tree_json"]:'';
 		$tree_name = isset($_POST["tree_name"])?$_POST["tree_name"]:'';
-		json_encode($tree_json);
 		$create_user_account = isset($_POST["create_user_account"])?$_POST["create_user_account"]:'';
-		$time=date('Y-m-d h:i:s', time());
-		$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time')";
-		$res=$conn->query($sql);
-		$ret_data["success"] = 'success';
+		json_encode($tree_json);
+		$sql0="SELECT id FROM plm_tree_list WHERE product_id='$product_id' AND tree_name='$tree_name'";
+		$res0=$conn->query($sql0);
+		if($res0->num_rows>0){
+			$ret_data["success"] = 'chongfu';
+		}else{
+			$time=date('Y-m-d h:i:s', time());
+			$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time');";
+			$sql2="SELECT LAST_INSERT_ID() AS 'lastid'";
+			$res=$conn->query($sql);
+			$res2=$conn->query($sql2);
+			$row=$res2->fetch_assoc();
+			$ret_data["success"] = 'success';
+			$ret_data["data"]["treeid"] =$row['lastid'];
+			
+		}
 		$json=json_encode($ret_data);
 		echo $json;
 	}else if($flag=='getTreeList'){
@@ -501,8 +512,13 @@
 		$id = isset($_POST["id"])?$_POST["id"]:'';
 		$tree_json = isset($_POST["tree_json"])?$_POST["tree_json"]:'';
 		$sql="UPDATE plm_tree_list SET tree_json='$tree_json' WHERE id='$id'";
+		$sql2="SELECT tree_name,product_id FROM plm_tree_list WHERE id='$id'";
 		$res=$conn->query($sql);
+		$res2=$conn->query($sql2);
+		$row=$res2->fetch_assoc();
 		$ret_data["success"] = 'success';
+		$ret_data["data"]["tree_name"] =$row['tree_name'];
+		$ret_data["data"]["product_id"] =$row['product_id'];
 		$json=json_encode($ret_data);
 		echo $json;
 	}else if($flag=='deletePLMTree'){
@@ -512,7 +528,70 @@
 		$ret_data["success"] = 'success';
 		$json=json_encode($ret_data);
 		echo $json;
-
+	}else if($flag=='savePlmOperatingData'){
+		$treename = isset($_POST["treename"])?$_POST["treename"]:'';
+		$treeid = isset($_POST["treeid"])?$_POST["treeid"]:'';
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		$username = isset($_POST["username"])?$_POST["username"]:'';
+//		$content = isset($_POST["content"])?$_POST["content"]:'';
+		$content = isset($_POST["content"]) ? json_decode($_POST["content"],TRUE) : array();
+		$time=date('Y-m-d h:i:s', time());
+		$arr_length=count($content);
+		for($i=0;$i<$arr_length;$i++){
+			$content_single=$content[$i];
+			$sql="INSERT INTO `plm_operating_data`(`tree_id`,`product_id`,`tree_name`,`content`,`create_user`,`create_time`,`isdelete`)VALUES('$treeid','$product_id','$treename','$content_single','$username','$time','0');";
+			$res=$conn->query($sql);
+		}
+		$ret_data["success"] = 'success';
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='getOprateTreeList'){
+		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
+		$sql="SELECT tree_id,product_id,tree_name FROM plm_operating_data WHERE product_id='$product_id' AND isdelete='0' GROUP BY tree_id ORDER BY tree_id DESC";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i=0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["tree_id"] = $row["tree_id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
+				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';			
+		}else{
+			$ret_data["success"] = 'null';
+		}
+		$json=json_encode($ret_data);
+		echo $json;
+	}else if($flag=='getOprateListData'){
+		$OprateListID = isset($_POST["OprateListID"])?$_POST["OprateListID"]:'';
+		$sql="SELECT id,tree_id,product_id,tree_name,content,create_user,create_time FROM plm_operating_data WHERE tree_id='$OprateListID' AND isdelete='0' ORDER BY id";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i=0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["id"] = $row["id"];
+				$ret_data["data"][$i]["tree_id"] = $row["tree_id"];
+				$ret_data["data"][$i]["product_id"] = $row["product_id"];
+				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
+				$ret_data["data"][$i]["content"] = $row["content"];
+				$ret_data["data"][$i]["create_user"] = $row["create_user"];
+				$ret_data["data"][$i]["create_time"] = $row["create_time"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';			
+		}else{
+			$ret_data["success"] = 'null';
+		}
+		$json=json_encode($ret_data);
+		echo $json;		
+	}else if($flag=='deletePLMOprateData'){
+		$id = isset($_POST["id"])?$_POST["id"]:'';
+		$sql="DELETE FROM plm_operating_data WHERE id='$id'";
+		$res=$conn->query($sql);
+		$ret_data["success"] = 'success';
+		$json=json_encode($ret_data);
+		echo $json;	
 	}
 	
 	$conn->close();
