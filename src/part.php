@@ -385,6 +385,18 @@
 			$ret_data["data"][$i]["value"]=$row["work_order"];
 			$i++;
 		}		
+	}else if($flag=='selectPLM'){
+		$sql="SELECT DISTINCT product_id FROM plm";
+		$res=$conn->query($sql);
+		if($res->num_rows>0){
+			$i = 0;
+			while($row=$res->fetch_assoc()){
+				$ret_data["data"][$i]["label"]=$row["product_id"];
+				$ret_data["data"][$i]["value"]=$row["product_id"];
+				$i++;
+			}
+			$ret_data["success"] = 'success';
+		}
 	}
 	$conn->close();
 	$json = json_encode($ret_data);
