@@ -379,7 +379,7 @@
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["id"] = $row["id"];
 				$ret_data["data"][$i]["product_id"] = $row["product_id"];
-				$ret_data["data"][$i]["name"] = $row["label"];
+				$ret_data["data"][$i]["name"] = $row["figure_number"].$row["label"];
 				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 				$ret_data["data"][$i]["lx"] = 'plm_part';
 				$ret_data["data"][$i]["leaf"] = false;
@@ -403,7 +403,7 @@
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["id"] = $row["id"];
 				$ret_data["data"][$i]["product_id"] = $row["product_id"];
-				$ret_data["data"][$i]["name"] = $row["label"];
+				$ret_data["data"][$i]["name"] = $row["figure_number"].$row["label"];
 				$ret_data["data"][$i]["figure_number"] = $row["figure_number"];
 				$ret_data["data"][$i]["lx"] = 'plm_part';
 				$ret_data["data"][$i]["leaf"] = false;
