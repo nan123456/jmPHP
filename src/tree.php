@@ -469,7 +469,7 @@
 		if($res0->num_rows>0){
 			$ret_data["success"] = 'chongfu';
 		}else{
-			$time=date('Y-m-d h:i:s', time());
+			$time=date('Y-m-d H:i:s', time());
 			$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time');";
 			$sql2="SELECT LAST_INSERT_ID() AS 'lastid'";
 			$res=$conn->query($sql);
@@ -535,7 +535,7 @@
 		$username = isset($_POST["username"])?$_POST["username"]:'';
 //		$content = isset($_POST["content"])?$_POST["content"]:'';
 		$content = isset($_POST["content"]) ? json_decode($_POST["content"],TRUE) : array();
-		$time=date('Y-m-d h:i:s', time());
+		$time=date('Y-m-d H:i:s', time());
 		$arr_length=count($content);
 		for($i=0;$i<$arr_length;$i++){
 			$content_single=$content[$i];
