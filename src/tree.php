@@ -488,11 +488,14 @@
 		if($res->num_rows>0){
 			$i=0;
 			while($row=$res->fetch_assoc()){
+				$sql1="SELECT `name` FROM `user` WHERE account='".$row["create_user_account"]."'";
+				$res1=$conn->query($sql1);
+				$row1=$res1->fetch_assoc();
 				$ret_data["data"][$i]["list_id"] = $row["id"];
 				$ret_data["data"][$i]["product_id"] = $row["product_id"];
 				$ret_data["data"][$i]["tree_json"] = $row["tree_json"];
 				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
-				$ret_data["data"][$i]["create_user_account"] = $row["create_user_account"];
+				$ret_data["data"][$i]["user_name"] = $row1["name"];
 				$ret_data["data"][$i]["create_time"] = $row["create_time"];
 				$i++;
 			}
@@ -547,12 +550,14 @@
 		echo $json;
 	}else if($flag=='getOprateTreeList'){
 		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
-		$sql="SELECT tree_id,product_id,tree_name FROM plm_operating_data WHERE product_id='$product_id' AND isdelete='0' GROUP BY tree_id ORDER BY tree_id DESC";
+		$sql="SELECT tree_id,product_id,tree_name,create_time,create_user FROM plm_operating_data WHERE product_id='$product_id' AND isdelete='0' GROUP BY tree_id ORDER BY tree_id DESC";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i=0;
 			while($row=$res->fetch_assoc()){
 				$ret_data["data"][$i]["tree_id"] = $row["tree_id"];
+				$ret_data["data"][$i]["user_name"] = $row["create_user"];
+				$ret_data["data"][$i]["create_time"] = $row["create_time"];
 				$ret_data["data"][$i]["product_id"] = $row["product_id"];
 				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
 				$i++;
