@@ -597,6 +597,14 @@
 		$ret_data["success"] = 'success';
 		$json=json_encode($ret_data);
 		echo $json;	
+	}else if($flag=="creatPlmJsonFile"){
+		$listid = isset($_POST["listid"])?$_POST["listid"]:'';
+		$sql="select tree_json from plm_tree_list where id='$listid'";
+		$res=$conn->query($sql);
+		$row=$res->fetch_assoc();
+		$json_char= $row["tree_json"];
+		$json=json_decode($json_char);
+		var_dump($json);
 	}
 	
 	$conn->close();
