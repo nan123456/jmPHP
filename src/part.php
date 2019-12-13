@@ -382,7 +382,7 @@
 		$res=$conn->query($sql);
 		while($row=$res->fetch_assoc()){
 			$ret_data["data"][$i]["label"]=$row["product_name"];
-			$ret_data["data"][$i]["value"]=$row["work_order"];
+			$ret_data["data"][$i]["value"]=$row["work_order"].$row["product_name"];
 			$i++;
 		}		
 	}else if($flag=='selectPLM'){
