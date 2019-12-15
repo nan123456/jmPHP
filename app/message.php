@@ -3,7 +3,7 @@ require ("../conn.php");
 	$flag = $_POST["flag"];
 	$department =$_POST["department"];
 //$flag = "0";
-	$department ='检验部';
+//	$department ='检验部';
 
 switch ($flag) {
 	case '0' :
@@ -18,6 +18,8 @@ switch ($flag) {
 			$arr[$i]['workstate'] = $row['workstate'];
 			$arr[$i]['route'] = $row['route'];
 			$arr[$i]['workshop'] = $row['workshop'];
+			$arr[$i]['count'] = $row['count'];
+			$arr[$i]['id'] = $row['id'];
 			$i++;
 		}
 	}
@@ -32,6 +34,8 @@ switch ($flag) {
 			$arr[$i]['workstate'] = $row['workstate'];
 			$arr[$i]['route'] = $row['route'];
 			$arr[$i]['workshop'] = $row['workshop'];
+			$arr[$i]['count'] = $row['count'];
+			$arr[$i]['id'] = $row['id'];
 			$i++;
 		}
 	}
@@ -51,6 +55,8 @@ switch ($flag) {
 			$arr[$i]['workstate'] = $row['workstate'];
 			$arr[$i]['route'] = $row['route'];
 			$arr[$i]['workshop'] = $row['workshop'];
+			$arr[$i]['count'] = $row['count'];
+			$arr[$i]['id'] = $row['id'];
 			$i++;
 		}
 	}
@@ -65,11 +71,27 @@ switch ($flag) {
 			$arr[$i]['workstate'] = $row['workstate'];
 			$arr[$i]['route'] = $row['route'];
 			$arr[$i]['workshop'] = $row['workshop'];
+			$arr[$i]['count'] = $row['count'];
+			$arr[$i]['id'] = $row['id'];
 			$i++;
 		}
 	}
 	}
 	$json = json_encode($arr);
+    echo $json;
+	break;
+	case '2' :
+	$messageid =$_POST["messageid"];
+	$sql1="UPDATE message SET state = '1' WHERE id = $messageid";
+	$res = $conn -> query($sql1);
+	$json = json_encode($res);
+    echo $json;
+	break;
+	case '3' :
+	$messageid =$_POST["messageid"];
+	$sql1="DELETE FROM message WHERE id = $messageid";
+	$res = $conn -> query($sql1);
+	$json = json_encode($res);
     echo $json;
 	break;
 }

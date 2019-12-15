@@ -108,7 +108,7 @@ switch ($flag) {
 				$conn -> query($sql2);
 //	//			// 更新message
  				$message = $name . "的" . $route .  "已评审！";
-           		 $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','让步接收','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+           		 $sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop,count) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','让步接收','" . $route . "','" . $writtenBy . "','" . $workshop . "','" . $finishcount . "')";
 				$conn->query($sql_mes);
 //				$sql1 = "UPDATE message SET state='1' where id='" . $messageid . "' ORDER by id LIMIT 1 ";
 //				$conn -> query($sql1);
@@ -183,7 +183,7 @@ switch ($flag) {
 				$conn -> query($sql10);
 			}
 			$message = $name . "的" . $route .  "已评审！";
-       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','返工','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop,count) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','返工','" . $route . "','" . $writtenBy . "','" . $workshop . "','" . $finishcount . "')";
 			$conn->query($sql_mes);
 		} 
 		//报废，默认不改变完成数量，记录检查数量作为报废数量
@@ -216,7 +216,7 @@ switch ($flag) {
 //			$sql19 = "UPDATE scrap SET scrapNum=scrapNum + '" . $reviews . "'  WHERE modid='" . $modid . "' and routeid='" . $routeid . "' ORDER by id LIMIT 1";
 //			$conn -> query($sql19);
 			$message = $name . "的" . $route .  "已评审！";
-       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','报修','" . $route . "','" . $writtenBy . "','" . $workshop . "')";
+       		$sql_mes = "INSERT INTO message (content,time,department,state,workstate,route,cuser,workshop,count) VALUES ('" . $message . "','" . date("Y-m-d H:i:s") . "','".$department."','0','报修','" . $route . "','" . $writtenBy . "','" . $workshop . "','" . $finishcount . "')";
 			$conn->query($sql_mes);
 		}
 		// 循环检测是否所有工序完成
