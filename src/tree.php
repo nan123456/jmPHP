@@ -462,6 +462,7 @@
 		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
 		$tree_json = isset($_POST["tree_json"])?$_POST["tree_json"]:'';
 		$tree_name = isset($_POST["tree_name"])?$_POST["tree_name"]:'';
+		$plan_date = isset($_POST["plan_date"])?$_POST["plan_date"]:'';
 		$create_user_account = isset($_POST["create_user_account"])?$_POST["create_user_account"]:'';
 		json_encode($tree_json);
 		$sql0="SELECT id FROM plm_tree_list WHERE product_id='$product_id' AND tree_name='$tree_name'";
@@ -470,7 +471,7 @@
 			$ret_data["success"] = 'chongfu';
 		}else{
 			$time=date('Y-m-d H:i:s', time());
-			$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time');";
+			$sql="INSERT INTO `plm_tree_list`(`product_id`,`tree_json`,`tree_name`,`create_user_account`,`create_time`,`plan_date`)VALUES('$product_id','$tree_json','$tree_name','$create_user_account','$time','$plan_date');";
 			$sql2="SELECT LAST_INSERT_ID() AS 'lastid'";
 			$res=$conn->query($sql);
 			$res2=$conn->query($sql2);
@@ -483,7 +484,7 @@
 		echo $json;
 	}else if($flag=='getTreeList'){
 		$product_id = isset($_POST["product_id"])?$_POST["product_id"]:'';
-		$sql="SELECT id,product_id,tree_json,tree_name,create_user_account,create_time FROM plm_tree_list WHERE product_id='$product_id' ORDER BY id DESC";
+		$sql="SELECT id,product_id,tree_json,tree_name,create_user_account,create_time,plan_date FROM plm_tree_list WHERE product_id='$product_id' ORDER BY id DESC";
 		$res=$conn->query($sql);
 		if($res->num_rows>0){
 			$i=0;
@@ -497,6 +498,7 @@
 				$ret_data["data"][$i]["tree_name"] = $row["tree_name"];
 				$ret_data["data"][$i]["user_name"] = $row1["name"];
 				$ret_data["data"][$i]["create_time"] = $row["create_time"];
+				$ret_data["data"][$i]["plan_date"] = $row["plan_date"];
 				$i++;
 			}
 			$ret_data["success"] = 'success';			
