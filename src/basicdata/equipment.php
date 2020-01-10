@@ -33,6 +33,8 @@
 				$ret_data["data"][$i]["id"] = $row["id"];
 				$ret_data["data"][$i]["number"] = $row["number"];
 				$ret_data["data"][$i]["name"] = $row["name"];
+				$ret_data["data"][$i]["type"] = $row["type"];
+				$ret_data["data"][$i]["typenumber"] = $row["typenumber"];
 				$ret_data["data"][$i]["state"] = $row["state"];
 				$ret_data["data"][$i]["workcenter"] = $row["workcenter"];
 				$ret_data["data"][$i]["checkrequest"] = $row["checkrequest"];
