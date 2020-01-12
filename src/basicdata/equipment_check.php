@@ -40,12 +40,12 @@
 				$e_type=$row2["typenumber"];//设备型号
 				$e_number=$row2["number"];//设备编号
 				$workshop=$row2["workcenter"];//车间
-				$state_time='{"running":"","fault":"","other":"","mantain":"","plan":""}';
+				$state_time='{"running":"0","fault":"0","other":"0","mantain":"0","plan":"0"}';
 				$sqli="SELECT content FROM `equipment_table_template` WHERE `name`='".$e_name."'";
 				$resulti=$conn->query($sqli);
 				$rowi=$resulti->fetch_assoc();
 				$json=$rowi["content"];
-				$content_json=(array) json_decode($json,true);
+				$content_json=(array)json_decode($json,true);
 				$content_arr=array();
 				$char="[";
 				for($i=0;$i<11;$i++){
