@@ -1,5 +1,6 @@
 <?php
 	require("../../conn.php");
+	error_reporting(0);
 	$ret_data = array();
 	$flag = isset($_POST["flag"])?$_POST["flag"]:'';
 	if($flag=='getCheckList'){
