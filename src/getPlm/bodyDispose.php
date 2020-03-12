@@ -10,7 +10,7 @@
 	);
 	//获取传入body
 	// $bodyData = @file_get_contents('php://input');
-	$url='http://localhost:60177/ITEMWeb.asmx?op=GetProductBom&strProductID='.$ProductID;
+	$url='http://192.168.1.117/ITEMWeb.asmx/GetProductBom?strProductID='.$ProductID;
 	$bodyData=send_post($url);
 	function send_post($url) {
     // $postdata = http_build_query($post_data);
