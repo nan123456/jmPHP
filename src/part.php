@@ -378,12 +378,11 @@
 		}
 	}else if($flag=='getPLMProject'){
 		$i=0;
-		$sql="select product_name,work_order from plan_table";
+		$sql="select label,product_id from plm_header";
 		$res=$conn->query($sql);
 		while($row=$res->fetch_assoc()){
-			$ret_data["data"][$i]["label"]=$row["product_name"];
-			$ret_data["data"][$i]["value"]=$row["product_name"];
-			$ret_data["data"][$i]["work_order"]=$row["work_order"];
+			$ret_data["data"][$i]["label"]=$row["label"];
+			$ret_data["data"][$i]["product_id"]=$row["product_id"];
 			$i++;
 		}		
 	}else if($flag=='selectPLM'){
