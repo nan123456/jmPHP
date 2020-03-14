@@ -28,13 +28,17 @@
 	$bodyData=substr_replace($bodyData,"",$count,9); 
 	//json解码
     $bodyData = json_decode($bodyData,true);
-    //重复获取数据先删除原数据
-	$sql="delete from plm_header";
-	$conn->query($sql);
-    //保存数据库
-    foreach($bodyData as $key => $value){
-    	$sql="insert into plm_header(product_id,label) values('".$value["product_id"]."','".$value["product_name"]."')";
+	if($bodyData[0]['product_name']){
+		//重复获取数据先删除原数据
+		$sql="delete from plm_header";
 		$conn->query($sql);
-    }
-    echo "success";
+		//保存数据库
+		foreach($bodyData as $key => $value){
+			$sql="insert into plm_header(product_id,label) values('".$value["product_id"]."','".$value["product_name"]."')";
+			$conn->query($sql);
+		}
+		echo "success";
+	}else{
+		echo "error";
+	}
 ?>
