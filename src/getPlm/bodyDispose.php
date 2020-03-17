@@ -1,22 +1,24 @@
 <?php
 	require ("../../conn.php");
 	$ProductID = isset($_POST["ProductID"]) ? $_POST["ProductID"] : 'null';
+	set_time_limit(0);
 	//获取当前时间戳
 	$newtime=time();
 	//定义返回数组
-	$result = array(
-		'code'=>200,
-		'mes'=>''
-	);
+	// $result = array(
+	// 	'code'=>200,
+	// 	'mes'=>''
+	// );
 	//获取传入body
 	// $bodyData = @file_get_contents('php://input');
-	$url='http://192.168.1.117/ITEMWeb.asmx/GetProductBom?strProductID='.$ProductID;
+	$url='http://192.168.1.245/ITEMWeb.asmx/GetProductBom?strProductID='.$ProductID;
 	$bodyData=send_post($url);
 	function send_post($url) {
     // $postdata = http_build_query($post_data);
+	$postdata=null;
     $options = array(
     'http' => array(
-        'method' => 'POST',
+        'method' => 'GET',
         'header' => 'Content-type:application/x-www-form-urlencoded',
         'content' => $postdata,
         'timeout' => 15 * 60 // 超时时间（单位:s）
@@ -26,6 +28,7 @@
     $result = file_get_contents($url, false, $context);
     return $result;
 }
+	// echo $bodyData;
 	//去除xml部分
 	$count=strpos($bodyData,'<?xml version="1.0" encoding="utf-8"?>'); 
 	$bodyData=substr_replace($bodyData,"",$count,39); 
