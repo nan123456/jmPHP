@@ -12,6 +12,8 @@
 	//获取传入body
 	// $bodyData = @file_get_contents('php://input');
 	$url='http://192.168.1.245/ITEMWeb.asmx/GetProductBom?strProductID='.$ProductID;
+	//测试链接
+	// $url='http://localhost/jmphp/src/getPlm/echoData.php';
 	$bodyData=send_post($url);
 	function send_post($url) {
     // $postdata = http_build_query($post_data);
@@ -35,7 +37,14 @@
 	$count=strpos($bodyData,'<string xmlns="http://caxawebitem.org/">'); 
 	$bodyData=substr_replace($bodyData,"",$count,40); 
 	$count=strpos($bodyData,'</string>'); 
-	$bodyData=substr_replace($bodyData,"",$count,9); 
+	$bodyData=substr_replace($bodyData,"",$count,9);
+	//替换所有空格
+	$bodyData=preg_replace('/\s+/','',$bodyData);
+	//替换所有换行
+	$bodyData = str_replace(array("\r\n", "\r", "\n"), "", $bodyData);
+	//保存json字符串变量
+	$bodyData_str=$bodyData;
+	// echo $bodyData;
 	//json解码
     $bodyData = json_decode($bodyData,true);
 	$productId = isset($bodyData[0]["product_id"]) ? $bodyData[0]["product_id"] : "";
@@ -53,8 +62,12 @@
 	}
 	
 	if($bodyData[0]["product_id"]==$ProductID){
-		$sql="DELETE FROM `plm` WHERE `product_id`='$ProductID'";
-		$conn->query($sql);
+		$sql1="DELETE FROM `plm` WHERE `product_id`='$ProductID'";
+		$conn->query($sql1);
+		$sql2="DELETE FROM `plm_json` WHERE `product_id`='$ProductID'";
+		$conn->query($sql2);
+		$sql3="INSERT INTO plm_json(`product_id`,`json`)VALUES('$ProductID','$bodyData_str')";
+		$conn->query($sql3);
 		recursion($bodyData[0]["children"],$bodyData[0]["product_id"],$bodyData[0]["product_id"]);
 		echo 'success';
 	}else{
